@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.HomeAutomation.Li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.HomeAutomation.PhilipsHue", "DerekWare.HomeAutomation.PhilipsHue\DerekWare.HomeAutomation.PhilipsHue.csproj", "{2E1241E6-58CD-410D-A78B-9821B2538DA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris", "..\Applications\LifxNet\Iris.csproj", "{BD6281D8-DE6F-4A5A-B01A-727525394883}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris", "Iris.csproj", "{BD6281D8-DE6F-4A5A-B01A-727525394883}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

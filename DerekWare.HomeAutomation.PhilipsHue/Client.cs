@@ -7,16 +7,12 @@ using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
 using Q42.HueApi;
+using Q42.HueApi.Interfaces;
+using Q42.HueApi.Models.Bridge;
 using Q42.HueApi.Models.Groups;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
 {
-    public class BridgeEventArgs : EventArgs
-    {
-        public string BridgeId { get; set; }
-        public string IpAddress { get; set; }
-    }
-
     public class Client : IClient
     {
         public static readonly Client Instance = new();
@@ -87,10 +83,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             if(BridgeLocater is null)
             {
                 BridgeLocater = new HttpBridgeLocator();
-                BridgeLocater.BridgeFound += (sender, bridge) =>
-                {
-                    BridgeDiscovered?.Invoke(this, new BridgeEventArgs { BridgeId = bridge.BridgeId, IpAddress = bridge.IpAddress });
-                };
+                BridgeLocater.BridgeFound += OnBridgeDiscovered;
             }
 
             CancelBridgeDiscovery();
@@ -167,6 +160,21 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         {
             CancelBridgeDiscovery();
             HueClient = null;
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        async void OnBridgeDiscovered(IBridgeLocator sender, LocatedBridge other)
+        {
+            if(BridgeDiscovered is null)
+            {
+                return;
+            }
+
+            var bridge = await Bridge.Create(other);
+            BridgeDiscovered.Invoke(this, new BridgeEventArgs { Bridge = bridge });
         }
 
         #endregion

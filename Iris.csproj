@@ -7,7 +7,7 @@
     <ProjectGuid>{BD6281D8-DE6F-4A5A-B01A-727525394883}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>DerekWare.Iris</RootNamespace>
-    <AssemblyName>DerekWare.Iris</AssemblyName>
+    <AssemblyName>DerekWare Iris</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -97,7 +97,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Cyotek.Windows.Forms.ColorPicker, Version=1.0.0.0, Culture=neutral, PublicKeyToken=58daa28b0b2de221, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Cyotek.Windows.Forms.ColorPicker.1.7.2\lib\net35\Cyotek.Windows.Forms.ColorPicker.dll</HintPath>
+      <HintPath>packages\Cyotek.Windows.Forms.ColorPicker.1.7.2\lib\net35\Cyotek.Windows.Forms.ColorPicker.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -193,30 +193,30 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Assemblies\DerekWare.HomeAutomation.Common\DerekWare.HomeAutomation.Common.csproj">
+    <ProjectReference Include="DerekWare.HomeAutomation.Common\DerekWare.HomeAutomation.Common.csproj">
       <Project>{7e59c277-b9ca-4577-bc00-0bd6a94f9b22}</Project>
       <Name>DerekWare.HomeAutomation.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Assemblies\DerekWare.HomeAutomation.LifxLan\DerekWare.HomeAutomation.Lifx.Lan.csproj">
+    <ProjectReference Include="DerekWare.HomeAutomation.LifxLan\DerekWare.HomeAutomation.Lifx.Lan.csproj">
       <Project>{49420673-44bd-4d6d-a4bc-1bf2e022fdec}</Project>
       <Name>DerekWare.HomeAutomation.Lifx.Lan</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Assemblies\DerekWare.HomeAutomation.PhilipsHue\DerekWare.HomeAutomation.PhilipsHue.csproj">
+    <ProjectReference Include="DerekWare.HomeAutomation.PhilipsHue\DerekWare.HomeAutomation.PhilipsHue.csproj">
       <Project>{2e1241e6-58cd-410d-a78b-9821b2538da9}</Project>
       <Name>DerekWare.HomeAutomation.PhilipsHue</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Assemblies\DerekWare.Misc\DerekWare.Misc.csproj">
+    <ProjectReference Include="DerekWare.Misc\DerekWare.Misc.csproj">
       <Project>{713cbedf-3003-4a12-970c-000574bafeaf}</Project>
       <Name>DerekWare.Misc</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -21,7 +21,19 @@ namespace DerekWare.Iris
 
         public string ApiKey { get; private set; }
 
-        public string IpAddress { get => IpAddressComboBox.Text; set => IpAddressComboBox.Text = value; }
+        public string IpAddress
+        {
+            get
+            {
+                if(IpAddressComboBox.SelectedItem is Bridge bridge)
+                {
+                    return bridge.IpAddress;
+                }
+
+                return IpAddressComboBox.Text;
+            }
+            set => IpAddressComboBox.Text = value;
+        }
 
         bool LooksLikeAnAddress
         {
@@ -55,12 +67,12 @@ namespace DerekWare.Iris
 
         void IpAddressComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            YupButton.Enabled = LooksLikeAnAddress;
+            YupButton.Enabled = !IpAddress.IsNullOrEmpty();
         }
 
         void IpAddressComboBox_TextUpdate(object sender, EventArgs e)
         {
-            YupButton.Enabled = LooksLikeAnAddress;
+            YupButton.Enabled = !IpAddress.IsNullOrEmpty();
         }
 
         void NopeButton_Click(object sender, EventArgs e)
@@ -77,11 +89,11 @@ namespace DerekWare.Iris
                 return;
             }
 
-            var index = IpAddressComboBox.Items.Add(e.IpAddress);
+            IpAddressComboBox.Items.Add(e.Bridge);
 
-            if(IpAddressComboBox.Text.IsNullOrEmpty())
+            if(IpAddressComboBox.SelectedItem is null)
             {
-                IpAddressComboBox.SelectedItem = index;
+                IpAddressComboBox.SelectedItem = e.Bridge;
             }
         }
 
