@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.Misc", "..\Assemblies\DerekWare.Misc\DerekWare.Misc.csproj", "{713CBEDF-3003-4A12-970C-000574BAFEAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.Misc", "DerekWare.Misc\DerekWare.Misc.csproj", "{713CBEDF-3003-4A12-970C-000574BAFEAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.HomeAutomation.Common", "..\Assemblies\DerekWare.HomeAutomation.Common\DerekWare.HomeAutomation.Common.csproj", "{7E59C277-B9CA-4577-BC00-0BD6A94F9B22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.HomeAutomation.Common", "DerekWare.HomeAutomation.Common\DerekWare.HomeAutomation.Common.csproj", "{7E59C277-B9CA-4577-BC00-0BD6A94F9B22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.HomeAutomation.Lifx.Lan", "..\Assemblies\DerekWare.HomeAutomation.LifxLan\DerekWare.HomeAutomation.Lifx.Lan.csproj", "{49420673-44BD-4D6D-A4BC-1BF2E022FDEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.HomeAutomation.Lifx.Lan", "DerekWare.HomeAutomation.LifxLan\DerekWare.HomeAutomation.Lifx.Lan.csproj", "{49420673-44BD-4D6D-A4BC-1BF2E022FDEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.HomeAutomation.PhilipsHue", "..\Assemblies\DerekWare.HomeAutomation.PhilipsHue\DerekWare.HomeAutomation.PhilipsHue.csproj", "{2E1241E6-58CD-410D-A78B-9821B2538DA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.HomeAutomation.PhilipsHue", "DerekWare.HomeAutomation.PhilipsHue\DerekWare.HomeAutomation.PhilipsHue.csproj", "{2E1241E6-58CD-410D-A78B-9821B2538DA9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris", "..\Applications\LifxNet\Iris.csproj", "{BD6281D8-DE6F-4A5A-B01A-727525394883}"
 EndProject

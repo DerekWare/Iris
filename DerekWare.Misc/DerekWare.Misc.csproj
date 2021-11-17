@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{713CBEDF-3003-4A12-970C-000574BAFEAF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DerekWare.Misc</RootNamespace>
+    <AssemblyName>DerekWare.Misc</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\..\bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collections\Array.cs" />
+    <Compile Include="Collections\DistinctList.cs" />
+    <Compile Include="Collections\Enumerable.cs" />
+    <Compile Include="Collections\Group\Group.cs" />
+    <Compile Include="Collections\Group\GroupCollection.cs" />
+    <Compile Include="Collections\KeyedList.cs" />
+    <Compile Include="Collections\KeyValuePair.cs" />
+    <Compile Include="Collections\LimitedQueue.cs" />
+    <Compile Include="Collections\Lookup.cs" />
+    <Compile Include="Collections\Observable\ObservableCollectionNotifier.cs" />
+    <Compile Include="Collections\Observable\ObservableDictionary.cs" />
+    <Compile Include="Collections\Observable\ObservableDictionaryNotifier.cs" />
+    <Compile Include="Collections\Observable\ObservableHashSet.cs" />
+    <Compile Include="Collections\Observable\ObservableList.cs" />
+    <Compile Include="Collections\Observable\ObservableQueue.cs" />
+    <Compile Include="Collections\OrderedDictionary.cs" />
+    <Compile Include="Collections\PropertySet.cs" />
+    <Compile Include="Collections\Queue.cs" />
+    <Compile Include="Collections\SequenceComparer.cs" />
+    <Compile Include="Collections\Stack.cs" />
+    <Compile Include="Collections\Synchronized\SynchronizedDictionary.cs" />
+    <Compile Include="Collections\Synchronized\SynchronizedHashSet.cs" />
+    <Compile Include="Collections\Synchronized\SynchronizedQueue.cs" />
+    <Compile Include="Collections\Synchronized\SynchronizedList.cs" />
+    <Compile Include="Collections\Tree.cs" />
+    <Compile Include="Collections\ValueMap.cs" />
+    <Compile Include="COM.cs" />
+    <Compile Include="CommandLine.cs" />
+    <Compile Include="Diagnostics\ConsoleTraceTarget.cs" />
+    <Compile Include="Diagnostics\Debug.cs" />
+    <Compile Include="Diagnostics\DebugTraceTarget.cs" />
+    <Compile Include="Diagnostics\TextFileTraceTarget.cs" />
+    <Compile Include="Diagnostics\TraceDispatcher.cs" />
+    <Compile Include="Diagnostics\TraceTarget.cs" />
+    <Compile Include="Diagnostics\XmlFileTraceTarget.cs" />
+    <Compile Include="IO\Serialization\ExcelWriter.cs" />
+    <Compile Include="Expressions\Clause.cs" />
+    <Compile Include="Expressions\ComparisonDelegate.cs" />
+    <Compile Include="Expressions\Evaluatable.cs" />
+    <Compile Include="Expressions\Expression.cs" />
+    <Compile Include="Expressions\Operator.cs" />
+    <Compile Include="Expressions\ResolvedClause.cs" />
+    <Compile Include="Expressions\SelectorDelegate.cs" />
+    <Compile Include="Expressions\WildcardPattern.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="IO\FileInfo\FileInfoComparer.cs" />
+    <Compile Include="IO\FileInfo\FileInfoSet.cs" />
+    <Compile Include="IO\FileInfo\FileSet.cs" />
+    <Compile Include="IO\FileInfo\FileSynchronizer.cs" />
+    <Compile Include="IO\Input\KeyboardHook.cs" />
+    <Compile Include="IO\Input\Keys.cs" />
+    <Compile Include="IO\Path\Directory.cs" />
+    <Compile Include="IO\Path\File.cs" />
+    <Compile Include="IO\Path\Operators.cs" />
+    <Compile Include="IO\Path\Path.cs" />
+    <Compile Include="IO\Path\PathExtensions.cs" />
+    <Compile Include="IO\Path\SegmentList.cs" />
+    <Compile Include="IO\Serialization\DataContractSerializer.cs" />
+    <Compile Include="IO\Serialization\JsonSerializer.cs" />
+    <Compile Include="IO\Serialization\Serializer.cs" />
+    <Compile Include="IO\Serialization\XmlSerializer.cs" />
+    <Compile Include="IO\Serialization\XmlTimeSpan.cs" />
+    <Compile Include="Math.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Net\FileDownloader\FileDownloadBackgroundWorker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Net\FileDownloader\FileDownloader.cs" />
+    <Compile Include="Net\HLS\Playlist.cs" />
+    <Compile Include="Net\HLS\PlaylistEntry.cs" />
+    <Compile Include="Net\HLS\Segment.cs" />
+    <Compile Include="Net\HLS\TagNames.cs" />
+    <Compile Include="Net\RemoteFileSystem\Activator.cs" />
+    <Compile Include="Net\RemoteFileSystem\FTP\Directory.cs" />
+    <Compile Include="Net\RemoteFileSystem\FTP\DirectoryEntry.cs" />
+    <Compile Include="Net\RemoteFileSystem\FTP\File.cs" />
+    <Compile Include="Net\RemoteFileSystem\FTP\FileSystemInfo.cs" />
+    <Compile Include="Net\RemoteFileSystem\IDirectory.cs" />
+    <Compile Include="Net\RemoteFileSystem\IDirectoryEntry.cs" />
+    <Compile Include="Net\RemoteFileSystem\IFile.cs" />
+    <Compile Include="Net\RemoteFileSystem\Local\Directory.cs" />
+    <Compile Include="Net\RemoteFileSystem\Local\DirectoryEntry.cs" />
+    <Compile Include="Net\RemoteFileSystem\Local\File.cs" />
+    <Compile Include="Net\RemoteFileSystem\RemoteFileCache.cs" />
+    <Compile Include="Net\WebClient\PathExtensions.cs" />
+    <Compile Include="Net\WebClient\WebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Net\WebClient\WebClient.Events.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Net\WebClient\WebClientExtensions.cs" />
+    <Compile Include="Process.cs" />
+    <Compile Include="Query\Clause.cs" />
+    <Compile Include="Query\Expression.cs" />
+    <Compile Include="Ratio.cs" />
+    <Compile Include="Reflection\Attributes.cs" />
+    <Compile Include="Reflection\Enum.cs" />
+    <Compile Include="Reflection\Field.cs" />
+    <Compile Include="Reflection\ICloneable.cs" />
+    <Compile Include="Reflection\Member.cs" />
+    <Compile Include="Reflection\Method.cs" />
+    <Compile Include="Reflection\Property.cs" />
+    <Compile Include="Reflection\Reflector.cs" />
+    <Compile Include="Reflection\TypeConverter.cs" />
+    <Compile Include="Security\Aes.cs" />
+    <Compile Include="Security\Transform.cs" />
+    <Compile Include="SimpleDate.cs" />
+    <Compile Include="Strings\CharacterComparer.cs" />
+    <Compile Include="Strings\Enumerable.cs" />
+    <Compile Include="Strings\StringBuilding.cs" />
+    <Compile Include="Strings\StringMatch.cs" />
+    <Compile Include="Strings\StringParsing.cs" />
+    <Compile Include="Threading\IThread.cs" />
+    <Compile Include="Threading\Task.cs" />
+    <Compile Include="Threading\TaskFactory.cs" />
+    <Compile Include="Threading\Thread.cs" />
+    <Compile Include="Threading\ThreadCollection.cs" />
+    <Compile Include="Threading\ThreadExtensions.cs" />
+    <Compile Include="Threading\ThreadPriorityBoost.cs" />
+    <Compile Include="IO\Serialization\XmlExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
