@@ -139,7 +139,7 @@ namespace DerekWare.Iris
             this.ZoneColorBand.Name = "ZoneColorBand";
             this.ZoneColorBand.Size = new System.Drawing.Size(698, 43);
             this.ZoneColorBand.TabIndex = 0;
-            this.ZoneColorBand.ColorsChanged += new System.EventHandler<ColorBandColorsChangedEventArgs>(this.ZoneColorBand_ColorsChanged);
+            this.ZoneColorBand.ColorsChanged += new System.EventHandler<ColorsChangedEventArgs>(this.ZoneColorBand_ColorsChanged);
             // 
             // EffectGroupBox
             // 

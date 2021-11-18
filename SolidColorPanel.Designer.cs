@@ -235,7 +235,7 @@ namespace DerekWare.Iris
             this.tableLayoutPanel1.SetRowSpan(this.ColorBand, 3);
             this.ColorBand.Size = new System.Drawing.Size(166, 112);
             this.ColorBand.TabIndex = 9;
-            this.ColorBand.ColorsChanged += new System.EventHandler<ColorBandColorsChangedEventArgs>(this.ColorBand_ColorsChanged);
+            this.ColorBand.ColorsChanged += new System.EventHandler<ColorsChangedEventArgs>(this.ColorBand_ColorsChanged);
             // 
             // SolidColorPanel
             // 

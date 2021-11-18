@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common.Scenes
 {
-    public interface IReadOnlySceneProperties : IName, IFamily
+    public interface IReadOnlySceneProperties : IName, IFamily, IEquatable<IReadOnlySceneProperties>
     {
         [Description("True if the scene chooses its own colors.")]
         public abstract bool IsDynamic { get; }
@@ -30,10 +31,10 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
     public abstract class Scene : IScene
     {
-        [Description("True if the scene chooses its own colors."), Browsable(false)]
+        [Description("True if the scene chooses its own colors."), Browsable(false), XmlIgnore]
         public abstract bool IsDynamic { get; }
 
-        [Description("True if the scene is intended for multizone lights, such as the LIFX Z strip."), Browsable(false)]
+        [Description("True if the scene is intended for multizone lights, such as the LIFX Z strip."), Browsable(false), XmlIgnore]
         public abstract bool IsMultiZone { get; }
 
         public abstract IEnumerable<Color> GetPalette(IDevice targetDevice);
@@ -49,7 +50,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         [Description("True if the effect runs on the device as opposed to running in this application.")]
         public bool IsFirmware => false;
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public string Name => GetType().GetTypeName();
 
         public void Apply(IDevice device, TimeSpan duration)
@@ -71,6 +72,60 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         {
             devices.ForEach(Apply);
         }
+
+        #region Equality
+
+        public bool Equals(IReadOnlySceneProperties other)
+        {
+            if(ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if(ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Equals(Name, other.Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if(ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if(obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((IReadOnlySceneProperties)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name != null ? Name.GetHashCode() : 0;
+        }
+
+        public static bool operator ==(Scene left, Scene right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Scene left, Scene right)
+        {
+            return !Equals(left, right);
+        }
+
+        #endregion
 
         #region IScene
 

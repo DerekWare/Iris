@@ -13,7 +13,7 @@ namespace DerekWare.Iris
 
         Color[] _Colors = new Color[0];
 
-        public event EventHandler<ColorBandColorsChangedEventArgs> ColorsChanged;
+        public event EventHandler<ColorsChangedEventArgs> ColorsChanged;
 
         public Color[] Colors
         {
@@ -46,7 +46,7 @@ namespace DerekWare.Iris
 
             Colors[index] = hsv;
             Invalidate();
-            ColorsChanged?.Invoke(this, new ColorBandColorsChangedEventArgs { Colors = Colors });
+            ColorsChanged?.Invoke(this, new ColorsChangedEventArgs { Colors = Colors });
         }
 
         protected override void OnPaint(PaintEventArgs e)

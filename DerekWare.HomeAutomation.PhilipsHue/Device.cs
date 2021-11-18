@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Xml.Serialization;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common.Effects;
 using Q42.HueApi;
+using Effect = Q42.HueApi.Effect;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
 {
     public class Device : IDevice, IEquatable<Device>
     {
+        protected DeviceStateRefreshTask RefreshTask;
         internal Light HueDevice;
 
         public event EventHandler<DeviceEventArgs> PropertiesChanged;
@@ -25,8 +29,11 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public string Family => Client.Instance.Family;
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public IReadOnlyCollection<IDeviceGroup> Groups { get; } // TODO
+
+        [Browsable(false), XmlIgnore]
+        public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
 
         public string Id => HueDevice.Id;
         public bool IsColor => Type.IndexOf("color", StringComparison.CurrentCultureIgnoreCase) >= 0; // TODO this is a little hacky
@@ -42,13 +49,13 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public string Vendor => HueDevice.ManufacturerName;
         public int ZoneCount => 1;
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public Color Color { get => Colors.FromHueColor(HueDevice.State); set => SetColor(value, TimeSpan.Zero); }
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public IReadOnlyCollection<Color> MultiZoneColors { get => new[] { Color }; set => SetMultiZoneColors(value, TimeSpan.Zero); }
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public PowerState Power { get => HueDevice.State.On ? PowerState.On : PowerState.Off; set => SetPower(value); }
 
         public override string ToString()
@@ -137,7 +144,14 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public async void RefreshState()
         {
             HueDevice = await Client.Instance.HueClient.GetLightAsync(HueDevice.Id);
+            RefreshTask ??= new DeviceStateRefreshTask(this);
             OnStateChanged();
+
+            // If we're turned off, stop running effects
+            if(Power == PowerState.Off)
+            {
+                EffectFactory.Instance.Stop(this);
+            }
         }
 
         public void SetColor(Color color, TimeSpan transitionDuration)
@@ -193,6 +207,15 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
             cmd.SendCommandAsync(new[] { HueDevice.Id });
             OnStateChanged();
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        public virtual void Dispose()
+        {
+            DerekWare.Extensions.Dispose(ref RefreshTask);
         }
 
         #endregion

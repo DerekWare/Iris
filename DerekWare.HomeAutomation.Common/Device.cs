@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common.Effects;
 
 namespace DerekWare.HomeAutomation.Common
 {
-    public interface IDevice : IDeviceProperties, IDeviceState, IEquatable<IDevice>
+    public interface IDevice : IDeviceProperties, IDeviceState, IEquatable<IDevice>, IDisposable
     {
         event EventHandler<DeviceEventArgs> PropertiesChanged;
         event EventHandler<DeviceEventArgs> StateChanged;
@@ -26,6 +27,7 @@ namespace DerekWare.HomeAutomation.Common
     // State changes based on user interaction
     public interface IDeviceState
     {
+        IReadOnlyCollection<IEffect> Effects { get; }
         Color Color { get; set; }
         IReadOnlyCollection<Color> MultiZoneColors { get; set; }
         PowerState Power { get; set; }

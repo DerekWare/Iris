@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
@@ -13,9 +14,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
     {
     }
 
-    public interface IReadOnlyEffectProperties : IName, IFamily
+    public interface IReadOnlyEffectProperties : IName, IFamily, IEquatable<IReadOnlyEffectProperties>
     {
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public IDevice Device { get; }
 
         [Description("True if the effect runs on the device as opposed to running in this application.")]
@@ -42,14 +43,70 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         #endregion
 
-        [Browsable(false)]
+        public virtual string Family => null;
+
+        [Browsable(false), XmlIgnore]
         public bool IsRunning => Device is not null;
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public string Name => GetType().GetTypeName();
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public IDevice Device { get; private set; }
+
+        #region Equality
+
+        public bool Equals(IReadOnlyEffectProperties other)
+        {
+            if(ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if(ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Equals(Name, other.Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if(ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if(obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((IReadOnlyEffectProperties)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name != null ? Name.GetHashCode() : 0;
+        }
+
+        public static bool operator ==(Effect left, Effect right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Effect left, Effect right)
+        {
+            return !Equals(left, right);
+        }
+
+        #endregion
 
         #region IDisposable
 
@@ -96,7 +153,5 @@ namespace DerekWare.HomeAutomation.Common.Effects
         }
 
         #endregion
-
-        public virtual string Family => null;
     }
 }

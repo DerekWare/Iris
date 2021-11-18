@@ -63,7 +63,7 @@ namespace DerekWare.Iris
             ColorChanged?.Invoke(this, new ColorChangedEventArgs { Color = _Color });
         }
 
-        void ColorBand_ColorsChanged(object sender, ColorBandColorsChangedEventArgs e)
+        void ColorBand_ColorsChanged(object sender, ColorsChangedEventArgs e)
         {
             Color = e.Colors[0];
             ColorChanged?.Invoke(this, new ColorChangedEventArgs { Color = _Color });

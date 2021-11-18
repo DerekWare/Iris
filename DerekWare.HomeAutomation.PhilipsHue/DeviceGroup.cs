@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
+using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
@@ -34,7 +36,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public RoomClass? Class => HueDevice.Class;
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public override IReadOnlyCollection<IDevice> Devices => InternalDevices;
 
         public override string Family => Client.Instance.Family;
@@ -43,6 +45,22 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public GroupType? Type => HueDevice.Type;
         public override string Uuid => HueDevice.Id;
         public override string Vendor => null;
+
+        public override void Dispose()
+        {
+            List<Device> devices;
+
+            lock(InternalDevices.SyncRoot)
+            {
+                devices = InternalDevices.ToList();
+                InternalDevices.Clear();
+            }
+
+            foreach(var device in devices)
+            {
+                device.Dispose();
+            }
+        }
 
         public override void SetFirmwareEffect(object effect)
         {

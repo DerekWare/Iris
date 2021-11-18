@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DerekWare.HomeAutomation.Common;
+using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.Strings;
 using PowerState = DerekWare.HomeAutomation.Common.PowerState;
@@ -21,7 +23,7 @@ namespace DerekWare.Iris
 
         public IDevice Device => (IDevice)Tag;
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnHandleCreated(EventArgs e)
         {
             Device.StateChanged += OnDeviceStateChanged;
             Device.PropertiesChanged += OnDevicePropertiesChanged;
@@ -31,7 +33,15 @@ namespace DerekWare.Iris
             UpdateProperties();
             UpdateState();
 
-            base.OnLoad(e);
+            base.OnHandleCreated(e);
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            Device.StateChanged -= OnDeviceStateChanged;
+            Device.PropertiesChanged -= OnDevicePropertiesChanged;
+
+            base.OnHandleDestroyed(e);
         }
 
         protected void UpdateEffects()
@@ -57,14 +67,11 @@ namespace DerekWare.Iris
         {
             SceneLayoutPanel.Controls.Clear();
 
-            foreach(var properties in SceneFactory.Instance)
+            foreach(var scene in SceneFactory.Instance)
             {
                 var button = new Button
                 {
-                    Dock = DockStyle.Fill,
-                    Text = properties.Name,
-                    Tag = properties,
-                    Enabled = properties.Family.IsNullOrEmpty() || properties.Family.Equals(Device.Family)
+                    Dock = DockStyle.Fill, Text = scene.Name, Tag = scene, Enabled = scene.Family.IsNullOrEmpty() || scene.Family.Equals(Device.Family)
                 };
 
                 button.Click += SceneButton_Click;
@@ -85,14 +92,12 @@ namespace DerekWare.Iris
             SolidColorPanel.Color = Device.Color;
             ZoneColorBand.Colors = Device.MultiZoneColors.ToArray();
 
-            // TODO
-#if false
-            var activeEffects = GetDevices().Select(i => i.ActiveEffect).WhereNotNull().Select(i => i.GetType()).ToHashSet();
+            var activeEffects = Device.Effects;
 
             foreach(var button in EffectLayoutPanel.Controls.OfType<Button>())
             {
-                var effectType = (Type)button.Tag;
-                var isActive = activeEffects.Contains(effectType);
+                var effect = (IReadOnlyEffectProperties)button.Tag;
+                var isActive = activeEffects.Contains(effect);
 
                 if(isActive)
                 {
@@ -106,7 +111,6 @@ namespace DerekWare.Iris
                     button.UseVisualStyleBackColor = true;
                 }
             }
-#endif
 
             InUpdate = false;
         }
@@ -187,7 +191,7 @@ namespace DerekWare.Iris
             InUpdate = false;
         }
 
-        void ZoneColorBand_ColorsChanged(object sender, ColorBandColorsChangedEventArgs e)
+        void ZoneColorBand_ColorsChanged(object sender, ColorsChangedEventArgs e)
         {
             InUpdate = true;
             EffectFactory.Instance.Stop(Device);

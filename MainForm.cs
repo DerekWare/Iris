@@ -96,8 +96,12 @@ namespace DerekWare.Iris
 
         void DeviceTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            RootLayoutPanel.Controls.RemoveWhere<object>(i => i is ActionPanel);
-
+            foreach(var i in RootLayoutPanel.Controls.OfType<ActionPanel>())
+            {
+                RootLayoutPanel.Controls.Remove(i);
+                i.Dispose();
+            }
+            
             if(e.Node is not DeviceTreeView.DeviceNode node)
             {
                 return;
@@ -130,7 +134,9 @@ namespace DerekWare.Iris
             // Update the device list, pruning any addresses that were unreachable
             // TODO make a standard way of detecting valid devices
             Settings.Default.LifxDevices = new StringCollection();
-            Settings.Default.LifxDevices.AddRange(LifxClient.Instance.Devices.WhereNotNull(i => i.Product).Select(i => i.Uuid).ToArray()); // TODO don't use Uuid?
+            Settings.Default.LifxDevices.AddRange(LifxClient.Instance.Devices.WhereNotNull(i => i.Product)
+                                                            .Select(i => i.Uuid)
+                                                            .ToArray()); // TODO don't use Uuid?
             Settings.Default.Save();
         }
 

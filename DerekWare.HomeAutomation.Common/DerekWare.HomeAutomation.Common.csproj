@@ -84,11 +84,13 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeviceStateRefreshTask.cs" />
     <Compile Include="Effects\Calliope.cs" />
     <Compile Include="Effects\Effect.cs" />
     <Compile Include="Effects\EffectFactory.cs" />
     <Compile Include="Effects\EffectRenderer.cs" />
     <Compile Include="Effects\Expando.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Effects\Move.cs" />
     <Compile Include="Effects\MultiZoneColorEffectRenderer.cs" />

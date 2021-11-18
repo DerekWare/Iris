@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
+using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
@@ -34,13 +36,29 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             InternalDevices.CollectionChanged += OnContentsChanged;
         }
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public override IReadOnlyCollection<IDevice> Devices => InternalDevices;
 
         public override string Family => Client.Instance.Family;
         public override string Name { get; }
         public override string Uuid { get; }
         public override string Vendor => null;
+
+        public override void Dispose()
+        {
+            List<Device> devices;
+
+            lock(InternalDevices.SyncRoot)
+            {
+                devices = InternalDevices.ToList();
+                InternalDevices.Clear();
+            }
+
+            foreach(var device in devices)
+            {
+                device.Dispose();
+            }
+        }
 
         public override string ToString()
         {

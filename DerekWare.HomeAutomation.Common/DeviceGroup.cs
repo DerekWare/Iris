@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common.Effects;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -29,15 +31,21 @@ namespace DerekWare.HomeAutomation.Common
         public abstract string Uuid { get; }
         public abstract string Vendor { get; }
 
+        #region IDisposable
+
+        public abstract void Dispose();
+
+        #endregion
+
         public virtual int DeviceCount => Devices.Count;
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public virtual IReadOnlyCollection<IDeviceGroup> Groups => Array.Empty<IDeviceGroup>();
 
         public virtual bool IsColor { get { return Devices.Any(i => i.IsColor); } }
         public virtual bool IsMultiZone => true;
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public virtual string Product => null;
 
         public virtual int ZoneCount
@@ -53,10 +61,13 @@ namespace DerekWare.HomeAutomation.Common
             }
         }
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
+        public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
+
+        [Browsable(false), XmlIgnore]
         public virtual Color Color { get => Devices.FirstOrDefault()?.Color ?? new Color(); set => SetColor(value, TimeSpan.Zero); }
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public virtual IReadOnlyCollection<Color> MultiZoneColors
         {
             get
@@ -78,7 +89,7 @@ namespace DerekWare.HomeAutomation.Common
             set => SetMultiZoneColors(value, TimeSpan.Zero);
         }
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public PowerState Power { get { return Devices.Any(i => i.Power == PowerState.On) ? PowerState.On : PowerState.Off; } set => SetPower(value); }
 
         public override string ToString()

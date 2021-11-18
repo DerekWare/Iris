@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 {
     // TODO property accessors aren't thread safe
-    public class Device : IDevice, IEquatable<Device>
+    public class Device : IDevice, IEquatable<Device>, IDisposable
     {
         internal SynchronizedHashSet<DeviceGroup> InternalGroups = new();
 
@@ -25,6 +27,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         Products.Product _Product;
         Products.Vendor _Vendor;
         WaveformSettings _Waveform;
+        DeviceStateRefreshTask RefreshTask;
 
         public event EventHandler<DeviceEventArgs> PropertiesChanged;
         public event EventHandler<DeviceEventArgs> StateChanged;
@@ -39,12 +42,12 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public int DeviceCount => 1;
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public IReadOnlyCollection<IDevice> DeviceList => new IDevice[] { this };
 
         public string Family => Client.Instance.Family;
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups;
 
         public string IpAddress => Controller.IpAddress;
@@ -65,21 +68,23 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public int ZoneCount => MultiZoneColors.Count;
 
-        [Browsable(false)]
+        public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
+
+        [Browsable(false), XmlIgnore]
         public Color Color { get => _Color; set => SetColor(value); }
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public IReadOnlyCollection<Color> MultiZoneColors { get => _MultiZoneColors; set => SetMultiZoneColors(value); }
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public MultiZoneEffectSettings MultiZoneEffect { get => _MultiZoneEffect; set => SetMultiZoneEffect(value); }
 
         public string Name { get; private set; }
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public PowerState Power { get => _Power; set => SetPower(value); }
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public WaveformSettings Waveform { get => _Waveform; set => SetWaveform(value); }
 
         public async Task RefreshProperties()
@@ -120,6 +125,12 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                 {
                     _Power = response.Power;
                     OnDeviceStateChanged();
+
+                    // If we're turned off, stop running effects
+                    if(Power == PowerState.Off)
+                    {
+                        EffectFactory.Instance.Stop(this);
+                    }
                 }
             });
 
@@ -217,6 +228,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         {
             await RefreshProperties();
             await RefreshState();
+
+            RefreshTask = new DeviceStateRefreshTask(this);
         }
 
         #region Equality
@@ -348,6 +361,15 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         void IDeviceState.RefreshState()
         {
             RefreshState();
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        public virtual void Dispose()
+        {
+            Extensions.Dispose(ref RefreshTask);
         }
 
         #endregion

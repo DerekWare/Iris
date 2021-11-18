@@ -3,7 +3,7 @@ using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.Iris
 {
-    public class ColorBandColorsChangedEventArgs : EventArgs
+    public class ColorsChangedEventArgs : EventArgs
     {
         public Color[] Colors;
     }

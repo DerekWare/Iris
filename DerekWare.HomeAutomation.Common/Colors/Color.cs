@@ -47,7 +47,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
             set
             {
                 Debug.Assert(value is >= 0 and <= 1);
-                _Brightness = Math.Min(Math.Max(value, 0), 1);
+                _Brightness = value.Clamp(0, 1);
             }
         }
 
@@ -57,8 +57,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
             set
             {
                 Debug.Assert(value is >= 0 and <= 1);
-                _Hue = Math.Min(Math.Max(value, 0), 1);
-                ;
+                _Hue = value.Clamp(0, 1);
             }
         }
 
@@ -68,8 +67,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
             set
             {
                 Debug.Assert(value is >= 0 and <= 1);
-                _Kelvin = Math.Min(Math.Max(value, 0), 1);
-                ;
+                _Kelvin = value.Clamp(0, 1);
             }
         }
 
@@ -79,8 +77,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
             set
             {
                 Debug.Assert(value is >= 0 and <= 1);
-                _Saturation = Math.Min(Math.Max(value, 0), 1);
-                ;
+                _Saturation = value.Clamp(0, 1);
             }
         }
 

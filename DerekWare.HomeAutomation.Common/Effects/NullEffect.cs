@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Xml.Serialization;
 using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -7,10 +8,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
     [Name("Stop")]
     public class NullEffect : Effect
     {
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public override bool IsFirmware => false;
 
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public override bool IsMultiZone => false;
 
         public override object Clone()

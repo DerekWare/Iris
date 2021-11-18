@@ -130,7 +130,7 @@
     <Compile Include="ConnectDeviceDialog.Designer.cs">
       <DependentUpon>ConnectDeviceDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ColorBandColorsChangedEventArgs.cs" />
+    <Compile Include="ColorsChangedEventArgs.cs" />
     <Compile Include="ColorChangedEventArgs.cs" />
     <Compile Include="DeviceTreeView.cs">
       <SubType>Component</SubType>
@@ -247,5 +247,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
