@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
+using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.Iris.Properties;
 using DerekWare.Strings;
 using LifxClient = DerekWare.HomeAutomation.Lifx.Lan.Client;

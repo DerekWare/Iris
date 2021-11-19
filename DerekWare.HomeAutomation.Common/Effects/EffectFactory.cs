@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DerekWare.Collections;
-using DerekWare.HomeAutomation.Common.Effects;
 
-namespace DerekWare.HomeAutomation.Common
+namespace DerekWare.HomeAutomation.Common.Effects
 {
     public interface IEffectFactory : IFactory<IEffect, IReadOnlyEffectProperties>
     {

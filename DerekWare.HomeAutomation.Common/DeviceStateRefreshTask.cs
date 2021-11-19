@@ -6,15 +6,11 @@ namespace DerekWare.HomeAutomation.Common
 {
     public class DeviceStateRefreshTask : IDisposable
     {
-        readonly CancellationTokenSource CancellationTokenSource = new();
         readonly IDevice Device;
-        readonly Task Task;
         readonly TimeSpan Timeout;
 
-        public DeviceStateRefreshTask(IDevice device)
-            : this(device, TimeSpan.FromSeconds(10))
-        {
-        }
+        CancellationTokenSource CancellationTokenSource = new();
+        Task Task;
 
         public DeviceStateRefreshTask(IDevice device, TimeSpan timeout)
         {
@@ -36,8 +32,11 @@ namespace DerekWare.HomeAutomation.Common
 
         public virtual void Dispose()
         {
-            CancellationTokenSource.Cancel();
-            Task.Wait();
+            CancellationTokenSource?.Cancel();
+            Task?.Wait();
+
+            CancellationTokenSource = null;
+            Task = null;
         }
 
         #endregion

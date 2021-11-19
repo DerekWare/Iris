@@ -26,7 +26,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         protected double ColorOffset;
         protected EffectDirection Direction;
         protected TimeSpan NextChange = TimeSpan.Zero;
-        protected RenderState RenderState;
+        protected RenderState _RenderState;
 
         Color[] Colors;
 
@@ -62,7 +62,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
                 case EffectBehavior.Bounce:
                     // Every cycle, reverse the direction
-                    if(renderState.CycleCount != RenderState?.CycleCount)
+                    if(renderState.CycleCount != _RenderState?.CycleCount)
                     {
                         Direction = Direction == EffectDirection.Left ? EffectDirection.Right : EffectDirection.Left;
                     }
@@ -117,7 +117,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 Colors[colorOffset++] = i;
             }
 
-            RenderState = renderState.Clone();
+            _RenderState = renderState.Clone();
             colors = Colors;
             return true;
         }

@@ -9,7 +9,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
     {
         readonly Scenes.Calliope Scene = new();
 
-        RenderState RenderState;
+        RenderState _RenderState;
 
         [Range(typeof(double), "0", "1")]
         public double Brightness { get => Scene.Brightness; set => Scene.Brightness = value; }
@@ -30,14 +30,14 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override bool GetColors(RenderState renderState, out IReadOnlyCollection<Color> colors)
         {
-            if(renderState.CycleCount == RenderState?.CycleCount)
+            if(renderState.CycleCount == _RenderState?.CycleCount)
             {
                 colors = null;
                 return false;
             }
 
             colors = Scene.GetPalette(Device).ToList();
-            RenderState = renderState.Clone();
+            _RenderState = renderState.Clone();
             return true;
         }
     }

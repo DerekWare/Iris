@@ -7,6 +7,7 @@ using DerekWare.HomeAutomation.Common;
 using DerekWare.Strings;
 using LifxClient = DerekWare.HomeAutomation.Lifx.Lan.Client;
 using HueClient = DerekWare.HomeAutomation.PhilipsHue.Client;
+using PowerState = DerekWare.HomeAutomation.Common.PowerState;
 
 namespace DerekWare.Iris
 {
@@ -15,6 +16,9 @@ namespace DerekWare.Iris
         readonly TreeNode Devices = new("Devices");
         readonly Dictionary<string, FamilyNode> Families = new();
         readonly TreeNode Groups = new("Groups");
+        readonly TreeNode PowerOff = new("Power Off");
+        readonly TreeNode PowerOn = new("Power On");
+        readonly TreeNode EffectActive = new("Effect Active");
 
         public DeviceTreeView()
         {
@@ -25,11 +29,16 @@ namespace DerekWare.Iris
 
             TreeNode.Add(Nodes, Groups);
             TreeNode.Add(Nodes, Devices);
+            TreeNode.Add(Nodes, PowerOn);
+            TreeNode.Add(Nodes, PowerOff);
+            TreeNode.Add(Nodes, EffectActive);
 
             HueClient.Instance.DeviceDiscovered += OnDeviceChanged;
             HueClient.Instance.PropertiesChanged += OnDeviceChanged;
+            HueClient.Instance.StateChanged += OnDeviceChanged;
             LifxClient.Instance.DeviceDiscovered += OnDeviceChanged;
             LifxClient.Instance.PropertiesChanged += OnDeviceChanged;
+            LifxClient.Instance.StateChanged += OnDeviceChanged;
         }
 
         void Update(IDevice device)
@@ -40,16 +49,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            var group = device as IDeviceGroup;
-
-            if(group is not null)
-            {
-                GroupNode.Add(Groups.Nodes, group);
-            }
-            else
-            {
-                DeviceNode.Add(Devices.Nodes, device);
-            }
+            DeviceNode.Add(device is IDeviceGroup ? Groups.Nodes : Devices.Nodes, device);
 
             if(!device.Family.IsNullOrEmpty())
             {
@@ -60,14 +60,38 @@ namespace DerekWare.Iris
                     TreeNode.Add(Nodes, familyNode);
                 }
 
-                if(group is not null)
+                DeviceNode.Add(device is IDeviceGroup ? familyNode.Groups.Nodes : familyNode.Devices.Nodes, device);
+            }
+
+            if(device.Power == PowerState.On)
+            {
+                foreach(var i in PowerOff.Nodes.OfType<DeviceNode>().ToList().Where(i => Equals(i.Device, device)))
                 {
-                    GroupNode.Add(familyNode.Groups.Nodes, group);
+                    PowerOff.Nodes.Remove(i);
                 }
-                else
+
+                DeviceNode.Add(PowerOn.Nodes, device);
+            }
+            else
+            {
+                foreach(var i in PowerOn.Nodes.OfType<DeviceNode>().ToList().Where(i => Equals(i.Device, device)))
                 {
-                    DeviceNode.Add(familyNode.Devices.Nodes, device);
+                    PowerOff.Nodes.Remove(i);
                 }
+
+                DeviceNode.Add(PowerOff.Nodes, device);
+            }
+
+            if(device.Effects.IsNullOrEmpty())
+            {
+                foreach(var i in EffectActive.Nodes.OfType<DeviceNode>().ToList().Where(i => Equals(i.Device, device)))
+                {
+                    EffectActive.Nodes.Remove(i);
+                }
+            }
+            else
+            {
+                DeviceNode.Add(EffectActive.Nodes, device);
             }
         }
 
@@ -92,7 +116,14 @@ namespace DerekWare.Iris
 
             public static void Add(TreeNodeCollection parent, IDevice device)
             {
-                Add<DeviceNode>(parent, device);
+                if(device is IDeviceGroup group)
+                {
+                    Add<GroupNode>(parent, group);
+                }
+                else
+                {
+                    Add<DeviceNode>(parent, device);
+                }
             }
         }
 

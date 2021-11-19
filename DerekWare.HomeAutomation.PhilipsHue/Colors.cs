@@ -45,7 +45,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             return new Color(h, s, b, m);
         }
 
-        public static Color FromHueColor(State state)
+        public static Color FromState(State state)
         {
             return FromHueColor(state.Hue, state.Saturation, state.Brightness, state.ColorTemperature);
         }
@@ -63,7 +63,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             m = (int)(MiredMin + (src.Kelvin * (MiredMax - MiredMin)));
         }
 
-        public static void ToHueColor(this Color src, State state)
+        public static void ToState(this Color src, State state)
         {
             // For colors, set hue, saturation, brightness; for white, set brightness and mired/colortemp
             ToHueColor(src, out var h, out var s, out var b, out var m);
@@ -82,6 +82,31 @@ namespace DerekWare.HomeAutomation.PhilipsHue
                 state.Brightness = b;
                 state.ColorTemperature = null;
             }
+        }
+
+        public static LightCommand ToLightCommand(this Color src)
+        {
+            // For colors, set hue, saturation, brightness; for white, set brightness and mired/colortemp
+            ToHueColor(src, out var h, out var s, out var b, out var m);
+            
+            var cmd = new LightCommand();
+
+            if(src.IsWhite)
+            {
+                cmd.Hue = null;
+                cmd.Saturation = null;
+                cmd.Brightness = b;
+                cmd.ColorTemperature = m;
+            }
+            else
+            {
+                cmd.Hue = h;
+                cmd.Saturation = s;
+                cmd.Brightness = b;
+                cmd.ColorTemperature = null;
+            }
+
+            return cmd;
         }
     }
 }
