@@ -2,7 +2,7 @@
 
 namespace DerekWare.HomeAutomation.Common
 {
-    public static class Extensions
+    public static class DeviceExtensions
     {
         public static IReadOnlyCollection<IDevice> GetDevices(this IDevice device)
         {

@@ -15,13 +15,13 @@ namespace DerekWare.Iris
 
         #region Event Handlers
 
-        void CancelButton_Click(object sender, EventArgs e)
+        protected void CancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
 
-        void OkButton_Click(object sender, EventArgs e)
+        protected void OkButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();

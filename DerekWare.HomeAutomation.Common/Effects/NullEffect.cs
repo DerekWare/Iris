@@ -21,7 +21,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         public override void Start(IDevice device)
         {
-            EffectFactory.Instance.Stop(device);
+            EffectFactory.Instance.StopEffect(device);
         }
 
         public override void Stop(bool wait = true)

@@ -126,7 +126,7 @@ namespace DerekWare.Iris
             // method from running and clearing that invalid address out of the list.
             try
             {
-                EffectFactory.Instance.StopAll();
+                EffectFactory.Instance.StopAllEffects();
             }
             catch
             {

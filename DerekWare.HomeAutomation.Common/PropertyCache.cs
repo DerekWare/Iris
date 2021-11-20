@@ -55,7 +55,7 @@ namespace DerekWare.HomeAutomation.Common
                 return;
             }
 
-            var properties = Reflection.GetWritableProperties(type).Select(i => new KeyValuePair<string, PropertyInfo>(i.Name, i)).ToDictionary();
+            var properties = Factory.GetWritableProperties(type).Select(i => new KeyValuePair<string, PropertyInfo>(i.Name, i)).ToDictionary();
 
             foreach(var cacheItem in cache)
             {
@@ -93,7 +93,7 @@ namespace DerekWare.HomeAutomation.Common
         public static void SaveProperties(object obj)
         {
             var type = obj.GetType();
-            var properties = Reflection.GetWritableProperties(type);
+            var properties = Factory.GetWritableProperties(type);
             var cache = new Dictionary<string, object>();
 
             // Special-case non-serializable types

@@ -213,7 +213,7 @@ namespace DerekWare.HomeAutomation.Common
 
             if(PowerState.Off == _Power)
             {
-                EffectFactory.Instance.Stop(this);
+                EffectFactory.Instance.StopEffect(this);
             }
         }
 

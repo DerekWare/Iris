@@ -90,7 +90,7 @@
     <Compile Include="Effects\EffectFactory.cs" />
     <Compile Include="Effects\EffectRenderer.cs" />
     <Compile Include="Effects\Bloom.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="DeviceExtensions.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Effects\Move.cs" />
     <Compile Include="Effects\MultiZoneColorEffectRenderer.cs" />
@@ -106,9 +106,8 @@
     <Compile Include="Colors\StandardColors.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Device.cs" />
-    <Compile Include="Factory.cs" />
+    <Compile Include="FactoryExtensions.cs" />
     <Compile Include="PropertyCache.cs" />
-    <Compile Include="Reflection.cs" />
     <Compile Include="DeviceGroup.cs" />
     <Compile Include="PowerState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

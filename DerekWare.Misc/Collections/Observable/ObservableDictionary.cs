@@ -7,8 +7,11 @@ using System.Diagnostics;
 
 namespace DerekWare.Collections
 {
-    public interface IObservableDictionary<TKey, TValue>
-        : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, ILookup<TKey, TValue>, ICollection, IObservableCollectionNotifier
+    public interface IObservableDictionary<TKey, TValue> : IReadOnlyObservableDictionary<TKey, TValue>, IDictionary<TKey, TValue>
+    {
+    }
+
+    public interface IReadOnlyObservableDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>, ILookup<TKey, TValue>, IObservableCollectionNotifier
     {
         IEqualityComparer<TKey> Comparer { get; }
     }
@@ -69,6 +72,11 @@ namespace DerekWare.Collections
             items.ForEach(Add);
         }
 
+        public virtual void CopyTo(Array array, int index)
+        {
+            Items.ForEach(i => array.SetValue(i, index++));
+        }
+
         public virtual TValue GetValue(TKey key)
         {
             return Items[key];
@@ -101,15 +109,6 @@ namespace DerekWare.Collections
 
             return true;
         }
-
-        #region ICollection
-
-        public virtual void CopyTo(Array array, int index)
-        {
-            Items.ForEach(i => array.SetValue(i, index++));
-        }
-
-        #endregion
 
         #region ICollection<KeyValuePair<TKey,TValue>>
 
@@ -149,11 +148,6 @@ namespace DerekWare.Collections
             Notifier.OnAdd(key);
         }
 
-        public virtual bool ContainsKey(TKey key)
-        {
-            return Items.ContainsKey(key);
-        }
-
         public virtual bool Remove(TKey key)
         {
             if(!Items.Remove(key))
@@ -163,11 +157,6 @@ namespace DerekWare.Collections
 
             Notifier.OnRemove(key);
             return true;
-        }
-
-        public virtual bool TryGetValue(TKey key, out TValue value)
-        {
-            return Items.TryGetValue(key, out value);
         }
 
         #endregion
@@ -186,6 +175,20 @@ namespace DerekWare.Collections
         public virtual IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return Items.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IReadOnlyDictionary<TKey,TValue>
+
+        public virtual bool ContainsKey(TKey key)
+        {
+            return Items.ContainsKey(key);
+        }
+
+        public virtual bool TryGetValue(TKey key, out TValue value)
+        {
+            return Items.TryGetValue(key, out value);
         }
 
         #endregion

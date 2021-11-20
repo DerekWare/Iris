@@ -121,7 +121,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             Device = device;
 
             // Stop all other effects on the given devices
-            EffectFactory.Instance.Stop(Device);
+            EffectFactory.Instance.StopEffect(Device);
 
             // Register with the factory
             EffectFactory.Instance.OnEffectStarted(this);

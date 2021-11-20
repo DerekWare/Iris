@@ -16,14 +16,14 @@ namespace DerekWare.Iris
 
         public ActionPanel(IDevice device)
         {
-            Tag = device;
+            Device = device;
 
             InitializeComponent();
         }
 
-        public IDevice Device => (IDevice)Tag;
+        public IDevice Device { get; }
 
-        protected override void OnHandleCreated(EventArgs e)
+        protected void AttachDevice()
         {
             Device.StateChanged += OnDeviceStateChanged;
             Device.PropertiesChanged += OnDevicePropertiesChanged;
@@ -32,15 +32,23 @@ namespace DerekWare.Iris
             UpdateEffects();
             UpdateProperties();
             UpdateState();
+        }
 
+        protected void DetachDevice()
+        {
+            Device.StateChanged -= OnDeviceStateChanged;
+            Device.PropertiesChanged -= OnDevicePropertiesChanged;
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            AttachDevice();
             base.OnHandleCreated(e);
         }
 
         protected override void OnHandleDestroyed(EventArgs e)
         {
-            Device.StateChanged -= OnDeviceStateChanged;
-            Device.PropertiesChanged -= OnDevicePropertiesChanged;
-
+            DetachDevice();
             base.OnHandleDestroyed(e);
         }
 
@@ -163,7 +171,7 @@ namespace DerekWare.Iris
             var powerState = (PowerState)PowerComboBox.SelectedIndex;
 
             InUpdate = true;
-            EffectFactory.Instance.Stop(Device);
+            EffectFactory.Instance.StopEffect(Device);
             Device.Power = powerState;
             InUpdate = false;
         }
@@ -178,7 +186,7 @@ namespace DerekWare.Iris
             }
 
             InUpdate = true;
-            EffectFactory.Instance.Stop(Device);
+            EffectFactory.Instance.StopEffect(Device);
             scene.Apply(Device);
             InUpdate = false;
         }
@@ -186,7 +194,7 @@ namespace DerekWare.Iris
         void SolidColorPanel_ColorChanged(object sender, ColorChangedEventArgs e)
         {
             InUpdate = true;
-            EffectFactory.Instance.Stop(Device);
+            EffectFactory.Instance.StopEffect(Device);
             Device.Color = e.Color;
             InUpdate = false;
         }
@@ -194,7 +202,7 @@ namespace DerekWare.Iris
         void ZoneColorBand_ColorsChanged(object sender, ColorsChangedEventArgs e)
         {
             InUpdate = true;
-            EffectFactory.Instance.Stop(Device);
+            EffectFactory.Instance.StopEffect(Device);
             Device.MultiZoneColors = e.Colors;
             InUpdate = false;
         }

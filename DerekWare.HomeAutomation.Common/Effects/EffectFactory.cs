@@ -4,12 +4,12 @@ using DerekWare.Collections;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    public interface IEffectFactory : IFactory<IEffect, IReadOnlyEffectProperties>
+    public interface IEffectFactory : IFactory<IEffect>
     {
         public IReadOnlyCollection<Effect> RunningEffects { get; }
     }
 
-    public class EffectFactory : Factory<IEffect, IReadOnlyEffectProperties>, IEffectFactory
+    public class EffectFactory : Factory<IEffect>, IEffectFactory
     {
         public static readonly EffectFactory Instance = new();
 
@@ -19,7 +19,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         {
         }
 
-        public IReadOnlyCollection<Effect> RunningEffects => _RunningEffects.ToList();
+        public IReadOnlyCollection<Effect> RunningEffects => _RunningEffects;
 
         public IEnumerable<IEffect> GetRunningEffects(IDevice device)
         {
@@ -39,7 +39,12 @@ namespace DerekWare.HomeAutomation.Common.Effects
             }
         }
 
-        public void Stop(IDevice device)
+        public void StopAllEffects()
+        {
+            RunningEffects.ForEach(i => i.Stop());
+        }
+
+        public void StopEffect(IDevice device)
         {
             // Stop any firmware effects that might be running
             device.SetFirmwareEffect(null);
@@ -50,14 +55,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
             GetRunningEffects(device).ForEach(effect => effect.Stop());
         }
 
-        public void Stop(IEnumerable<IDevice> devices)
+        public void StopEffect(IEnumerable<IDevice> devices)
         {
-            devices.ForEach(Stop);
-        }
-
-        public void StopAll()
-        {
-            RunningEffects.ForEach(i => i.Stop());
+            devices.ForEach(StopEffect);
         }
 
         internal void OnEffectStarted(Effect effect)
