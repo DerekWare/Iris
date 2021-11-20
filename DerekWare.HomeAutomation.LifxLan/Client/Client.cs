@@ -65,6 +65,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
         public IReadOnlyCollection<IDevice> Devices => InternalDevices.Values.ToList<IDevice>();
         public string Family => "LIFX";
         public IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups.Values.ToList<IDeviceGroup>();
+        public TimeSpan MinMessageInterval => TimeSpan.FromMilliseconds(50);
 
         public void Connect(string ipAddress)
         {

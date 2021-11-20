@@ -14,9 +14,9 @@ namespace DerekWare.HomeAutomation.Common
         public static IEnumerable<PropertyInfo> GetProperties(Type type)
         {
             return from p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                   let b = type.GetCustomAttributes<BrowsableAttribute>(true).FirstOrDefault()
-                   where b is null || b.Browsable
                    where p.CanRead
+                   let b = p.GetCustomAttributes<BrowsableAttribute>(true).ToList()
+                   where (b.Count <= 0) || b.First().Browsable
                    select p;
         }
 

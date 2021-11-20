@@ -19,5 +19,8 @@ namespace DerekWare.HomeAutomation.Common
 
         IReadOnlyCollection<IDevice> Devices { get; }
         IReadOnlyCollection<IDeviceGroup> Groups { get; }
+        
+        // The minimum amount of time between messages sent to this client to prevent overrun.
+        TimeSpan MinMessageInterval { get; }
     }
 }

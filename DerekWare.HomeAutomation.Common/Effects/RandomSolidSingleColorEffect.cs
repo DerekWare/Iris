@@ -10,8 +10,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
     {
         readonly Random Random = new();
 
-        int CycleCount = -1;
-
         [Range(typeof(double), "0", "1")]
         public double Brightness { get; set; } = 1;
 
@@ -31,7 +29,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override bool GetColor(RenderState state, out Color color)
         {
-            if(state.CycleCount == CycleCount)
+            if(!state.CycleCountChanged)
             {
                 color = null;
                 return false;
@@ -45,7 +43,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 Kelvin = Kelvin
             };
 
-            CycleCount = state.CycleCount;
             return true;
         }
     }

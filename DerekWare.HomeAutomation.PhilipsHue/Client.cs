@@ -70,6 +70,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public IReadOnlyCollection<IDevice> Devices => InternalDevices.Values.ToList();
         public string Family => "Philips Hue";
         public IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups;
+        public TimeSpan MinMessageInterval => TimeSpan.FromMilliseconds(100);
 
         internal LocalHueClient HueClient { get; private set; }
 

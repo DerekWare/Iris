@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Scenes;
 
@@ -26,9 +27,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
         protected double ColorOffset;
         protected EffectDirection Direction;
         protected TimeSpan NextChange = TimeSpan.Zero;
-        protected RenderState _RenderState;
-
-        Color[] Colors;
 
         public Move()
         {
@@ -38,17 +36,13 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public override bool IsMultiZone => true;
         public virtual EffectBehavior Behavior { get; set; }
 
-        protected Scene Scene { get; set; }
-
         public override object Clone()
         {
             return MemberwiseClone();
         }
 
-        protected override bool GetColors(RenderState renderState, out IReadOnlyCollection<Color> colors)
+        protected override bool UpdateColors(RenderState renderState, ref Color[] colors)
         {
-            Palette ??= Scene is not null ? Scene.GetPalette(Device).ToArray() : Device.MultiZoneColors.ToArray();
-
             // Decide the direction of movement based on the effect behavior
             switch(Behavior)
             {
@@ -62,7 +56,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
                 case EffectBehavior.Bounce:
                     // Every cycle, reverse the direction
-                    if(renderState.CycleCount != _RenderState?.CycleCount)
+                    if(renderState.CycleCountChanged)
                     {
                         Direction = Direction == EffectDirection.Left ? EffectDirection.Right : EffectDirection.Left;
                     }
@@ -80,10 +74,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                     break;
             }
 
-            var colorCount = Palette.Count;
             int colorOffset;
-
-            Colors ??= new Color[colorCount];
 
             // Using different algorithms for Random and the others because of possible drift
             // that isn't apparent in Random.
@@ -104,28 +95,26 @@ namespace DerekWare.HomeAutomation.Common.Effects
                     ColorOffset += 1;
                 }
 
-                colorOffset = (int)(ColorOffset * colorCount);
+                colorOffset = (int)(ColorOffset * colors.Length);
             }
             else
             {
-                colorOffset = (int)((Direction == EffectDirection.Left ? renderState.CyclePosition : 1 - renderState.CyclePosition) * colorCount);
+                colorOffset = (int)((Direction == EffectDirection.Left ? renderState.CyclePosition : 1 - renderState.CyclePosition) * colors.Length);
             }
 
             foreach(var i in Palette)
             {
-                colorOffset %= colorCount;
-                Colors[colorOffset++] = i;
+                colorOffset %= colors.Length;
+                colors[colorOffset++] = i;
             }
 
-            _RenderState = renderState.Clone();
-            colors = Colors;
             return true;
         }
 
         protected override TimeSpan ValidateRefreshRate()
         {
             var refreshRate = base.ValidateRefreshRate().TotalSeconds;
-            refreshRate = Math.Max(refreshRate, 1.0 / ZoneCount);
+            refreshRate = Math.Max(refreshRate, 1.0 / Palette.Count);
             refreshRate = Math.Max(refreshRate, 1.0 / Duration.TotalSeconds);
             return TimeSpan.FromSeconds(refreshRate);
         }

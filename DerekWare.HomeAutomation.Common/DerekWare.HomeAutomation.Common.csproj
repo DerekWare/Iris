@@ -89,7 +89,7 @@
     <Compile Include="Effects\Effect.cs" />
     <Compile Include="Effects\EffectFactory.cs" />
     <Compile Include="Effects\EffectRenderer.cs" />
-    <Compile Include="Effects\Expando.cs" />
+    <Compile Include="Effects\Bloom.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Effects\Move.cs" />
@@ -112,10 +112,13 @@
     <Compile Include="DeviceGroup.cs" />
     <Compile Include="PowerState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\BrightWhite.cs" />
     <Compile Include="Scenes\Calliope.cs" />
     <Compile Include="Scenes\Scene.cs" />
     <Compile Include="Scenes\SceneFactory.cs" />
     <Compile Include="Scenes\Spectrum.cs" />
+    <Compile Include="Scenes\UserScene.cs" />
+    <Compile Include="Scenes\WarmWhite.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DerekWare.Misc\DerekWare.Misc.csproj">

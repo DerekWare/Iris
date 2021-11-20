@@ -25,8 +25,8 @@ namespace DerekWare.HomeAutomation.Common
         public abstract event EventHandler<DeviceEventArgs> PropertiesChanged;
         public abstract event EventHandler<DeviceEventArgs> StateChanged;
 
+        public abstract IClient Client { get; }
         public abstract IReadOnlyCollection<IDevice> Devices { get; }
-        public abstract string Family { get; }
         public abstract string Name { get; }
         public abstract string Uuid { get; }
         public abstract string Vendor { get; }
@@ -38,6 +38,11 @@ namespace DerekWare.HomeAutomation.Common
         #endregion
 
         public virtual int DeviceCount => Devices.Count;
+
+        [Browsable(false), XmlIgnore]
+        public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
+
+        public virtual string Family => Client.Family;
 
         [Browsable(false), XmlIgnore]
         public virtual IReadOnlyCollection<IDeviceGroup> Groups => Array.Empty<IDeviceGroup>();
@@ -60,9 +65,6 @@ namespace DerekWare.HomeAutomation.Common
                 return Math.Max(multizoneCount, singleCount);
             }
         }
-
-        [Browsable(false), XmlIgnore]
-        public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
 
         [Browsable(false), XmlIgnore]
         public virtual Color Color { get => Devices.FirstOrDefault()?.Color ?? new Color(); set => SetColor(value, TimeSpan.Zero); }

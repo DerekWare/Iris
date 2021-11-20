@@ -14,11 +14,11 @@ namespace DerekWare.Iris
     class DeviceTreeView : TreeView
     {
         readonly TreeNode Devices = new("Devices");
+        readonly TreeNode EffectActive = new("Effect Active");
         readonly Dictionary<string, FamilyNode> Families = new();
         readonly TreeNode Groups = new("Groups");
         readonly TreeNode PowerOff = new("Power Off");
         readonly TreeNode PowerOn = new("Power On");
-        readonly TreeNode EffectActive = new("Effect Active");
 
         public DeviceTreeView()
         {
@@ -127,16 +127,11 @@ namespace DerekWare.Iris
             }
         }
 
-        public class FamilyNode : TreeNode
+        public class FamilyNode : ParentNode
         {
-            public readonly TreeNode Devices = new("Devices");
-            public readonly TreeNode Groups = new("Groups");
-
             public FamilyNode(string name)
                 : base(name)
             {
-                Add(Nodes, Devices);
-                Add(Nodes, Groups);
             }
         }
 
@@ -153,6 +148,19 @@ namespace DerekWare.Iris
             public static void Add(TreeNodeCollection parent, IDeviceGroup device)
             {
                 Add<GroupNode>(parent, device);
+            }
+        }
+
+        public class ParentNode : TreeNode
+        {
+            public readonly TreeNode Devices = new("Devices");
+            public readonly TreeNode Groups = new("Groups");
+
+            public ParentNode(string name)
+                : base(name)
+            {
+                Add(Nodes, Devices);
+                Add(Nodes, Groups);
             }
         }
 
@@ -196,7 +204,7 @@ namespace DerekWare.Iris
                 {
                     child = (T)Add(parent, (T)Activator.CreateInstance(typeof(T), device));
                 }
-                else
+                else if(!child.Text.Equals(device.Name))
                 {
                     child.Text = device.Name;
                 }

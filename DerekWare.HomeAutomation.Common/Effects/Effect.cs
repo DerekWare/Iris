@@ -16,22 +16,17 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
     public interface IReadOnlyEffectProperties : IName, IFamily, IEquatable<IReadOnlyEffectProperties>
     {
-        [Browsable(false), XmlIgnore]
         public IDevice Device { get; }
-
-        [Description("True if the effect runs on the device as opposed to running in this application.")]
         public bool IsFirmware { get; }
-
-        [Description("True if the effect is intended for multizone lights or light groups.")]
         public bool IsMultiZone { get; }
     }
 
     public abstract class Effect : IEffect
     {
-        [Description("True if the effect runs on the device as opposed to running in this application.")]
+        [XmlIgnore, Description("True if the effect runs on the device as opposed to running in this application.")]
         public abstract bool IsFirmware { get; }
 
-        [Description("True if the effect is intended for multizone lights or light groups.")]
+        [XmlIgnore, Description("True if the effect is intended for multizone lights or light groups.")]
         public abstract bool IsMultiZone { get; }
 
         protected abstract void StartEffect();
@@ -43,6 +38,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         #endregion
 
+        [XmlIgnore]
         public virtual string Family => null;
 
         [Browsable(false), XmlIgnore]

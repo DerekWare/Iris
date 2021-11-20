@@ -29,11 +29,13 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         [Range(typeof(double), "0", "1")]
         public double MinSaturation { get; set; } = 0.25;
 
-        public override IEnumerable<Color> GetPalette(IDevice targetDevice)
+        public override IReadOnlyCollection<Color> GetPalette(IDevice targetDevice)
         {
+            var palette = new Color[targetDevice.ZoneCount];
+            
             for(var i = 0; i < targetDevice.ZoneCount; ++i)
             {
-                yield return new Color
+                palette[i] = new Color
                 {
                     Hue = Random.NextDouble(),
                     Saturation = (Random.NextDouble() * (MaxSaturation - MinSaturation)) + MinSaturation,
@@ -41,6 +43,8 @@ namespace DerekWare.HomeAutomation.Common.Scenes
                     Kelvin = Kelvin
                 };
             }
+
+            return palette;
         }
 
         public override object Clone()

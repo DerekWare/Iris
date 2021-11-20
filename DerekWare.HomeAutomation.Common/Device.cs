@@ -20,6 +20,7 @@ namespace DerekWare.HomeAutomation.Common
     // Properties generally don't change at runtime except when first connecting to the device
     public interface IDeviceProperties : IName, IFamily
     {
+        IClient Client { get; }
         bool IsColor { get; }
         bool IsMultiZone { get; }
         string Product { get; }
@@ -46,7 +47,7 @@ namespace DerekWare.HomeAutomation.Common
     // Optional base class for devices
     public abstract class Device : IDevice, IEquatable<Device>
     {
-        public abstract string Family { get; }
+        public abstract IClient Client { get; }
         public abstract IReadOnlyCollection<IDeviceGroup> Groups { get; }
         public abstract bool IsColor { get; }
         public abstract bool IsMultiZone { get; }
@@ -73,6 +74,8 @@ namespace DerekWare.HomeAutomation.Common
 
         [Browsable(false), XmlIgnore]
         public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
+
+        public virtual string Family => Client.Family;
 
         [Browsable(false), XmlIgnore]
         public virtual Color Color { get => _Color; set => SetColor(value, TimeSpan.Zero); }
@@ -207,6 +210,11 @@ namespace DerekWare.HomeAutomation.Common
         {
             _Power = power;
             OnStateChanged();
+
+            if(PowerState.Off == _Power)
+            {
+                EffectFactory.Instance.Stop(this);
+            }
         }
 
         #endregion

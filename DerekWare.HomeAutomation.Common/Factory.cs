@@ -19,7 +19,7 @@ namespace DerekWare.HomeAutomation.Common
     }
 
     public class Factory<TObject, TProperties> : IFactory<TObject, TProperties>
-        where TObject : TProperties, ICloneable
+        where TObject : TProperties, ICloneable, IName
     {
         protected readonly SynchronizedDictionary<string, TObject> Items = new();
 
@@ -46,12 +46,17 @@ namespace DerekWare.HomeAutomation.Common
 
         public void Add(Type type)
         {
-            Add(type.GetTypeName(), () => (TObject)Activator.CreateInstance(type));
+            Add(() => (TObject)Activator.CreateInstance(type));
         }
 
-        public void Add(string name, Func<TObject> activator)
+        public void Add(Func<TObject> activator)
         {
-            Items.Add(name, activator());
+            Add(activator());
+        }
+
+        public void Add(TObject properties)
+        {
+            Items.Add(properties.Name, properties);
         }
 
         public void AddRange(IEnumerable<Type> types)

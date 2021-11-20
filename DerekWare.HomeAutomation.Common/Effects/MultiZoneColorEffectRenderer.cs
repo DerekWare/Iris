@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Threading;
@@ -8,30 +7,29 @@ namespace DerekWare.HomeAutomation.Common.Effects
 {
     public abstract class MultiZoneColorEffectRenderer : EffectRenderer
     {
-        protected abstract bool GetColors(RenderState renderState, out IReadOnlyCollection<Color> colors);
+        protected abstract bool UpdateColors(RenderState renderState, ref Color[] colors);
+
+        // The target colors to set
+        Color[] Colors;
 
         public override bool IsMultiZone => true;
 
-        protected virtual IReadOnlyCollection<Color> OriginalPalette { get; set; }
-        protected virtual IReadOnlyCollection<Color> Palette { get; set; }
-        protected virtual int ZoneCount { get; private set; } = 1;
+        // The original colors from the scene or device
+        protected virtual IReadOnlyList<Color> Palette { get; private set; }
 
         protected override void DoWork(Thread sender, DoWorkEventArgs e)
         {
-            ZoneCount = Device.ZoneCount;
-            OriginalPalette = Device.MultiZoneColors.ToList();
-            Palette = OriginalPalette.ToList();
+            Palette = Device.MultiZoneColors.ToArray();
+            Colors = Palette.ToArray();
 
             base.DoWork(sender, e);
-
-            Device.SetMultiZoneColors(OriginalPalette, TimeSpan.Zero);
         }
 
         protected override void Update(RenderState state)
         {
-            if(GetColors(state, out var colors))
+            if(UpdateColors(state, ref Colors))
             {
-                Device.SetMultiZoneColors(colors, FirstRun ? TimeSpan.Zero : RefreshRate);
+                Device.SetMultiZoneColors(Colors, RefreshRate);
             }
         }
     }

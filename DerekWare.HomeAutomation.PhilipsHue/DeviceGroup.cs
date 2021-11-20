@@ -27,7 +27,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
             foreach(var i in HueDevice.Lights)
             {
-                if(Client.Instance.InternalDevices.TryGetValue(i, out var device))
+                if(PhilipsHue.Client.Instance.InternalDevices.TryGetValue(i, out var device))
                 {
                     InternalDevices.Add(device);
                 }
@@ -36,10 +36,11 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public RoomClass? Class => HueDevice.Class;
 
+        public override IClient Client => PhilipsHue.Client.Instance;
+
         [Browsable(false), XmlIgnore]
         public override IReadOnlyCollection<IDevice> Devices => InternalDevices;
 
-        public override string Family => Client.Instance.Family;
         public string ModelId => HueDevice.ModelId;
         public override string Name => HueDevice.Name;
         public GroupType? Type => HueDevice.Type;
@@ -119,13 +120,13 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         void OnPropertiesChanged(object sender, DeviceEventArgs e)
         {
             PropertiesChanged?.Invoke(this, new DeviceEventArgs { Device = this });
-            Client.Instance.OnPropertiesChanged(this);
+            PhilipsHue.Client.Instance.OnPropertiesChanged(this);
         }
 
         void OnStateChanged(object sender, DeviceEventArgs e)
         {
             StateChanged?.Invoke(this, new DeviceEventArgs { Device = this });
-            Client.Instance.OnStateChanged(this);
+            PhilipsHue.Client.Instance.OnStateChanged(this);
         }
 
         #endregion

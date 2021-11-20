@@ -21,10 +21,11 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             RefreshState();
         }
 
-        public override string Family => Client.Instance.Family;
+        [Browsable(false), XmlIgnore]
+        public override IClient Client => PhilipsHue.Client.Instance;
 
         [Browsable(false), XmlIgnore]
-        public override IReadOnlyCollection<IDeviceGroup> Groups => Client.Instance.Groups.Where(i => i.Devices.Contains(this)).ToList();
+        public override IReadOnlyCollection<IDeviceGroup> Groups => PhilipsHue.Client.Instance.Groups.Where(i => i.Devices.Contains(this)).ToList();
 
         public string Id => HueDevice.Id;
         public override bool IsColor => Type.IndexOf("color", StringComparison.CurrentCultureIgnoreCase) >= 0; // TODO this is a little hacky
@@ -42,7 +43,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public override async void RefreshState()
         {
-            HueDevice = await Client.Instance.HueClient.GetLightAsync(HueDevice.Id);
+            HueDevice = await PhilipsHue.Client.Instance.HueClient.GetLightAsync(HueDevice.Id);
 
             base.SetColor(Colors.FromState(HueDevice.State), TimeSpan.Zero);
             base.SetPower(HueDevice.State.On ? PowerState.On : PowerState.Off);
@@ -87,13 +88,13 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         protected override void OnPropertiesChanged(DeviceEventArgs e)
         {
             base.OnPropertiesChanged(e);
-            Client.Instance.OnPropertiesChanged(this);
+            PhilipsHue.Client.Instance.OnPropertiesChanged(this);
         }
 
         protected override void OnStateChanged(DeviceEventArgs e)
         {
             base.OnStateChanged(e);
-            Client.Instance.OnStateChanged(this);
+            PhilipsHue.Client.Instance.OnStateChanged(this);
         }
     }
 }

@@ -33,7 +33,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             OnCreate();
         }
 
-        public override string Family => Client.Instance.Family;
+        [Browsable(false), XmlIgnore]
+        public override IClient Client => Lan.Client.Instance;
 
         [Browsable(false), XmlIgnore]
         public override IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups;
@@ -65,14 +66,14 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
             await Controller.GetGroup(response =>
             {
-                Client.Instance.CreateGroup(response, out var group);
+                Lan.Client.Instance.CreateGroup(response, out var group);
                 InternalGroups.Add(group);
                 group.InternalDevices.Add(this);
             });
 
             await Controller.GetLocation(response =>
             {
-                Client.Instance.CreateGroup(response, out var group);
+                Lan.Client.Instance.CreateGroup(response, out var group);
                 InternalGroups.Add(group);
                 group.InternalDevices.Add(this);
             });
@@ -211,13 +212,13 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         protected override void OnPropertiesChanged(DeviceEventArgs e)
         {
             base.OnPropertiesChanged(e);
-            Client.Instance.OnPropertiesChanged(this);
+            Lan.Client.Instance.OnPropertiesChanged(this);
         }
 
         protected override void OnStateChanged(DeviceEventArgs e)
         {
             base.OnStateChanged(e);
-            Client.Instance.OnStateChanged(this);
+            Lan.Client.Instance.OnStateChanged(this);
         }
 
         async void OnCreate()

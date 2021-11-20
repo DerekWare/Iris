@@ -22,14 +22,16 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             return MemberwiseClone();
         }
 
-        public override IEnumerable<Color> GetPalette(IDevice targetDevice)
+        public override IReadOnlyCollection<Color> GetPalette(IDevice targetDevice)
         {
-            double count = targetDevice.ZoneCount;
+            var palette = new Color[targetDevice.ZoneCount];
 
-            for(var i = 0; i < count; ++i)
+            for(var i = 0; i < targetDevice.ZoneCount; ++i)
             {
-                yield return new Color { Hue = i / count, Saturation = Saturation, Brightness = Brightness, Kelvin = Kelvin };
+                palette[i] = new Color { Hue = i / (double)targetDevice.ZoneCount, Saturation = Saturation, Brightness = Brightness, Kelvin = Kelvin };
             }
+
+            return palette;
         }
     }
 }

@@ -7,19 +7,13 @@ namespace DerekWare.HomeAutomation.Common.Effects
     {
         protected abstract bool GetColor(RenderState state, out Color color);
 
-        protected SingleColorEffectRenderer()
-        {
-            Duration = TimeSpan.FromSeconds(10);
-            RefreshRate = TimeSpan.FromSeconds(5);
-        }
-
         public override bool IsMultiZone => false;
 
         protected override void Update(RenderState state)
         {
             if(GetColor(state, out var color))
             {
-                Device.SetColor(color, FirstRun ? TimeSpan.Zero : RefreshRate);
+                Device.SetColor(color, RefreshRate);
             }
         }
     }

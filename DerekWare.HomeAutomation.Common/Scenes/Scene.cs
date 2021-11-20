@@ -37,7 +37,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         [Description("True if the scene is intended for multizone lights, such as the LIFX Z strip."), Browsable(false), XmlIgnore]
         public abstract bool IsMultiZone { get; }
 
-        public abstract IEnumerable<Color> GetPalette(IDevice targetDevice);
+        public abstract IReadOnlyCollection<Color> GetPalette(IDevice targetDevice);
 
         #region ICloneable
 
@@ -45,22 +45,36 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         #endregion
 
+        protected Scene()
+        {
+            Name = GetType().GetTypeName();
+        }
+
+        [XmlIgnore]
         public virtual string Family => null;
 
-        [Description("True if the effect runs on the device as opposed to running in this application.")]
+        [XmlIgnore, Description("True if the effect runs on the device as opposed to running in this application.")]
         public bool IsFirmware => false;
 
         [Browsable(false), XmlIgnore]
-        public string Name => GetType().GetTypeName();
+        public string Name { get; protected set; }
 
         public void Apply(IDevice device, TimeSpan duration)
         {
             // Retrieve the color palette
-            var palette = GetPalette(device).ToList();
+            var palette = GetPalette(device);
 
             // Turn on the device and apply the scene
             device.Power = PowerState.On;
-            device.MultiZoneColors = palette;
+
+            if(palette.Count > 1)
+            {
+                device.MultiZoneColors = palette;
+            }
+            else
+            {
+                device.Color = palette.First();
+            }
         }
 
         public void Apply(IEnumerable<IDevice> devices, TimeSpan duration)

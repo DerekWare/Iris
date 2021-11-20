@@ -37,9 +37,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         }
 
         [Browsable(false), XmlIgnore]
+        public override IClient Client => Lan.Client.Instance;
+
+        [Browsable(false), XmlIgnore]
         public override IReadOnlyCollection<IDevice> Devices => InternalDevices;
 
-        public override string Family => Client.Instance.Family;
         public override string Name { get; }
         public override string Uuid { get; }
         public override string Vendor => null;
@@ -96,13 +98,13 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         void OnPropertiesChanged(object sender, DeviceEventArgs e)
         {
             PropertiesChanged?.Invoke(this, new DeviceEventArgs { Device = this });
-            Client.Instance.OnPropertiesChanged(this);
+            Lan.Client.Instance.OnPropertiesChanged(this);
         }
 
         void OnStateChanged(object sender, DeviceEventArgs e)
         {
             StateChanged?.Invoke(this, new DeviceEventArgs { Device = this });
-            Client.Instance.OnStateChanged(this);
+            Lan.Client.Instance.OnStateChanged(this);
         }
 
         #endregion
