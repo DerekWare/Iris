@@ -29,7 +29,14 @@ namespace DerekWare.HomeAutomation.Common.Effects
         {
             if(UpdateColors(state, ref Colors))
             {
-                Device.SetMultiZoneColors(Colors, RefreshRate);
+                if(Colors.Length == 1)
+                {
+                    Device.SetColor(Colors[0], RefreshRate);
+                }
+                else
+                {
+                    Device.SetMultiZoneColors(Colors, RefreshRate);
+                }
             }
         }
     }

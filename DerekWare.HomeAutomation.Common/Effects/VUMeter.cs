@@ -97,14 +97,20 @@ namespace DerekWare.HomeAutomation.Common.Effects
 #endif
             irms = 1 - rms;
 
+            if(rms < 0.05f)
+            {
+                colors = new[] { BackgroundColor };
+                return true;
+            }
+
             var color = new Color(irms,
                                   (rms * (MaxSaturation - MinSaturation)) + MinSaturation,
                                   (amp * (MaxBrightness - MinBrightness)) + MinBrightness,
                                   Kelvin);
 
-            if(SingleColor || (colors.Length < 5))
+            if(SingleColor || (colors.Length < 3))
             {
-                colors = color.Repeat(colors.Length).ToArray();
+                colors = new[] { color };
                 return true;
             }
 
