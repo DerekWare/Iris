@@ -113,20 +113,9 @@ namespace DerekWare.HomeAutomation.Common.Audio
 
         protected static IEnumerable<float> ConvertIeeeFloat(byte[] bytes, int byteCount)
         {
-            var sample = new byte[sizeof(float)];
-
             for(var i = 0; i < byteCount; i += sizeof(float))
             {
-#if false
-                for(var j = 0; j < sizeof(float); ++j)
-                {
-                    sample[j] = bytes[(i + sizeof(float)) - (j + 1)];
-                }
-
-                yield return BitConverter.ToSingle(sample, 0);
-#else
                 yield return BitConverter.ToSingle(bytes, i);
-#endif
             }
         }
 
