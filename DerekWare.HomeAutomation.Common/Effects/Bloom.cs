@@ -45,8 +45,8 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // a random number of zones.
             if(CurrentCount > TargetCount)
             {
-                ZoneIndex = Random.Next(0, colors.Length);
-                TargetCount = Random.Next(3, colors.Length);
+                ZoneIndex = Random.Next(0, ZoneCount);
+                TargetCount = Random.Next(3, ZoneCount);
                 CurrentCount = 1;
 
                 BloomColor = new Color(Random.NextDouble(),
@@ -59,12 +59,12 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             while(index < 0)
             {
-                index += colors.Length;
+                index += ZoneCount;
             }
 
             for(var i = 0; i < CurrentCount; ++i)
             {
-                colors[index % colors.Length] = BloomColor;
+                colors[index % ZoneCount] = BloomColor;
                 ++index;
             }
 

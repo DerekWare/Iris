@@ -79,7 +79,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         {
             if(Recorder.CurrentDuration.TotalSeconds < (Recorder.MaxDuration.TotalSeconds / 2))
             {
-                colors = BackgroundColor.Repeat(colors.Length).ToArray();
+                colors = BackgroundColor.Repeat(ZoneCount).ToArray();
                 return true;
             }
 
@@ -108,25 +108,25 @@ namespace DerekWare.HomeAutomation.Common.Effects
                                   (amp * (MaxBrightness - MinBrightness)) + MinBrightness,
                                   Kelvin);
 
-            if(SingleColor || (colors.Length < 3))
+            if(SingleColor || (ZoneCount < 3))
             {
                 colors = new[] { color };
                 return true;
             }
 
-            var size = (int)Math.Ceiling(amp * ((colors.Length + 1) / 2));
-            var offset = ((colors.Length / 2) + Offset) - size;
+            var size = (int)Math.Ceiling(amp * ((ZoneCount + 1) / 2));
+            var offset = ((ZoneCount / 2) + Offset) - size;
 
             while(offset < 0)
             {
-                offset += colors.Length;
+                offset += ZoneCount;
             }
 
-            colors = BackgroundColor.Repeat(colors.Length).ToArray();
+            colors = BackgroundColor.Repeat(ZoneCount).ToArray();
 
             for(var i = 0; i < (size * 2); ++i)
             {
-                colors[offset++ % colors.Length] = color;
+                colors[offset++ % ZoneCount] = color;
             }
 
             return true;

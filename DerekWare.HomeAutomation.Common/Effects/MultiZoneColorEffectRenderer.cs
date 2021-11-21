@@ -16,6 +16,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         // The original colors from the scene or device
         protected virtual IReadOnlyList<Color> Palette { get; private set; }
+        protected int ZoneCount => Palette.Count;
 
         protected override void DoWork(Thread sender, DoWorkEventArgs e)
         {

@@ -97,16 +97,16 @@ namespace DerekWare.HomeAutomation.Common.Effects
                     ColorOffset += 1;
                 }
 
-                colorOffset = (int)(ColorOffset * colors.Length);
+                colorOffset = (int)(ColorOffset * ZoneCount);
             }
             else
             {
-                colorOffset = (int)((Direction == EffectDirection.Left ? renderState.CyclePosition : 1 - renderState.CyclePosition) * colors.Length);
+                colorOffset = (int)((Direction == EffectDirection.Left ? renderState.CyclePosition : 1 - renderState.CyclePosition) * ZoneCount);
             }
 
             foreach(var i in Palette)
             {
-                colorOffset %= colors.Length;
+                colorOffset %= ZoneCount;
                 colors[colorOffset++] = i;
             }
 
