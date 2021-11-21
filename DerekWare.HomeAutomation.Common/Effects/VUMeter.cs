@@ -1,5 +1,8 @@
-﻿using System;
+﻿// #define UseRms
+
+using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml.Serialization;
 using DerekWare.Collections;
@@ -37,9 +40,17 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Description("Shifts the center of the effect left or right.")]
         public int Offset { get; set; }
 
-#if false
-        [Description("Increases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no amplification."),
-        Range(typeof(float), "0.1", "10")]
+#if UseRms
+        [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
+         Range(typeof(float), "0.1", "10")]
+        public float RmsSensitivity { get; set; } = 1;
+
+        [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
+         Range(typeof(float), "0.1", "10")]
+        public float AmplitudeSensitivity { get; set; } = 1;
+#else
+        [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
+         Range(typeof(float), "0.1", "10")]
         public float Sensitivity { get; set; } = 1;
 #endif
 
@@ -77,10 +88,12 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // sizes, so it's not worth the extra math.
             float amp, rms, irms;
 
-#if true
-            rms = amp = Recorder.GetPeakAmplitude();
-#else
+#if UseRms
             Recorder.GetPeakRmsAndAmplitude(out rms, out amp);
+            amp *= AmplitudeSensitivity;
+            rms *= RmsSensitivity;
+#else
+            rms = amp = Recorder.GetPeakAmplitude() * Sensitivity;
 #endif
             irms = 1 - rms;
 
