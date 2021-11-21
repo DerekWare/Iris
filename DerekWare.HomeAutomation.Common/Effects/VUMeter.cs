@@ -30,8 +30,8 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Description("Shifts the center of the effect left or right.")]
         public int Offset { get; set; }
 
-        [Description("Increases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is zero amplification."),
-         Range(typeof(float), "1", "10"), Browsable(false), XmlIgnore]
+        [Description("Increases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no amplification."),
+         Range(typeof(float), "0.1", "10")]
         public float Sensitivity { get; set; } = 1;
 
         [Description("Set all devices to the same color rather than treating them as a multizone device.")]
@@ -75,7 +75,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 return true;
             }
 
-            var size = (int)(max * ((colors.Length + 1) / 2));
+            var size = (int)Math.Ceiling(max * ((colors.Length + 1) / 2));
             var offset = (colors.Length / 2) + Offset;
             var start = offset - size;
 
@@ -86,7 +86,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             colors = BackgroundColor.Repeat(colors.Length).ToArray();
 
-            for(var i = 0; i < size * 2; ++i)
+            for(var i = 0; i < (size * 2); ++i)
             {
                 colors[(start + i) % colors.Length] = color;
             }
