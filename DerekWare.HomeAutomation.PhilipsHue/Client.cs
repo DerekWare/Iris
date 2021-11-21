@@ -31,11 +31,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             add
             {
                 _DeviceDiscovered += value;
-
-                foreach(var device in InternalDevices)
-                {
-                    value.BeginInvoke(this, new DeviceEventArgs { Device = device.Value }, null, null);
-                }
+                InternalDevices.ForEach(i => value.BeginInvoke(this, new DeviceEventArgs { Device = i.Value }, null, null));
             }
             remove => _DeviceDiscovered -= value;
         }
@@ -182,7 +178,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public static Task<string> Register(string bridgeAddress)
         {
-            return new LocalHueClient(bridgeAddress).RegisterAsync("DerekWare", "PC");
+            return new LocalHueClient(bridgeAddress).RegisterAsync("DerekWare", Environment.MachineName);
         }
     }
 }

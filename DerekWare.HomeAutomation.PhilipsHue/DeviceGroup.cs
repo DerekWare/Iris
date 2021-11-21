@@ -93,24 +93,14 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         void OnContentsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            switch(e.Action)
+            foreach(Device device in e.OldItems.SafeEmpty())
             {
-                case NotifyCollectionChangedAction.Add:
-                    foreach(Device device in e.NewItems)
-                    {
-                        device.StateChanged += OnStateChanged;
-                    }
+                device.StateChanged -= OnStateChanged;
+            }
 
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                case NotifyCollectionChangedAction.Reset:
-                    foreach(Device device in e.NewItems)
-                    {
-                        device.StateChanged -= OnStateChanged;
-                    }
-
-                    break;
+            foreach(Device device in e.NewItems.SafeEmpty())
+            {
+                device.StateChanged += OnStateChanged;
             }
 
             OnStateChanged(null, null);

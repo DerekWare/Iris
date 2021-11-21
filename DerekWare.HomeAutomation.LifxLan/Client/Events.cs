@@ -12,7 +12,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
             add
             {
                 _DeviceDiscovered += value;
-                InternalDevices.ForEach(i => OnDeviceDiscovered(i.Value));
+                InternalDevices.ForEach(i => value.BeginInvoke(this, new DeviceEventArgs { Device = i.Value }, null, null));
             }
             remove => _DeviceDiscovered -= value;
         }
