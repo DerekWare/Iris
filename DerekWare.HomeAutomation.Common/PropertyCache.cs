@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
+using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -104,6 +105,11 @@ namespace DerekWare.HomeAutomation.Common
                 if(typeof(TimeSpan) == property.PropertyType)
                 {
                     propertyValue = ((TimeSpan)propertyValue).ToString();
+                }
+                else if(typeof(Color) == property.PropertyType)
+                {
+                    // TODO why can't we serialize Color?
+                    continue;
                 }
 
                 cache[property.Name] = propertyValue;
