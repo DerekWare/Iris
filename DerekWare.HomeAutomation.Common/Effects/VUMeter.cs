@@ -31,8 +31,8 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public int Offset { get; set; }
 
         [Description("Increases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is zero amplification."),
-         Range(typeof(float), "1", "10")]
-        public float Sensitivity { get; set; } = 8;
+         Range(typeof(float), "1", "10"), Browsable(false), XmlIgnore]
+        public float Sensitivity { get; set; } = 1;
 
         [Description("Set all devices to the same color rather than treating them as a multizone device.")]
         public bool SingleColor { get; set; } = false;
