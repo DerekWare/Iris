@@ -1,25 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DerekWare.Collections;
 using NAudio.Wave;
-using Enumerable = DerekWare.Collections.Enumerable;
 
 namespace DerekWare.HomeAutomation.Common.Audio
 {
-    public class AudioFrame
-    {
-        public float Average => Enumerable.SafeEmpty(Samples).Average();
-        public float Max => Enumerable.SafeEmpty(Samples).Max();
-        public float Min => Enumerable.SafeEmpty(Samples).Min();
-        public int SampleCount => Samples?.Length ?? 0;
-        public float[] Samples { get; internal set; }
-    }
-
     // Records audio using the WASAPI loopback, storing PCM samples in a buffer of 
     // a finite size, ejecting samples from the FIFO as needed.
     public class AudioRecorder : IDisposable
     {
-        readonly Queue<float> Queue = new();
+        readonly SynchronizedQueue<float> Queue = new();
 
         WasapiLoopbackCapture CaptureInstance = new();
 
@@ -31,7 +22,7 @@ namespace DerekWare.HomeAutomation.Common.Audio
         public TimeSpan CurrentDuration => TimeSpan.FromSeconds(Queue.Count / (float)Format.SampleRate);
         public WaveFormat Format => CaptureInstance.WaveFormat;
         public bool IsSupportedFormat => null != SampleConverter;
-        public TimeSpan MaxDuration { get; set; } = TimeSpan.FromSeconds(1);
+        public TimeSpan MaxDuration { get; set; } = TimeSpan.FromSeconds(0.5);
 
         protected Func<byte[], int, IEnumerable<float>> SampleConverter
         {
@@ -60,12 +51,14 @@ namespace DerekWare.HomeAutomation.Common.Audio
             }
         }
 
-        public AudioFrame GetSamples()
+        public float GetPeakAmplitude()
         {
-            lock(Queue)
-            {
-                return new AudioFrame { Samples = Queue.ToArray() };
-            }
+            return Queue.ToArray().GetPeakAmplitude();
+        }
+
+        public void GetPeakRmsAndAmplitude(out float rms, out float amp)
+        {
+            Queue.ToArray().GetPeakRmsAndAmplitude((int)(Format.SampleRate * 0.005), out rms, out amp);
         }
 
         public void Start()
@@ -107,13 +100,13 @@ namespace DerekWare.HomeAutomation.Common.Audio
                     }
 
                     value /= Format.Channels;
-                    Queue.Enqueue(value);
+                    Queue.Push(value);
                 }
 
                 // Trim the queue
                 while(CurrentDuration > MaxDuration)
                 {
-                    Queue.Dequeue();
+                    Queue.Pop();
                 }
             }
         }

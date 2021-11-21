@@ -112,6 +112,7 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioProcessor.cs" />
     <Compile Include="Audio\AudioRecorder.cs" />
     <Compile Include="DeviceStateRefreshTask.cs" />
     <Compile Include="Effects\Calliope.cs" />
