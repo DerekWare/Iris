@@ -13,7 +13,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
     [Name("VU Meter"), Description("Hooks your sound device and responds to sounds made by your PC, including music.")]
     public class VUMeter : MultiZoneColorEffectRenderer
     {
-        AudioLoopbackFifo Recorder;
+        AudioRecorder Recorder;
 
         public VUMeter()
         {
@@ -23,9 +23,17 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Description("The color of the unused portions of the device."), Browsable(false), XmlIgnore]
         public Color BackgroundColor => StandardColors.Black;
 
+        [Browsable(false), XmlIgnore]
+        public double Kelvin => 1;
+
         // Unused
         [Browsable(false), XmlIgnore]
         public new TimeSpan Duration { get; set; }
+
+        public double MaxBrightness { get; set; } = 1;
+        public double MaxSaturation { get; set; } = 1;
+        public double MinBrightness { get; set; } = 0.5;
+        public double MinSaturation { get; set; } = 1;
 
         [Description("Shifts the center of the effect left or right.")]
         public int Offset { get; set; }
@@ -44,7 +52,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void StartEffect()
         {
-            Recorder = new AudioLoopbackFifo { MaxDuration = RefreshRate.Min(TimeSpan.FromSeconds(1)) };
+            Recorder = new AudioRecorder { MaxDuration = RefreshRate.Min(TimeSpan.FromSeconds(0.5)) };
             Recorder.Start();
             base.StartEffect();
         }
@@ -57,17 +65,19 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override bool UpdateColors(RenderState renderState, ref Color[] colors)
         {
-            if(Recorder.Count <= 0)
+            var audioFrame = Recorder.GetSamples();
+
+            if(audioFrame.SampleCount <= 0)
             {
                 colors = BackgroundColor.Repeat(colors.Length).ToArray();
                 return true;
             }
 
-            // TODO too many hard-coded values
-            var samples = Recorder.GetSamples().Select(i => Math.Abs(i) * Sensitivity).ToArray();
-            var avg = samples.Average().Clamp(0, 1);
-            var max = samples.Max().Clamp(0, 1);
-            var color = new Color(1 - max, 1, (avg / 2) + 0.5, 1);
+            var max = audioFrame.Max.Clamp(0, 1);
+            var color = new Color(1 - max,
+                                  (max * (MaxSaturation - MinSaturation)) + MinSaturation,
+                                  (max * (MaxBrightness - MinBrightness)) + MinBrightness,
+                                  Kelvin);
 
             if(SingleColor || (colors.Length < 5))
             {
@@ -76,19 +86,18 @@ namespace DerekWare.HomeAutomation.Common.Effects
             }
 
             var size = (int)Math.Ceiling(max * ((colors.Length + 1) / 2));
-            var offset = (colors.Length / 2) + Offset;
-            var start = offset - size;
+            var offset = ((colors.Length / 2) + Offset) - size;
 
-            while(start < 0)
+            while(offset < 0)
             {
-                start += colors.Length;
+                offset += colors.Length;
             }
 
             colors = BackgroundColor.Repeat(colors.Length).ToArray();
 
             for(var i = 0; i < (size * 2); ++i)
             {
-                colors[(start + i) % colors.Length] = color;
+                colors[offset++ % colors.Length] = color;
             }
 
             return true;

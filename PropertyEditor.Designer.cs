@@ -41,14 +41,14 @@ namespace DerekWare.Iris
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PropertyGrid.Location = new System.Drawing.Point(0, 0);
             this.PropertyGrid.Name = "PropertyGrid";
-            this.PropertyGrid.Size = new System.Drawing.Size(777, 468);
+            this.PropertyGrid.Size = new System.Drawing.Size(777, 668);
             this.PropertyGrid.TabIndex = 1;
             // 
             // NopeButton
             // 
             this.NopeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.NopeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.NopeButton.Location = new System.Drawing.Point(646, 492);
+            this.NopeButton.Location = new System.Drawing.Point(646, 692);
             this.NopeButton.Name = "NopeButton";
             this.NopeButton.Size = new System.Drawing.Size(120, 40);
             this.NopeButton.TabIndex = 3;
@@ -59,7 +59,7 @@ namespace DerekWare.Iris
             // YupButton
             // 
             this.YupButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.YupButton.Location = new System.Drawing.Point(520, 492);
+            this.YupButton.Location = new System.Drawing.Point(520, 692);
             this.YupButton.Name = "YupButton";
             this.YupButton.Size = new System.Drawing.Size(120, 40);
             this.YupButton.TabIndex = 2;
@@ -73,7 +73,7 @@ namespace DerekWare.Iris
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.NopeButton;
-            this.ClientSize = new System.Drawing.Size(778, 544);
+            this.ClientSize = new System.Drawing.Size(778, 744);
             this.Controls.Add(this.YupButton);
             this.Controls.Add(this.NopeButton);
             this.Controls.Add(this.PropertyGrid);

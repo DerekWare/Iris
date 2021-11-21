@@ -2,23 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using NAudio.Wave;
+using Enumerable = DerekWare.Collections.Enumerable;
 
 namespace DerekWare.HomeAutomation.Common.Audio
 {
+    public class AudioFrame
+    {
+        public float Average => Enumerable.SafeEmpty(Samples).Average();
+        public float Max => Enumerable.SafeEmpty(Samples).Max();
+        public float Min => Enumerable.SafeEmpty(Samples).Min();
+        public int SampleCount => Samples?.Length ?? 0;
+        public float[] Samples { get; internal set; }
+    }
+
     // Records audio using the WASAPI loopback, storing PCM samples in a buffer of 
     // a finite size, ejecting samples from the FIFO as needed.
-    public class AudioLoopbackFifo : IDisposable
+    public class AudioRecorder : IDisposable
     {
         readonly Queue<float> Queue = new();
 
         WasapiLoopbackCapture CaptureInstance = new();
 
-        public AudioLoopbackFifo()
+        public AudioRecorder()
         {
             CaptureInstance.DataAvailable += OnDataAvailable;
         }
 
-        public int Count => Queue.Count;
         public TimeSpan CurrentDuration => TimeSpan.FromSeconds(Queue.Count / (float)Format.SampleRate);
         public WaveFormat Format => CaptureInstance.WaveFormat;
         public bool IsSupportedFormat => null != SampleConverter;
@@ -51,11 +60,11 @@ namespace DerekWare.HomeAutomation.Common.Audio
             }
         }
 
-        public float[] GetSamples()
+        public AudioFrame GetSamples()
         {
             lock(Queue)
             {
-                return Queue.ToArray();
+                return new AudioFrame { Samples = Queue.ToArray() };
             }
         }
 
