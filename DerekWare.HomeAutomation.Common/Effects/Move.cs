@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using DerekWare.HomeAutomation.Common.Colors;
@@ -7,6 +8,7 @@ using DerekWare.HomeAutomation.Common.Scenes;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
+    [Description("Moves the current colors left, right or back and forth.")]
     public class Move : MultiZoneColorEffectRenderer
     {
         public enum EffectBehavior

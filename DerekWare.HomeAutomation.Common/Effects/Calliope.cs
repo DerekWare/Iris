@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
+    [Description("Repeatedly applies the Calliope effect with new colors.")]
     public class Calliope : MultiZoneColorEffectRenderer
     {
         readonly Scenes.Calliope Scene = new();

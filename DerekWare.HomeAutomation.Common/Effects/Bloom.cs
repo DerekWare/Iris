@@ -6,6 +6,7 @@ using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
+    [Description("Randomly selects a zone and color and expands outward.")]
     public class Bloom : MultiZoneColorEffectRenderer
     {
         readonly Random Random = new();

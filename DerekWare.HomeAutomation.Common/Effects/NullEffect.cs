@@ -4,8 +4,7 @@ using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    // A fake effect that just stops all other effects
-    [Name("Stop")]
+    [Name("Stop"), Description("Stops all other effects.")]
     public class NullEffect : Effect
     {
         [Browsable(false), XmlIgnore]

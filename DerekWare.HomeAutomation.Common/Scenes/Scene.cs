@@ -8,7 +8,7 @@ using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common.Scenes
 {
-    public interface IReadOnlySceneProperties : IName, IFamily, IEquatable<IReadOnlySceneProperties>
+    public interface IReadOnlySceneProperties : IDescription, IFamily, IName, IEquatable<IReadOnlySceneProperties>
     {
         [Description("True if the scene chooses its own colors.")]
         public abstract bool IsDynamic { get; }
@@ -45,10 +45,8 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         #endregion
 
-        protected Scene()
-        {
-            Name = GetType().GetTypeName();
-        }
+        [XmlIgnore]
+        public string Description => this.GetDescription();
 
         [XmlIgnore]
         public virtual string Family => null;
@@ -56,8 +54,8 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         [XmlIgnore, Description("True if the effect runs on the device as opposed to running in this application.")]
         public bool IsFirmware => false;
 
-        [Browsable(false), XmlIgnore]
-        public string Name { get; protected set; }
+        [XmlIgnore]
+        public string Name => this.GetName();
 
         public void Apply(IDevice device, TimeSpan duration)
         {

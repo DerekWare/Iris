@@ -56,15 +56,20 @@ namespace DerekWare.Iris
         {
             EffectLayoutPanel.Controls.Clear();
 
-            foreach(var properties in EffectFactory.Instance)
+            foreach(var effect in EffectFactory.Instance)
             {
                 var button = new Button
                 {
                     Dock = DockStyle.Fill,
-                    Text = properties.Name,
-                    Tag = properties,
-                    Enabled = properties.Family.IsNullOrEmpty() || properties.Family.Equals(Device.Family)
+                    Text = effect.Name,
+                    Tag = effect,
+                    Enabled = effect.Family.IsNullOrEmpty() || effect.Family.Equals(Device.Family)
                 };
+
+                if(!effect.Description.IsNullOrEmpty())
+                {
+                    new ToolTip().SetToolTip(button, effect.Description);
+                }
 
                 button.Click += EffectButton_Click;
                 EffectLayoutPanel.Controls.Add(button);
@@ -81,6 +86,11 @@ namespace DerekWare.Iris
                 {
                     Dock = DockStyle.Fill, Text = scene.Name, Tag = scene, Enabled = scene.Family.IsNullOrEmpty() || scene.Family.Equals(Device.Family)
                 };
+
+                if(!scene.Description.IsNullOrEmpty())
+                {
+                    new ToolTip().SetToolTip(button, scene.Description);
+                }
 
                 button.Click += SceneButton_Click;
                 SceneLayoutPanel.Controls.Add(button);

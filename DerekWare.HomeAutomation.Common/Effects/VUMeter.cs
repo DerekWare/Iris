@@ -10,7 +10,7 @@ using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Description("The VU Meter effect hooks your sound device and responds to sounds made by your PC, including music."), Name("VU Meter")]
+    [Name("VU Meter"), Description("Hooks your sound device and responds to sounds made by your PC, including music.")]
     public class VUMeter : MultiZoneColorEffectRenderer
     {
         AudioLoopbackFifo Recorder;

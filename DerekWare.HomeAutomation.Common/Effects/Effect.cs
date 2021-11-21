@@ -14,7 +14,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
     {
     }
 
-    public interface IReadOnlyEffectProperties : IName, IFamily, IEquatable<IReadOnlyEffectProperties>
+    public interface IReadOnlyEffectProperties : IDescription, IFamily, IName, IEquatable<IReadOnlyEffectProperties>
     {
         public IDevice Device { get; }
         public bool IsFirmware { get; }
@@ -44,8 +44,11 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Browsable(false), XmlIgnore]
         public bool IsRunning => Device is not null;
 
-        [Browsable(false), XmlIgnore]
-        public string Name => GetType().GetTypeName();
+        [XmlIgnore]
+        public string Name => this.GetName();
+
+        [XmlIgnore]
+        public string Description => this.GetDescription();
 
         [Browsable(false), XmlIgnore]
         public IDevice Device { get; private set; }

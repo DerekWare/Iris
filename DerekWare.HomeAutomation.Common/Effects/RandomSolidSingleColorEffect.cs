@@ -1,11 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Name("Random Solid")]
+    [Name("Random Solid"), Description("Selects a random color to apply to the device.")]
     public class RandomSolidSingleColorEffect : SingleColorEffectRenderer
     {
         readonly Random Random = new();
