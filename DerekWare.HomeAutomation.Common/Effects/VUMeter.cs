@@ -75,9 +75,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 return true;
             }
 
-            var size = (int)(max * colors.Length);
+            var size = (int)(max * ((colors.Length + 1) / 2));
             var offset = (colors.Length / 2) + Offset;
-            var start = offset - (size / 2);
+            var start = offset - size;
 
             while(start < 0)
             {
@@ -86,7 +86,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             colors = BackgroundColor.Repeat(colors.Length).ToArray();
 
-            for(var i = 0; i < size; ++i)
+            for(var i = 0; i < size * 2; ++i)
             {
                 colors[(start + i) % colors.Length] = color;
             }
