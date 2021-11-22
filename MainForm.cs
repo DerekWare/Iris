@@ -59,6 +59,7 @@ namespace DerekWare.Iris
             ShowInTaskbar = true;
             Visible = true;
             WindowState = RestoreWindowState;
+            Activate();
         }
 
         #region Event Handlers

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using DerekWare.Collections;
+using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
-using DerekWare.HomeAutomation.Lifx.Lan.Devices;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 using DerekWare.Reflection;
+using Device = DerekWare.HomeAutomation.Lifx.Lan.Devices.Device;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
 {
@@ -35,12 +37,12 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
 
         protected override void StartEffect()
         {
-            ((Device)Device).SetMultiZoneEffect(Settings);
+            Device.GetDevices().ForEach<Device>(i => i.SetMultiZoneEffect(Settings));
         }
 
         protected override void StopEffect(bool wait)
         {
-            ((Device)Device).SetMultiZoneEffect(new MultiZoneEffectSettings());
+            Device.GetDevices().ForEach<Device>(i => i.SetMultiZoneEffect(new MultiZoneEffectSettings()));
         }
     }
 }
