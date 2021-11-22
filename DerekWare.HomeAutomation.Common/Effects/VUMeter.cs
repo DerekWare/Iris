@@ -1,4 +1,5 @@
 ﻿// #define UseRms
+// #define UseBandPassFilter
 
 using System;
 using System.ComponentModel;
@@ -9,13 +10,16 @@ using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Audio;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Reflection;
+using NAudio.Dsp;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
     [Name("VU Meter"), Description("Hooks your sound device and responds to sounds made by your PC, including music.")]
     public class VUMeter : MultiZoneColorEffectRenderer
     {
-        AudioRecorder Recorder;
+        AudioProcessor AudioProcessor;
+        AudioRecorder AudioRecorder;
+        BiQuadFilter Filter;
 
         public VUMeter()
         {
@@ -28,31 +32,25 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Browsable(false), XmlIgnore]
         public double Kelvin => 1;
 
+        [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
+         Range(typeof(float), "0.1", "10")]
+        public float AmplitudeSensitivity { get; set; } = 1;
+
         // Unused
         [Browsable(false), XmlIgnore]
         public new TimeSpan Duration { get; set; }
 
         public double MaxBrightness { get; set; } = 1;
         public double MaxSaturation { get; set; } = 1;
-        public double MinBrightness { get; set; } = 0.5;
-        public double MinSaturation { get; set; } = 1;
+        public double MinBrightness { get; set; } = 0.25;
+        public double MinSaturation { get; set; } = 0.25;
 
         [Description("Shifts the center of the effect left or right.")]
         public int Offset { get; set; }
 
-#if UseRms
         [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
          Range(typeof(float), "0.1", "10")]
         public float RmsSensitivity { get; set; } = 1;
-
-        [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
-         Range(typeof(float), "0.1", "10")]
-        public float AmplitudeSensitivity { get; set; } = 1;
-#else
-        [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
-         Range(typeof(float), "0.1", "10")]
-        public float Sensitivity { get; set; } = 1;
-#endif
 
         [Description("Set all devices to the same color rather than treating them as a multizone device.")]
         public bool SingleColor { get; set; } = false;
@@ -64,37 +62,47 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void StartEffect()
         {
-            Recorder = new AudioRecorder { MaxDuration = RefreshRate.Min(TimeSpan.FromSeconds(0.5)) };
-            Recorder.Start();
+            AudioRecorder = new AudioRecorder { MaxDuration = RefreshRate.Min(TimeSpan.FromSeconds(0.25)) };
+            AudioProcessor = new AudioProcessor(AudioRecorder);
+#if UseBandPassFilter
+            Filter = BiQuadFilter.PeakingEQ(AudioRecorder.Format.SampleRate, 120, 0.8f, 0);
+#endif
+            AudioRecorder.Start();
             base.StartEffect();
         }
 
         protected override void StopEffect(bool wait)
         {
             base.StopEffect(wait);
-            Extensions.Dispose(ref Recorder);
+            Extensions.Dispose(ref AudioProcessor);
+            Extensions.Dispose(ref AudioRecorder);
         }
 
         protected override bool UpdateColors(RenderState renderState, ref Color[] colors)
         {
-            if(Recorder.CurrentDuration.TotalSeconds < (Recorder.MaxDuration.TotalSeconds / 2))
+            if(AudioRecorder.CurrentDuration.TotalSeconds < (AudioRecorder.MaxDuration.TotalSeconds / 2))
             {
                 colors = BackgroundColor.Repeat(ZoneCount).ToArray();
                 return true;
             }
 
-            // I've tested with both peak amplitude and peak RMS and when playing music, peak
-            // RMS is pretty consistently ~amplitude/2 regardless of testing various window
-            // sizes, so it's not worth the extra math.
             float amp, rms, irms;
 
+            // After playing around with a bunch of different music, the RMS values are lower than
+            // I'd like and the band-pass filter doesn't produce significantly different results than
+            // just using peak amplitude, so I'm going the cheap route.
+            AudioProcessor.Capture();
+            amp = AudioProcessor.GetPeakAmplitude();
 #if UseRms
-            Recorder.GetPeakRmsAndAmplitude(out rms, out amp);
+            rms = AudioProcessor.GetPeakRms();
+#elif UseBandPassFilter
+            AudioProcessor.Filter(Filter);
+            rms = AudioProcessor.GetPeakAmplitude();
+#else
+            rms = amp;
+#endif
             amp *= AmplitudeSensitivity;
             rms *= RmsSensitivity;
-#else
-            rms = amp = Recorder.GetPeakAmplitude() * Sensitivity;
-#endif
             irms = 1 - rms;
 
             if(rms < 0.05f)
@@ -104,7 +112,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             }
 
             var color = new Color(irms,
-                                  (rms * (MaxSaturation - MinSaturation)) + MinSaturation,
+                                  (amp * (MaxSaturation - MinSaturation)) + MinSaturation,
                                   (amp * (MaxBrightness - MinBrightness)) + MinBrightness,
                                   Kelvin);
 

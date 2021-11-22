@@ -51,14 +51,20 @@ namespace DerekWare.HomeAutomation.Common.Audio
             }
         }
 
-        public float GetPeakAmplitude()
+        public float[] GetSamples()
         {
-            return Queue.ToArray().GetPeakAmplitude();
+            return Queue.ToArray();
         }
 
-        public void GetPeakRmsAndAmplitude(out float rms, out float amp)
+        public float[] GetSamples(TimeSpan range)
         {
-            Queue.ToArray().GetPeakRmsAndAmplitude((int)(Format.SampleRate * 0.005), out rms, out amp);
+            lock(Queue.SyncRoot)
+            {
+                var count = (int)Math.Min(Format.SampleRate * range.TotalSeconds, Queue.Count);
+                var samples = new float[count];
+                Queue.CopyTo(samples, 0, count);
+                return samples;
+            }
         }
 
         public void Start()

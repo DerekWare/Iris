@@ -65,6 +65,32 @@ namespace DerekWare.Collections
 
     public static partial class Enumerable
     {
+        /// <summary>
+        ///     Takes every Nth item from a collection.
+        /// </summary>
+        public static IEnumerable<T> TakeNth<T>(this IEnumerable<T> items, int n)
+        {
+            if(n < 1)
+            {
+                throw new IndexOutOfRangeException("N must be >= 1");
+            }
+
+            var e = items.GetEnumerator();
+
+            while(true)
+            {
+                for(var i = 0; i < n; ++i)
+                {
+                    if(!e.MoveNext())
+                    {
+                        yield break;
+                    }
+                }
+
+                yield return e.Current;
+            }
+        }
+
         public static IReadOnlyList<T> AsList<T>(this IEnumerable<T> items)
         {
             return items is IReadOnlyList<T> list ? list : new List<T>(items.SafeEmpty());

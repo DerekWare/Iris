@@ -121,6 +121,7 @@
     <Compile Include="Effects\EffectRenderer.cs" />
     <Compile Include="Effects\Bloom.cs" />
     <Compile Include="DeviceExtensions.cs" />
+    <Compile Include="Effects\GraphicEQ.cs" />
     <Compile Include="Effects\VUMeter.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Effects\Move.cs" />

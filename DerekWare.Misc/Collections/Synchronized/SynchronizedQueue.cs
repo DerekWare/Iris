@@ -102,6 +102,14 @@ namespace DerekWare.Collections
             }
         }
 
+        public override int CopyTo(T[] array, int arrayIndex, int count)
+        {
+            lock(SyncRoot)
+            {
+                return base.CopyTo(array, arrayIndex, count);
+            }
+        }
+
         public override IEnumerator<T> GetEnumerator()
         {
             return ((IEnumerable<T>)ToArray()).GetEnumerator();

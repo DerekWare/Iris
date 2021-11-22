@@ -36,6 +36,20 @@ namespace DerekWare.Collections
         public WaitHandle ItemsAvailable => ItemsAvailableEvent.WaitHandle;
         public object SyncRoot { get; set; } = new object();
 
+        public virtual int CopyTo(T[] array, int arrayIndex, int count)
+        {
+            count = Math.Min(count, Count);
+            var e = Items.GetEnumerator();
+
+            for(var i = 0; i < count; ++i)
+            {
+                e.MoveNext();
+                array[i] = e.Current;
+            }
+
+            return count;
+        }
+
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             if(Count <= 0)
