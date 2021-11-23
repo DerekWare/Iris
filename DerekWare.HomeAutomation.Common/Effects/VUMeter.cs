@@ -132,16 +132,11 @@ namespace DerekWare.HomeAutomation.Common.Effects
             var size = (int)Math.Ceiling(amp * (ZoneCount + 1));
             var offset = ((ZoneCount / 2) + Offset) - (size / 2);
 
-            while(offset < 0)
-            {
-                offset += ZoneCount;
-            }
-
             colors = BackgroundColor.Repeat(ZoneCount).ToArray();
 
             for(var i = 0; i < size; ++i)
             {
-                colors[offset++ % ZoneCount] = color;
+                colors.SetWrappingValue(offset + i, color);
             }
 
             return true;

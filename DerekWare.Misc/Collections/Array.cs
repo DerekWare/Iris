@@ -123,6 +123,26 @@ namespace DerekWare.Collections
             return true;
         }
 
+        /// <summary>
+        ///     Treats the array as circular, allow indices outside the valid range to wrap around.
+        /// </summary>
+        public static bool SetWrappingValue<T>(this T[] items, int index, T value, IEqualityComparer<T> comparer = null)
+        {
+            if(items.IsNullOrEmpty())
+            {
+                throw new ArgumentOutOfRangeException(nameof(items), "Array may not be empty.");
+            }
+
+            index %= items.Length;
+
+            if(index < 0)
+            {
+                index += items.Length;
+            }
+
+            return SetValue(items, index, value, comparer);
+        }
+
         public static T[] ToArray<T>(this IEnumerable<T> items, Func<T, int> indexSelector, int minCount = 0)
         {
             var results = new T[minCount];

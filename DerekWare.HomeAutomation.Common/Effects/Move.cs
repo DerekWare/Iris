@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Scenes;
 
@@ -86,17 +87,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 // from the last update.
                 var cycleIncrement = renderState.CycleIncrement * (Direction == EffectDirection.Left ? 1 : -1);
                 ColorOffset += cycleIncrement;
-
-                while(ColorOffset >= 1)
-                {
-                    ColorOffset -= 1;
-                }
-
-                while(ColorOffset < 0)
-                {
-                    ColorOffset += 1;
-                }
-
                 colorOffset = (int)(ColorOffset * ZoneCount);
             }
             else
@@ -106,8 +96,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             foreach(var i in Palette)
             {
-                colorOffset %= ZoneCount;
-                colors[colorOffset++] = i;
+                colors.SetWrappingValue(colorOffset++, i);
             }
 
             return true;
