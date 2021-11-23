@@ -31,7 +31,6 @@ namespace DerekWare.Iris
         /// </summary>
         private void InitializeComponent()
         {
-            DerekWare.HomeAutomation.Common.Colors.Color color1 = new DerekWare.HomeAutomation.Common.Colors.Color();
             this.BaseLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.PropertiesGroupBox = new System.Windows.Forms.GroupBox();
             this.PropertyGrid = new System.Windows.Forms.PropertyGrid();
@@ -218,11 +217,6 @@ namespace DerekWare.Iris
             // 
             // SolidColorPanel
             // 
-            color1.Brightness = 0D;
-            color1.Hue = 0D;
-            color1.Kelvin = 0D;
-            color1.Saturation = 0D;
-            this.SolidColorPanel.Color = color1;
             this.SolidColorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SolidColorPanel.Location = new System.Drawing.Point(8, 27);
             this.SolidColorPanel.Name = "SolidColorPanel";

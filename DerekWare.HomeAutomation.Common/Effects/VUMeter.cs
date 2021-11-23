@@ -32,9 +32,19 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Browsable(false), XmlIgnore]
         public double Kelvin => 1;
 
+#if UseRms
         [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
          Range(typeof(float), "0.1", "10")]
         public float AmplitudeSensitivity { get; set; } = 1;
+
+        [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
+         Range(typeof(float), "0.1", "10")]
+        public float RmsSensitivity { get; set; } = 1;
+#else
+        [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
+         Range(typeof(float), "0.1", "10")]
+        public float Sensitivity { get; set; } = 1;
+#endif
 
         // Unused
         [Browsable(false), XmlIgnore]
@@ -47,10 +57,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         [Description("Shifts the center of the effect left or right.")]
         public int Offset { get; set; }
-
-        [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
-         Range(typeof(float), "0.1", "10")]
-        public float RmsSensitivity { get; set; } = 1;
 
         [Description("Set all devices to the same color rather than treating them as a multizone device.")]
         public bool SingleColor { get; set; } = false;
@@ -91,18 +97,17 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // After playing around with a bunch of different music, the RMS values are lower than
             // I'd like and the band-pass filter doesn't produce significantly different results than
             // just using peak amplitude, so I'm going the cheap route.
-            AudioProcessor.Capture();
-            amp = AudioProcessor.GetPeakAmplitude();
+            AudioProcessor.Update();
 #if UseRms
-            rms = AudioProcessor.GetPeakRms();
+            amp = AudioProcessor.GetPeakAmplitude() * AmplitudeSensitivity;
+            rms = AudioProcessor.GetPeakRms() * RmsSensitivity;
 #elif UseBandPassFilter
+            amp = AudioProcessor.GetPeakAmplitude() * AmplitudeSensitivity;
             AudioProcessor.Filter(Filter);
-            rms = AudioProcessor.GetPeakAmplitude();
+            rms = AudioProcessor.GetPeakRms() * RmsSensitivity;
 #else
-            rms = amp;
+            rms = amp = AudioProcessor.GetPeakAmplitude() * Sensitivity;
 #endif
-            amp *= AmplitudeSensitivity;
-            rms *= RmsSensitivity;
             irms = 1 - rms;
 
             if(rms < 0.05f)
@@ -112,7 +117,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             }
 
             var color = new Color(irms,
-                                  (amp * (MaxSaturation - MinSaturation)) + MinSaturation,
+                                  (rms * (MaxSaturation - MinSaturation)) + MinSaturation,
                                   (amp * (MaxBrightness - MinBrightness)) + MinBrightness,
                                   Kelvin);
 

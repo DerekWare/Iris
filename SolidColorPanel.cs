@@ -38,7 +38,11 @@ namespace DerekWare.Iris
                 BrightnessUpDown.Value = new decimal(_Color.Brightness);
                 KelvinUpDown.Value = new decimal(_Color.Kelvin);
                 ColorBand.Colors = new[] { _Color };
-                StandardColorsComboBox.SelectedItem = StandardColorsComboBox.Items.Contains(_Color) ? _Color : null;
+
+                if(!StandardColorsComboBox.DroppedDown)
+                {
+                    StandardColorsComboBox.SelectedItem = StandardColorsComboBox.Items.Contains(_Color) ? _Color : null;
+                }
 
                 InUpdate = false;
             }

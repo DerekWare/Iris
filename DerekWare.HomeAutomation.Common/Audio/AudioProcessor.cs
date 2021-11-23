@@ -17,19 +17,19 @@ namespace DerekWare.HomeAutomation.Common.Audio
             Source = source;
         }
 
-        public void Capture(float[] samples)
+        public void Update(float[] samples)
         {
             Samples = samples;
         }
 
-        public void Capture()
+        public void Update()
         {
-            Capture(Source.GetSamples());
+            Update(Source.GetSamples());
         }
 
-        public void Capture(TimeSpan range)
+        public void Update(TimeSpan range)
         {
-            Capture(Source.GetSamples(range));
+            Update(Source.GetSamples(range));
         }
 
         /// <summary>

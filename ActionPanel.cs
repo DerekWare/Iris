@@ -106,7 +106,11 @@ namespace DerekWare.Iris
         {
             InUpdate = true;
 
-            PowerComboBox.SelectedIndex = (int)Device.Power;
+            if(!PowerComboBox.DroppedDown)
+            {
+                PowerComboBox.SelectedIndex = (int)Device.Power;
+            }
+
             SolidColorPanel.Color = Device.Color;
             ZoneColorBand.Colors = Device.MultiZoneColors.ToArray();
 
@@ -218,5 +222,6 @@ namespace DerekWare.Iris
         }
 
         #endregion
+
     }
 }
