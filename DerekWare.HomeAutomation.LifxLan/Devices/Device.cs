@@ -42,7 +42,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         public string IpAddress => Controller.IpAddress;
         public override bool IsColor => _Product?.features.color ?? false;
         public bool IsExtendedMultiZone => _Product?.features.extended_multizone ?? false;
-        public bool IsLifxZStrip => (_Vendor?.vid == 1) && (_Product.pid == 32);
         public override bool IsMultiZone => _Product?.features.multizone ?? false;
         public override string Name => _Name;
         public override string Product => _Product?.name;
@@ -169,13 +168,9 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         {
             base.SetMultiZoneColors(colors, transitionDuration);
 
-            if(IsExtendedMultiZone || IsLifxZStrip)
+            if(IsMultiZone)
             {
                 Controller.SetExtendedColorZones(MultiZoneColors, transitionDuration);
-            }
-            else if(IsMultiZone)
-            {
-                Controller.SetColorZones(MultiZoneColors.Compress().ToList(), transitionDuration);
             }
             else
             {

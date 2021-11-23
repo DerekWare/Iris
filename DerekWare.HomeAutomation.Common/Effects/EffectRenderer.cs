@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Xml.Serialization;
 using DerekWare.Diagnostics;
 using DerekWare.Reflection;
 using DerekWare.Threading;
@@ -13,7 +14,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected Thread Thread;
 
-        [Description("True if the effect runs on the device as opposed to running in this application.")]
+        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false), XmlIgnore]
         public override bool IsFirmware => false;
 
         [Description("The time it takes for the effect to complete a full cycle and start over.")]

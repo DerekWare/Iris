@@ -9,11 +9,11 @@ namespace DerekWare.HomeAutomation.Common.Scenes
     public class UserScene : Scene
     {
         protected string _Name;
-        
-        [XmlIgnore]
+
+        [Browsable(false), XmlIgnore]
         public override bool IsDynamic => false;
 
-        [XmlIgnore]
+        [Browsable(false), XmlIgnore]
         public override bool IsMultiZone => Palette.Count > 1;
 
         public new string Name { get => _Name; set => _Name = value; }

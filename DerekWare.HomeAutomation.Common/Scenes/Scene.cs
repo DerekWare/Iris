@@ -48,13 +48,13 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         [XmlIgnore]
         public string Description => this.GetDescription();
 
-        [XmlIgnore]
+        [Browsable(false), XmlIgnore]
         public virtual string Family => null;
 
-        [XmlIgnore, Description("True if the effect runs on the device as opposed to running in this application.")]
+        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false), XmlIgnore]
         public bool IsFirmware => false;
 
-        [XmlIgnore]
+        [Browsable(false), XmlIgnore]
         public string Name => this.GetName();
 
         public void Apply(IDevice device, TimeSpan duration)

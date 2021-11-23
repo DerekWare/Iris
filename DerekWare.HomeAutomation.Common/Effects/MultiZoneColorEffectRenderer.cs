@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Xml.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Threading;
+using DoWorkEventArgs = DerekWare.Threading.DoWorkEventArgs;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
@@ -12,6 +15,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         // The target colors to set
         Color[] Colors;
 
+        [Browsable(false), XmlIgnore]
         public override bool IsMultiZone => true;
 
         // The original colors from the scene or device

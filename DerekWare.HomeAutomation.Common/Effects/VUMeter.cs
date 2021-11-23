@@ -10,16 +10,19 @@ using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Audio;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Reflection;
-using NAudio.Dsp;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
     [Name("VU Meter"), Description("Hooks your sound device and responds to sounds made by your PC, including music.")]
     public class VUMeter : MultiZoneColorEffectRenderer
     {
+        static readonly TimeSpan MaxRecorderBufferDuration = TimeSpan.FromSeconds(0.25);
+
         AudioProcessor AudioProcessor;
         AudioRecorder AudioRecorder;
+#if UseBandPassFilter
         BiQuadFilter Filter;
+#endif
 
         public VUMeter()
         {
@@ -32,7 +35,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Browsable(false), XmlIgnore]
         public double Kelvin => 1;
 
-#if UseRms
+#if UseRms || UseBandPassFilter
         [Description("Increases or decreases the sensitivity of the audio analyzer. Higher values mean the audio is treated as louder. 1 is no change."),
          Range(typeof(float), "0.1", "10")]
         public float AmplitudeSensitivity { get; set; } = 1;
@@ -68,10 +71,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void StartEffect()
         {
-            AudioRecorder = new AudioRecorder { MaxDuration = RefreshRate.Min(TimeSpan.FromSeconds(0.25)) };
+            AudioRecorder = new AudioRecorder { MaxDuration = RefreshRate.Min(MaxRecorderBufferDuration) };
             AudioProcessor = new AudioProcessor(AudioRecorder);
 #if UseBandPassFilter
-            Filter = BiQuadFilter.PeakingEQ(AudioRecorder.Format.SampleRate, 120, 0.8f, 0);
+            Filter = BiQuadFilter.PeakingEQ(AudioRecorder.Format.SampleRate, 120, 1, 0);
 #endif
             AudioRecorder.Start();
             base.StartEffect();
@@ -88,7 +91,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         {
             if(AudioRecorder.CurrentDuration.TotalSeconds < (AudioRecorder.MaxDuration.TotalSeconds / 2))
             {
-                colors = BackgroundColor.Repeat(ZoneCount).ToArray();
+                colors = new[] { BackgroundColor };
                 return true;
             }
 
@@ -98,12 +101,11 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // I'd like and the band-pass filter doesn't produce significantly different results than
             // just using peak amplitude, so I'm going the cheap route.
             AudioProcessor.Update();
-#if UseRms
+#if UseRms || UseBandPassFilter
             amp = AudioProcessor.GetPeakAmplitude() * AmplitudeSensitivity;
-            rms = AudioProcessor.GetPeakRms() * RmsSensitivity;
-#elif UseBandPassFilter
-            amp = AudioProcessor.GetPeakAmplitude() * AmplitudeSensitivity;
+#if UseBandPassFilter
             AudioProcessor.Filter(Filter);
+#endif
             rms = AudioProcessor.GetPeakRms() * RmsSensitivity;
 #else
             rms = amp = AudioProcessor.GetPeakAmplitude() * Sensitivity;
@@ -121,14 +123,14 @@ namespace DerekWare.HomeAutomation.Common.Effects
                                   (amp * (MaxBrightness - MinBrightness)) + MinBrightness,
                                   Kelvin);
 
-            if(SingleColor || (ZoneCount < 3))
+            if(SingleColor || (ZoneCount < 5))
             {
                 colors = new[] { color };
                 return true;
             }
 
-            var size = (int)Math.Ceiling(amp * ((ZoneCount + 1) / 2));
-            var offset = ((ZoneCount / 2) + Offset) - size;
+            var size = (int)Math.Ceiling(amp * (ZoneCount + 1));
+            var offset = ((ZoneCount / 2) + Offset) - (size / 2);
 
             while(offset < 0)
             {
@@ -137,7 +139,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             colors = BackgroundColor.Repeat(ZoneCount).ToArray();
 
-            for(var i = 0; i < (size * 2); ++i)
+            for(var i = 0; i < size; ++i)
             {
                 colors[offset++ % ZoneCount] = color;
             }
