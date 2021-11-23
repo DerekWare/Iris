@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
+using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -57,15 +58,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             var index = ZoneIndex - (CurrentCount / 2);
 
-            while(index < 0)
-            {
-                index += ZoneCount;
-            }
-
             for(var i = 0; i < CurrentCount; ++i)
             {
-                colors[index % ZoneCount] = BloomColor;
-                ++index;
+                colors.SetWrappingValue(index + i, BloomColor);
             }
 
             CurrentCount += 2;
