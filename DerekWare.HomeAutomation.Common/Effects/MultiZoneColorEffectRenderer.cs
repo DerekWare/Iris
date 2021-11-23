@@ -18,9 +18,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Browsable(false), XmlIgnore]
         public override bool IsMultiZone => true;
 
+        protected int ZoneCount => Device.ZoneCount;
+
         // The original colors from the scene or device
         protected virtual IReadOnlyList<Color> Palette { get; private set; }
-        protected int ZoneCount => Palette.Count;
 
         protected override void DoWork(Thread sender, DoWorkEventArgs e)
         {
@@ -32,16 +33,18 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void Update(RenderState state)
         {
-            if(UpdateColors(state, ref Colors))
+            if(!UpdateColors(state, ref Colors))
             {
-                if(Colors.Length == 1)
-                {
-                    Device.SetColor(Colors[0], RefreshRate);
-                }
-                else
-                {
-                    Device.SetMultiZoneColors(Colors, RefreshRate);
-                }
+                return;
+            }
+
+            if(Colors.Length > 1)
+            {
+                Device.SetMultiZoneColors(Colors, RefreshRate);
+            }
+            else
+            {
+                Device.SetColor(Colors[0], RefreshRate);
             }
         }
     }

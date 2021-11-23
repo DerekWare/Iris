@@ -24,6 +24,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         Products.Product _Product;
         Products.Vendor _Vendor;
         WaveformSettings _Waveform;
+        int _ZoneCount;
 
         internal Device(string ipAddress, StateService response)
         {
@@ -47,7 +48,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         public override string Product => _Product?.name;
         public override string Uuid => IpAddress;
         public override string Vendor => _Vendor?.name;
-        public override int ZoneCount => MultiZoneColors.Count;
+        public override int ZoneCount => _ZoneCount;
 
         [Browsable(false), XmlIgnore]
         public MultiZoneEffectSettings MultiZoneEffect { get => _MultiZoneEffect; set => SetMultiZoneEffect(value); }
@@ -114,6 +115,12 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             {
                 await Controller.GetExtendedColorZones(response =>
                 {
+                    if(_ZoneCount != response.ZoneCount)
+                    {
+                        _ZoneCount = response.ZoneCount;
+                        OnPropertiesChanged();
+                    }
+
                     if(!_MultiZoneColors.SequenceEqual(response.Colors))
                     {
                         _MultiZoneColors = response.Colors.ToList();
@@ -125,6 +132,12 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             {
                 await Controller.GetColorZones(response =>
                 {
+                    if(_ZoneCount != response.ZoneCount)
+                    {
+                        _ZoneCount = response.ZoneCount;
+                        OnPropertiesChanged();
+                    }
+
                     if(!_MultiZoneColors.SequenceEqual(response.Colors))
                     {
                         _MultiZoneColors = response.Colors.ToList();

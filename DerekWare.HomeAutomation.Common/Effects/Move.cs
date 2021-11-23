@@ -116,7 +116,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         protected override TimeSpan ValidateRefreshRate()
         {
             var refreshRate = base.ValidateRefreshRate().TotalSeconds;
-            refreshRate = Math.Max(refreshRate, 1.0 / Palette.Count);
+            refreshRate = Math.Max(refreshRate, 1.0 / ZoneCount);
             refreshRate = Math.Max(refreshRate, 1.0 / Duration.TotalSeconds);
             return TimeSpan.FromSeconds(refreshRate);
         }
