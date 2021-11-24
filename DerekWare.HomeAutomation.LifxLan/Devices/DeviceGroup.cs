@@ -17,14 +17,14 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         public override event EventHandler<DeviceEventArgs> PropertiesChanged;
         public override event EventHandler<DeviceEventArgs> StateChanged;
 
-        internal DeviceGroup(StateGroup response)
+        internal DeviceGroup(GroupResponse response)
             : this()
         {
             Name = response.Label;
             Uuid = response.Uuid;
         }
 
-        internal DeviceGroup(StateLocation response)
+        internal DeviceGroup(LocationResponse response)
             : this()
         {
             Name = response.Label;

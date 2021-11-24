@@ -10,7 +10,7 @@
         }
     }
 
-    class StateLocation : StateGroup
+    class LocationResponse : GroupResponse
     {
         public new const ushort MessageType = 50;
     }

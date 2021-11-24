@@ -7,46 +7,21 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     {
         #region Conversion
 
-        protected abstract void Parse(List<Message> message);
+        public abstract bool Parse();
 
         #endregion
 
-        static readonly Dictionary<ushort, Func<Response>> TypeMap = new()
-        {
-            { Acknowledgement.MessageType, () => new Acknowledgement() },
-            { LightState.MessageType, () => new LightState() },
-            { StateEcho.MessageType, () => new StateEcho() },
-            { StateExtendedColorZones.MessageType, () => new StateExtendedColorZones() },
-            { StateGroup.MessageType, () => new StateGroup() },
-            { StateLabel.MessageType, () => new StateLabel() },
-            { StateLocation.MessageType, () => new StateLocation() },
-            { StateMultiZone.MessageType, () => new StateMultiZone() },
-            { StateMultiZoneEffect.MessageType, () => new StateMultiZoneEffect() },
-            { StatePower.MessageType, () => new StatePower() },
-            { StateService.MessageType, () => new StateService() },
-            { StateVersion.MessageType, () => new StateVersion() }
-        };
+        public List<Message> Messages { get; } = new();
+        public ushort MessageType => GetMessageType(GetType());
 
-        List<Message> _Messages = new();
-
-        public List<Message> Messages
+        public static ushort GetMessageType(Type type)
         {
-            get => _Messages;
-            set
-            {
-                _Messages = value;
-                Parse(value);
-            }
+            return (ushort)type.GetField("MessageType").GetValue(null);
         }
 
-        public static Response Create(ushort messageType)
+        public static ushort GetMessageType<T>()
         {
-            if(!TypeMap.TryGetValue(messageType, out var func))
-            {
-                return null;
-            }
-
-            return func();
+            return GetMessageType(typeof(T));
         }
     }
 }

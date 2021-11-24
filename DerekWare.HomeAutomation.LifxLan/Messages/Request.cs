@@ -2,8 +2,8 @@
 {
     abstract class Request : Message
     {
-        protected Request(ushort requestType)
-            : base(requestType)
+        protected Request(ushort messageType)
+            : base(messageType)
         {
         }
     }

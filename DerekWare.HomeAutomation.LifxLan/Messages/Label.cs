@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DerekWare.Diagnostics;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
@@ -14,22 +13,24 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
         }
     }
 
-    class StateLabel : Response
+    class LabelResponse : Response
     {
-        public const ushort MessageType = 25;
+        public new const ushort MessageType = 25;
 
         public string Label { get; private set; }
 
         #region Conversion
 
-        protected override void Parse(List<Message> messages)
+        public override bool Parse()
         {
-            Debug.Assert(1 == messages.Count);
+            Debug.Assert(1 == Messages.Count);
 
-            using var ms = new MemoryStream(messages[0].Payload);
+            using var ms = new MemoryStream(Messages[0].Payload);
             using var b = new BinaryReader(ms);
 
             Label = b.ReadBytes(32).DeserializeString();
+
+            return true;
         }
 
         #endregion

@@ -95,8 +95,8 @@
     <Compile Include="Messages\Label.cs" />
     <Compile Include="Messages\LightState.cs" />
     <Compile Include="Messages\Location.cs" />
-    <Compile Include="Messages\ExtendedMultiZone.cs" />
-    <Compile Include="Messages\MultiZoneColor.cs" />
+    <Compile Include="Messages\ExtendedMultiZoneColors.cs" />
+    <Compile Include="Messages\MultiZoneColors.cs" />
     <Compile Include="Messages\MultiZoneEffectSettings.cs" />
     <Compile Include="Messages\Power.cs" />
     <Compile Include="Messages\Request.cs" />

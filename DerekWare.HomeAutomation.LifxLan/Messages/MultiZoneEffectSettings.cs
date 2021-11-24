@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using DerekWare.Diagnostics;
 using DerekWare.Reflection;
@@ -27,6 +26,45 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
             : base(MessageType)
         {
         }
+    }
+
+    class MultiZoneEffectResponse : Response
+    {
+        public new const ushort MessageType = 509;
+
+        public MultiZoneEffectSettings Settings { get; } = new();
+
+        #region Conversion
+
+        public override bool Parse()
+        {
+            Debug.Assert(1 == Messages.Count);
+
+            using var ms = new MemoryStream(Messages[0].Payload);
+            using var b = new BinaryReader(ms);
+
+            Settings.InstanceId = b.ReadUInt32();
+            int effectType = b.ReadByte();
+            b.ReadUInt16(); // Reserved
+            Settings.Cycle = TimeSpan.FromMilliseconds(b.ReadUInt32());
+            Settings.Duration = TimeSpan.FromMilliseconds(b.ReadUInt64() / 1000 / 1000);
+            b.ReadUInt32(); // Reserved
+            b.ReadUInt32(); // Reserved
+            b.ReadUInt32(); // Parameter 0
+            Settings.Direction = (MultiZoneEffectDirection)b.ReadUInt32(); // Parameter 1
+            b.ReadUInt32(); // Parameter 2
+            b.ReadUInt32(); // Parameter 3
+            b.ReadUInt32(); // Parameter 4
+            b.ReadUInt32(); // Parameter 5
+            b.ReadUInt32(); // Parameter 6
+            b.ReadUInt32(); // Parameter 7
+
+            Settings.EffectType = Enum.IsDefined(typeof(MultiZoneEffectType), effectType) ? (MultiZoneEffectType)effectType : MultiZoneEffectType.Off;
+
+            return true;
+        }
+
+        #endregion
     }
 
     public class MultiZoneEffectSettings : ICloneable<MultiZoneEffectSettings>
@@ -91,42 +129,5 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
             writer.Write((uint)0); // Parameter 6
             writer.Write((uint)0); // Parameter 7
         }
-    }
-
-    class StateMultiZoneEffect : Response
-    {
-        public const ushort MessageType = 509;
-
-        public MultiZoneEffectSettings Settings { get; } = new();
-
-        #region Conversion
-
-        protected override void Parse(List<Message> messages)
-        {
-            Debug.Assert(1 == messages.Count);
-
-            using var ms = new MemoryStream(messages[0].Payload);
-            using var b = new BinaryReader(ms);
-
-            Settings.InstanceId = b.ReadUInt32();
-            int effectType = b.ReadByte();
-            b.ReadUInt16(); // Reserved
-            Settings.Cycle = TimeSpan.FromMilliseconds(b.ReadUInt32());
-            Settings.Duration = TimeSpan.FromMilliseconds(b.ReadUInt64() / 1000 / 1000);
-            b.ReadUInt32(); // Reserved
-            b.ReadUInt32(); // Reserved
-            b.ReadUInt32(); // Parameter 0
-            Settings.Direction = (MultiZoneEffectDirection)b.ReadUInt32(); // Parameter 1
-            b.ReadUInt32(); // Parameter 2
-            b.ReadUInt32(); // Parameter 3
-            b.ReadUInt32(); // Parameter 4
-            b.ReadUInt32(); // Parameter 5
-            b.ReadUInt32(); // Parameter 6
-            b.ReadUInt32(); // Parameter 7
-
-            Settings.EffectType = Enum.IsDefined(typeof(MultiZoneEffectType), effectType) ? (MultiZoneEffectType)effectType : MultiZoneEffectType.Off;
-        }
-
-        #endregion
     }
 }

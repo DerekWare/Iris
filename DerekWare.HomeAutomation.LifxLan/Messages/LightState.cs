@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Lifx.Lan.Colors;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 {
-    class LightState : Response
+    class LightStateResponse : Response
     {
-        public const ushort MessageType = 107;
+        public new const ushort MessageType = 107;
 
         public Color Color { get; private set; }
         public byte[] Label { get; private set; }
@@ -16,11 +15,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 
         #region Conversion
 
-        protected override void Parse(List<Message> messages)
+        public override bool Parse()
         {
-            Debug.Assert(1 == messages.Count);
+            Debug.Assert(1 == Messages.Count);
 
-            using var ms = new MemoryStream(messages[0].Payload);
+            using var ms = new MemoryStream(Messages[0].Payload);
             using var b = new BinaryReader(ms);
 
             Color = new Color();
@@ -30,6 +29,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
             Power = (double)b.ReadUInt16() / ushort.MaxValue;
             Label = b.ReadBytes(32);
             b.ReadBytes(8);
+
+            return true;
         }
 
         #endregion

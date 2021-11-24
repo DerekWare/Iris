@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-
-namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
+﻿namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 {
     class Acknowledgement : Response
     {
-        public const ushort MessageType = 45;
+        public new const ushort MessageType = 45;
 
         #region Conversion
 
-        protected override void Parse(List<Message> messages)
+        public override bool Parse()
         {
+            return true;
         }
 
         #endregion

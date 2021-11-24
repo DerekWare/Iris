@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using DerekWare.Collections;
@@ -14,7 +13,9 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
     // TODO purge stale messages building up in PendingResponses.
     class Dispatcher
     {
-        public delegate bool ResponseHandler<in TResponse>(TResponse message)
+        public delegate void ResponseHandler(Response response);
+
+        public delegate void ResponseHandler<in TResponse>(TResponse response)
             where TResponse : Response;
 
         public static readonly Dispatcher Instance = new();
@@ -28,118 +29,92 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
 
         public void OnMessageReceived(IPEndPoint endpoint, Message message)
         {
-            // TODO there's a possibility that a second response could be received
-            // while the lock is released and the response handler has been removed
-            // from the list.
-            Debug.Trace(null, $"Received {endpoint.Address}: {message}");
-
             var responseKey = new ResponseKey(message);
-            ResponseValue responseValue;
 
-            // Get the response handler from the map
             lock(PendingResponses.SyncRoot)
             {
-                if(!PendingResponses.TryGetValue(responseKey, out responseValue))
+                // Get the response handler from the map
+                if(!PendingResponses.TryGetValue(responseKey, out var responseValue))
                 {
-                    Debug.Warning(null, $"Unexpected message: {responseKey}");
+                    Debug.Warning(this, $"Unexpected message: {responseKey}");
                     return;
                 }
 
-                responseValue.Responses.Add(message);
+                // Validate the message type
+                if(responseValue.Response.MessageType != message.MessageType)
+                {
+                    Debug.Warning(this, $"Unexpected response message type: {message.MessageType}");
+                    return;
+                }
+
+                // Attempt to parse the message. A return value of false means more responses
+                // are expected.
+                responseValue.Response.Messages.Add(message);
+
+                if(!responseValue.Response.Parse())
+                {
+                    return;
+                }
+
+                // Response is complete
                 PendingResponses.Remove(responseKey);
-            }
 
-            // Call the handler. A return value of true means more responses are expected.
-            if(!responseValue.OnResponseReceived(responseValue.Responses))
-            {
-                return;
+                // Call the handler
+                responseValue.Handler(responseValue.Response);
             }
-
-            // Push the response handler back into the map for more messages
-            PendingResponses.Add(responseKey, responseValue);
         }
 
+        // Sends a request that requires no response
         public Task SendRequest(string ipAddress, Request request)
         {
-            Debug.Trace(null, $"Sending {ipAddress}: {request.GetType().Name}");
+            Debug.Trace(this, $"Sending {ipAddress}: {request.GetType().Name}");
 
-            if(request.AcknowledgementRequired)
-            {
-                Debug.Error(null, "AcknowledgementRequired with no response type supplied");
-            }
-
-            if(request.ResponseRequired)
-            {
-                Debug.Error(null, "ResponseRequired with no response type supplied");
-            }
+            request.AcknowledgementRequired = false;
+            request.ResponseRequired = false;
 
             return Client.Instance.SendMessage(ipAddress, request.SerializeBinary());
         }
 
-        public Task<TResponse> SendRequest<TResponse>(string ipAddress, Request request, ResponseHandler<TResponse> responseHandler = null)
+        // Sends a request that requires a response
+        public Task<TResponse> SendRequest<TResponse>(string ipAddress, Request request, ResponseHandler<TResponse> responseHandler)
             where TResponse : Response, new()
         {
-            Debug.Trace(null, $"Sending {ipAddress}: {request.GetType().Name}");
+            Debug.Trace(this, $"Sending {ipAddress}: {request.GetType().Name}");
 
-            if(request.AcknowledgementRequired)
+            var responseType = typeof(TResponse);
+
+            if(responseType == typeof(Acknowledgement))
             {
-                if(request.ResponseRequired)
-                {
-                    Debug.Error(null, "AcknowledgementRequired and ResponseRequired are mutually exclusive");
-                }
-
-                if(typeof(Acknowledgement) != typeof(TResponse))
-                {
-                    Debug.Error(null, "Response type must be AcknowledgementResponse");
-                }
+                request.AcknowledgementRequired = false;
+                request.ResponseRequired = false;
             }
             else
             {
-                if(typeof(TResponse) == typeof(Acknowledgement))
-                {
-                    // Debug.Warning(null, "AcknowledgementRequired not set");
-                    request.AcknowledgementRequired = true;
-                }
-                else if(!request.ResponseRequired)
-                {
-                    // Debug.Warning(null, "ResponseRequired not set");
-                    request.ResponseRequired = true;
-                }
+                request.AcknowledgementRequired = false;
+                request.ResponseRequired = true;
             }
 
+            // Create the response key/value pair. We use a lambda response handler
+            // to maintain the templated response type.
+            var response = new TResponse();
             var responseKey = new ResponseKey(request);
-            var responseValue = new ResponseValue();
             var taskCompletionSource = new TaskCompletionSource<TResponse>();
+            var responseValue = new ResponseValue(response,
+                                                  r =>
+                                                  {
+                                                      Debug.Assert(ReferenceEquals(r, response));
 
-            responseValue.OnResponseReceived = messages =>
-            {
-                // Validate the response type
-                if(Response.Create(messages[0].MessageType) is not TResponse response)
-                {
-                    // TODO gracefully handle the case where we get an unexpected response
-                    // because of an old request still lingering somewhere.
-                    Debug.Error(null, $"Unexpected response: {messages[0].MessageType}");
-                    return false;
-                }
+                                                      // Signal task completion
+                                                      taskCompletionSource.SetResult(response);
 
-                // Set the message list. Most responses only have one message, but
-                // some require multiple messages due to UDP packet size limitations.
-                response.Messages = messages;
+                                                      // Call the associated handler
+                                                      responseHandler?.Invoke(response);
+                                                  });
 
-                // Call the response handler. If it returns false, no further message
-                // processing is required.
-                if(responseHandler?.Invoke(response) ?? false)
-                {
-                    // More processing required
-                    return true;
-                }
-
-                // Signal task completion
-                taskCompletionSource.SetResult(response);
-                return false;
-            };
-
+            // Add the response to our pending list
             PendingResponses.Add(responseKey, responseValue);
+
+            // Send the request
             Client.Instance.SendMessage(ipAddress, request.SerializeBinary());
 
             return taskCompletionSource.Task;
@@ -222,8 +197,14 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
         class ResponseValue
         {
             public readonly DateTime CreationTime = DateTime.Now;
-            public readonly List<Message> Responses = new();
-            public Func<List<Message>, bool> OnResponseReceived;
+            public readonly ResponseHandler Handler;
+            public readonly Response Response;
+
+            public ResponseValue(Response response, ResponseHandler handler)
+            {
+                Response = response;
+                Handler = handler;
+            }
         }
     }
 }

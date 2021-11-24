@@ -26,7 +26,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         WaveformSettings _Waveform;
         int _ZoneCount = 1;
 
-        internal Device(string ipAddress, StateService response)
+        internal Device(string ipAddress, ServiceResponse response)
         {
             Controller = new DeviceController(ipAddress);
             _Name = ipAddress;
@@ -111,7 +111,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         public async Task RefreshStateAsync()
         {
             await RefreshPropertiesAsync();
-            
+
             await Controller.GetPower(response =>
             {
                 if(response.Power != _Power)

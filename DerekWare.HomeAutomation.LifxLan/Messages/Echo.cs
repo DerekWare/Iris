@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DerekWare.Diagnostics;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
@@ -20,17 +19,17 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
         }
     }
 
-    class StateEcho : Response
+    class EchoResponse : Response
     {
-        public const ushort MessageType = 59;
+        public new const ushort MessageType = 59;
 
         #region Conversion
 
-        protected override void Parse(List<Message> messages)
+        public override bool Parse()
         {
-            Debug.Assert(1 == messages.Count);
+            Debug.Assert(1 == Messages.Count);
 
-            using var ms = new MemoryStream(messages[0].Payload);
+            using var ms = new MemoryStream(Messages[0].Payload);
             using var b = new BinaryReader(ms);
 
             var content = b.ReadUInt64();
@@ -39,6 +38,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
             {
                 Debug.Warning(this, "Echo contents not as expected");
             }
+
+            return true;
         }
 
         #endregion

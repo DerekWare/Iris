@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DerekWare.Diagnostics;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
@@ -19,24 +18,26 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
         }
     }
 
-    class StateGroup : Response
+    class GroupResponse : Response
     {
-        public const ushort MessageType = 53;
+        public new const ushort MessageType = 53;
 
         public string Label { get; protected set; }
         public string Uuid { get; protected set; }
 
         #region Conversion
 
-        protected override void Parse(List<Message> messages)
+        public override bool Parse()
         {
-            Debug.Assert(messages.Count == 1);
+            Debug.Assert(Messages.Count == 1);
 
-            using var ms = new MemoryStream(messages[0].Payload);
+            using var ms = new MemoryStream(Messages[0].Payload);
             using var b = new BinaryReader(ms);
 
             Uuid = b.ReadBytes(16).FormatByteArray(string.Empty);
             Label = b.ReadBytes(32).DeserializeString();
+
+            return true;
         }
 
         #endregion

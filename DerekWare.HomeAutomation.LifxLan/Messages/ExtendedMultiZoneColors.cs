@@ -16,11 +16,46 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
         public byte ZoneIndex { get; set; }
     }
 
-    class GetExtendedColorZonesRequest : Request
+    class ExtendedMultiZoneColorsResponse : Response
+    {
+        public new const ushort MessageType = 512;
+
+        public byte ColorCount { get; private set; }
+        public Color[] Colors { get; private set; }
+        public byte ZoneCount { get; private set; }
+        public byte ZoneIndex { get; private set; }
+
+        #region Conversion
+
+        public override bool Parse()
+        {
+            Debug.Assert(1 == Messages.Count);
+
+            using var ms = new MemoryStream(Messages[0].Payload);
+            using var b = new BinaryReader(ms);
+
+            ZoneCount = b.ReadByte();
+            ZoneIndex = b.ReadByte();
+            ColorCount = b.ReadByte();
+            Colors = new Color[ColorCount];
+
+            for(var i = 0; i < ColorCount; ++i)
+            {
+                Colors[i] = new Color();
+                Colors[i].DeserializeBinary(b);
+            }
+
+            return true;
+        }
+
+        #endregion
+    }
+
+    class GetExtendedMultiZoneColorsRequest : Request
     {
         public new const ushort MessageType = 511;
 
-        public GetExtendedColorZonesRequest()
+        public GetExtendedMultiZoneColorsRequest()
             : base(MessageType)
         {
         }
@@ -35,12 +70,12 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
         }
     }
 
-    class SetExtendedColorZonesRequest : Request
+    class SetExtendedMultiZoneColorsRequest : Request
     {
         public const int MaxColorValueCount = 82; // Limited to 82 colors per request
         public new const ushort MessageType = 510;
 
-        public SetExtendedColorZonesRequest()
+        public SetExtendedMultiZoneColorsRequest()
             : base(MessageType)
         {
         }
@@ -60,38 +95,5 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
             writer.Write((byte)Settings.Colors.Count);
             Settings.Colors.ForEach(i => i.SerializeBinary(writer));
         }
-    }
-
-    class StateExtendedColorZones : Response
-    {
-        public const ushort MessageType = 512;
-
-        public byte ColorCount { get; private set; }
-        public Color[] Colors { get; private set; }
-        public byte ZoneCount { get; private set; }
-        public byte ZoneIndex { get; private set; }
-
-        #region Conversion
-
-        protected override void Parse(List<Message> messages)
-        {
-            Debug.Assert(1 == messages.Count);
-
-            using var ms = new MemoryStream(messages[0].Payload);
-            using var b = new BinaryReader(ms);
-
-            ZoneCount = b.ReadByte();
-            ZoneIndex = b.ReadByte();
-            ColorCount = b.ReadByte();
-            Colors = new Color[ColorCount];
-
-            for(var i = 0; i < ColorCount; ++i)
-            {
-                Colors[i] = new Color();
-                Colors[i].DeserializeBinary(b);
-            }
-        }
-
-        #endregion
     }
 }

@@ -79,7 +79,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
             GetServiceTask = Task.Run(GetServiceLoop, GetServiceTaskCancellationTokenSource.Token);
         }
 
-        internal bool CreateDevice(string ipAddress, StateService response, out Device device)
+        internal bool CreateDevice(string ipAddress, ServiceResponse response, out Device device)
         {
             lock(InternalDevices.SyncRoot)
             {
@@ -95,7 +95,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
             return true;
         }
 
-        internal bool CreateGroup(StateGroup response, out DeviceGroup group)
+        internal bool CreateGroup(GroupResponse response, out DeviceGroup group)
         {
             lock(InternalGroups.SyncRoot)
             {
@@ -125,7 +125,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
         {
             ipAddress ??= BroadcastAddress;
 
-            // Debug.Trace(null, $"Sending {address}: {data.FormatByteArray()}");
+            // Debug.Trace(this, $"Sending {address}: {data.FormatByteArray()}");
 
             try
             {
@@ -169,15 +169,25 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
                     continue;
                 }
 
-                // Debug.Trace(null, $"Received {receiveTask.Result.RemoteEndPoint.Address}: {receiveTask.Result.Buffer.FormatByteArray()}");
+                Message message;
 
-                var message = Message.DeserializeBinary(receiveTask.Result.Buffer);
-
-                if(StateService.MessageType == message.MessageType)
+                try
                 {
-                    CreateDevice(receiveTask.Result.RemoteEndPoint.Address.ToString(),
-                                 new StateService { Messages = new[] { message }.ToList() },
-                                 out var device);
+                    message = Message.DeserializeBinary(receiveTask.Result.Buffer);
+                }
+                catch(Exception ex)
+                {
+                    Debug.Error(this, ex);
+                    continue;
+                }
+
+                Debug.Trace(this, $"Received {receiveTask.Result.RemoteEndPoint.Address}: {message}");
+
+                if(ServiceResponse.MessageType == message.MessageType)
+                {
+                    var response = new ServiceResponse();
+                    response.Messages.Add(message);
+                    CreateDevice(receiveTask.Result.RemoteEndPoint.Address.ToString(), response, out var device);
                 }
                 else
                 {

@@ -9,21 +9,21 @@ using DerekWare.HomeAutomation.Common.Scenes;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Description("Moves the current colors left, right or back and forth.")]
+    [Description("Moves the current colors forward, backward or back and forth.")]
     public class Move : MultiZoneColorEffectRenderer
     {
         public enum EffectBehavior
         {
-            Left,
-            Right,
+            Forward,
+            Backward,
             Bounce,
             Random
         }
 
         public enum EffectDirection
         {
-            Left,
-            Right
+            Forward,
+            Backward
         }
 
         protected readonly Random Random = new();
@@ -49,19 +49,19 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // Decide the direction of movement based on the effect behavior
             switch(Behavior)
             {
-                case EffectBehavior.Left:
-                    Direction = EffectDirection.Left;
+                case EffectBehavior.Forward:
+                    Direction = EffectDirection.Forward;
                     break;
 
-                case EffectBehavior.Right:
-                    Direction = EffectDirection.Right;
+                case EffectBehavior.Backward:
+                    Direction = EffectDirection.Backward;
                     break;
 
                 case EffectBehavior.Bounce:
                     // Every cycle, reverse the direction
                     if(renderState.CycleCountChanged)
                     {
-                        Direction = Direction == EffectDirection.Left ? EffectDirection.Right : EffectDirection.Left;
+                        Direction = Direction == EffectDirection.Forward ? EffectDirection.Backward : EffectDirection.Forward;
                     }
 
                     break;
@@ -71,7 +71,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                     if(renderState.TotalElapsed >= NextChange)
                     {
                         NextChange += TimeSpan.FromSeconds(Duration.TotalSeconds * Random.NextDouble());
-                        Direction = Direction == EffectDirection.Left ? EffectDirection.Right : EffectDirection.Left;
+                        Direction = Direction == EffectDirection.Forward ? EffectDirection.Backward : EffectDirection.Forward;
                     }
 
                     break;
@@ -85,13 +85,13 @@ namespace DerekWare.HomeAutomation.Common.Effects
             {
                 // Calculate how far to move the offset into the palette based on how far we've moved
                 // from the last update.
-                var cycleIncrement = renderState.CycleIncrement * (Direction == EffectDirection.Left ? 1 : -1);
+                var cycleIncrement = renderState.CycleIncrement * (Direction == EffectDirection.Forward ? 1 : -1);
                 ColorOffset += cycleIncrement;
                 colorOffset = (int)(ColorOffset * ZoneCount);
             }
             else
             {
-                colorOffset = (int)((Direction == EffectDirection.Left ? renderState.CyclePosition : 1 - renderState.CyclePosition) * ZoneCount);
+                colorOffset = (int)((Direction == EffectDirection.Forward ? renderState.CyclePosition : 1 - renderState.CyclePosition) * ZoneCount);
             }
 
             foreach(var i in Palette)

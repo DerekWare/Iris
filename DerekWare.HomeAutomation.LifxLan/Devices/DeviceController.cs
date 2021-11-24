@@ -18,71 +18,49 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public string IpAddress { get; }
 
-        public Task<LightState> GetColor(Action<LightState> responseHandler)
+        public Task<LightStateResponse> GetColor(Dispatcher.ResponseHandler<LightStateResponse> responseHandler)
         {
-            return GetProperty<GetColorRequest, LightState>(responseHandler);
+            return GetProperty<GetColorRequest, LightStateResponse>(responseHandler);
         }
 
-        public Task<StateMultiZone> GetColorZones(Action<StateMultiZone> responseHandler)
+        public Task<MultiZoneColorsResponse> GetColorZones(Dispatcher.ResponseHandler<MultiZoneColorsResponse> responseHandler)
         {
-            // The response to this request will be N messages where N is ZoneCount / 8. We
-            // have to process the first message to get the zone count, then tell the dispatcher
-            // whether to continue processing responses.
-            var taskCompletionSource = new TaskCompletionSource<StateMultiZone>();
-            var task = taskCompletionSource.Task;
-
-            Dispatcher.Instance.SendRequest<StateMultiZone>(IpAddress,
-                                                            new GetColorZonesRequest(),
-                                                            response =>
-                                                            {
-                                                                if(response.Messages.Count < ((response.ZoneCount + 7) / 8))
-                                                                {
-                                                                    // More responses needed
-                                                                    return true;
-                                                                }
-
-                                                                // Caught them all
-                                                                taskCompletionSource.SetResult(response);
-                                                                responseHandler(response);
-                                                                return false;
-                                                            });
-
-            return task;
+            return GetProperty<GetMultiZoneColorsRequest, MultiZoneColorsResponse>(responseHandler);
         }
 
-        public Task<StateExtendedColorZones> GetExtendedColorZones(Action<StateExtendedColorZones> responseHandler)
+        public Task<ExtendedMultiZoneColorsResponse> GetExtendedColorZones(Dispatcher.ResponseHandler<ExtendedMultiZoneColorsResponse> responseHandler)
         {
-            return GetProperty<GetExtendedColorZonesRequest, StateExtendedColorZones>(responseHandler);
+            return GetProperty<GetExtendedMultiZoneColorsRequest, ExtendedMultiZoneColorsResponse>(responseHandler);
         }
 
-        public Task<StateGroup> GetGroup(Action<StateGroup> responseHandler)
+        public Task<GroupResponse> GetGroup(Dispatcher.ResponseHandler<GroupResponse> responseHandler)
         {
-            return GetProperty<GetGroupRequest, StateGroup>(responseHandler);
+            return GetProperty<GetGroupRequest, GroupResponse>(responseHandler);
         }
 
-        public Task<StateLabel> GetLabel(Action<StateLabel> responseHandler)
+        public Task<LabelResponse> GetLabel(Dispatcher.ResponseHandler<LabelResponse> responseHandler)
         {
-            return GetProperty<GetLabelRequest, StateLabel>(responseHandler);
+            return GetProperty<GetLabelRequest, LabelResponse>(responseHandler);
         }
 
-        public Task<StateLocation> GetLocation(Action<StateLocation> responseHandler)
+        public Task<LocationResponse> GetLocation(Dispatcher.ResponseHandler<LocationResponse> responseHandler)
         {
-            return GetProperty<GetLocationRequest, StateLocation>(responseHandler);
+            return GetProperty<GetLocationRequest, LocationResponse>(responseHandler);
         }
 
-        public Task<StateMultiZoneEffect> GetMultiZoneEffect(Action<StateMultiZoneEffect> responseHandler)
+        public Task<MultiZoneColorsResponse> GetMultiZoneColors(Dispatcher.ResponseHandler<MultiZoneColorsResponse> responseHandler)
         {
-            return GetProperty<GetMultiZoneEffectRequest, StateMultiZoneEffect>(responseHandler);
+            return GetProperty<GetMultiZoneColorsRequest, MultiZoneColorsResponse>(responseHandler);
         }
 
-        public Task<StatePower> GetPower(Action<StatePower> responseHandler)
+        public Task<PowerResponse> GetPower(Dispatcher.ResponseHandler<PowerResponse> responseHandler)
         {
-            return GetProperty<GetPowerRequest, StatePower>(responseHandler);
+            return GetProperty<GetPowerRequest, PowerResponse>(responseHandler);
         }
 
-        public Task<StateVersion> GetVersion(Action<StateVersion> responseHandler)
+        public Task<VersionResponse> GetVersion(Dispatcher.ResponseHandler<VersionResponse> responseHandler)
         {
-            return GetProperty<GetVersionRequest, StateVersion>(responseHandler);
+            return GetProperty<GetVersionRequest, VersionResponse>(responseHandler);
         }
 
         public Task SetColor(Color color, TimeSpan duration)
@@ -90,15 +68,24 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             return Dispatcher.Instance.SendRequest(IpAddress, new SetColorRequest { Color = color, Duration = duration });
         }
 
-        public async Task SetColorZones(IReadOnlyCollection<ColorZone> colors, TimeSpan duration)
+        public Task SetExtendedColorZones(IReadOnlyCollection<Color> colors, TimeSpan duration)
+        {
+            return Dispatcher.Instance.SendRequest(IpAddress,
+                                                   new SetExtendedMultiZoneColorsRequest
+                                                   {
+                                                       Settings = new ExtendedColorZoneSettings { Colors = colors, Duration = duration }
+                                                   });
+        }
+
+        public async Task SetMultiZoneColors(IReadOnlyCollection<ColorZone> colors, TimeSpan duration)
         {
             // Blast out the compressed color list, specifying not to change the color until we're done
             foreach(var i in colors.Take(colors.Count - 1))
             {
                 await Dispatcher.Instance.SendRequest(IpAddress,
-                                                      new SetColorZonesRequest
+                                                      new SetMultiZoneColorsRequest
                                                       {
-                                                          Settings = new ColorZoneSettings
+                                                          Settings = new MultiZoneColorSettings
                                                           {
                                                               Color = i.Color,
                                                               Duration = duration,
@@ -113,9 +100,9 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             foreach(var i in colors.Skip(colors.Count - 1))
             {
                 await Dispatcher.Instance.SendRequest(IpAddress,
-                                                      new SetColorZonesRequest
+                                                      new SetMultiZoneColorsRequest
                                                       {
-                                                          Settings = new ColorZoneSettings
+                                                          Settings = new MultiZoneColorSettings
                                                           {
                                                               Color = i.Color,
                                                               Duration = duration,
@@ -125,15 +112,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                                                           }
                                                       });
             }
-        }
-
-        public Task SetExtendedColorZones(IReadOnlyCollection<Color> colors, TimeSpan duration)
-        {
-            return Dispatcher.Instance.SendRequest(IpAddress,
-                                                   new SetExtendedColorZonesRequest
-                                                   {
-                                                       Settings = new ExtendedColorZoneSettings { Colors = colors, Duration = duration }
-                                                   });
         }
 
         public Task SetMultiZoneEffect(MultiZoneEffectSettings effectSettings)
@@ -151,28 +129,10 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             return Dispatcher.Instance.SendRequest(IpAddress, new SetWaveformRequest { Settings = waveformSettings });
         }
 
-        Task<TResponse> GetProperty<TRequest, TResponse>(Action<TResponse> responseHandler)
+        Task<TResponse> GetProperty<TRequest, TResponse>(Dispatcher.ResponseHandler<TResponse> responseHandler)
             where TRequest : Request, new() where TResponse : Response, new()
         {
-            return GetProperty(new TRequest(), responseHandler);
-        }
-
-        Task<TResponse> GetProperty<TRequest, TResponse>(TRequest request, Action<TResponse> responseHandler)
-            where TRequest : Request where TResponse : Response, new()
-        {
-            var taskCompletionSource = new TaskCompletionSource<TResponse>();
-            var task = taskCompletionSource.Task;
-
-            Dispatcher.Instance.SendRequest<TResponse>(IpAddress,
-                                                       request,
-                                                       response =>
-                                                       {
-                                                           taskCompletionSource.SetResult(response);
-                                                           responseHandler(response);
-                                                           return false;
-                                                       });
-
-            return task;
+            return Dispatcher.Instance.SendRequest(IpAddress, new TRequest(), responseHandler);
         }
     }
 }
