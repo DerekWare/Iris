@@ -29,7 +29,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         internal Device(string ipAddress, ServiceResponse response)
         {
             Controller = new DeviceController(ipAddress);
-            _Name = ipAddress;
 
             RefreshState();
         }
@@ -41,13 +40,24 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         public override IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups;
 
         public string IpAddress => Controller.IpAddress;
+
         public override bool IsColor => _Product?.features.color ?? false;
+
         public bool IsExtendedMultiZone => _Product?.features.extended_multizone ?? false;
+
         public override bool IsMultiZone => _Product?.features.multizone ?? false;
-        public override string Name => _Name;
+
+        [Browsable(false), XmlIgnore]
+        public override bool IsValid => !_Name.IsNullOrEmpty();
+
+        public override string Name => _Name.IsNullOrEmpty() ? IpAddress : _Name;
+
         public override string Product => _Product?.name;
+
         public override string Uuid => IpAddress;
+
         public override string Vendor => _Vendor?.name;
+
         public override int ZoneCount => _ZoneCount;
 
         [Browsable(false), XmlIgnore]

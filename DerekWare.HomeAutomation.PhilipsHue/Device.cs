@@ -28,17 +28,32 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public override IReadOnlyCollection<IDeviceGroup> Groups => PhilipsHue.Client.Instance.Groups.Where(i => i.Devices.Contains(this)).ToList();
 
         public string Id => HueDevice.Id;
+
         public override bool IsColor => Type.IndexOf("color", StringComparison.CurrentCultureIgnoreCase) >= 0; // TODO this is a little hacky
+
         public override bool IsMultiZone => false; // TODO can the gradient strip be addressed as more than one zone without the entertainment API?
+
+        [Browsable(false), XmlIgnore]
+        public override bool IsValid => true;
+
         public string LuminaireUniqueId => HueDevice.LuminaireUniqueId;
+
         public string ModelId => HueDevice.ModelId;
+
         public override string Name => HueDevice.Name;
+
         public override string Product => HueDevice.ProductId;
+
         public string SoftwareVersion => HueDevice.SoftwareVersion;
+
         public string SwConfigId => HueDevice.SwConfigId;
+
         public string Type => HueDevice.Type;
+
         public override string Uuid => HueDevice.UniqueId;
+
         public override string Vendor => HueDevice.ManufacturerName;
+
         public override int ZoneCount => 1;
 
         public override async void RefreshState()

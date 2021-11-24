@@ -23,6 +23,7 @@ namespace DerekWare.HomeAutomation.Common
         IClient Client { get; }
         bool IsColor { get; }
         bool IsMultiZone { get; }
+        bool IsValid { get; }
         string Product { get; }
         string Uuid { get; }
         string Vendor { get; }
@@ -51,6 +52,7 @@ namespace DerekWare.HomeAutomation.Common
         public abstract IReadOnlyCollection<IDeviceGroup> Groups { get; }
         public abstract bool IsColor { get; }
         public abstract bool IsMultiZone { get; }
+        public abstract bool IsValid { get; }
         public abstract string Name { get; }
         public abstract string Product { get; }
         public abstract string Uuid { get; }
@@ -223,7 +225,7 @@ namespace DerekWare.HomeAutomation.Common
 
         public virtual void Dispose()
         {
-            DerekWare.Extensions.Dispose(ref _RefreshTask);
+            Extensions.Dispose(ref _RefreshTask);
         }
 
         #endregion

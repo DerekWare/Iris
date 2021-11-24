@@ -51,6 +51,9 @@ namespace DerekWare.HomeAutomation.Common
         public virtual bool IsMultiZone => true;
 
         [Browsable(false), XmlIgnore]
+        public bool IsValid => Devices.Any(i => i.IsValid);
+
+        [Browsable(false), XmlIgnore]
         public virtual string Product => null;
 
         public virtual int ZoneCount
