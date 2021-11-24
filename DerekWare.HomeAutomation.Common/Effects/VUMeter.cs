@@ -129,14 +129,14 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 return true;
             }
 
-            var size = (int)Math.Ceiling(amp * (ZoneCount + 1));
-            var offset = ((ZoneCount / 2) + Offset) - (size / 2);
+            var size = (int)Math.Ceiling(amp * ((ZoneCount + 1) / 2));
+            var offset = ((ZoneCount / 2) + Offset) - size;
 
             colors = BackgroundColor.Repeat(ZoneCount).ToArray();
 
-            for(var i = 0; i < size; ++i)
+            for(var i = 0; i < (size * 2); ++i)
             {
-                colors.SetWrappingValue(offset + i, color);
+                colors.SetWrappingValue(offset++, color);
             }
 
             return true;

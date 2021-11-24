@@ -40,6 +40,9 @@ namespace DerekWare.Iris
             this.ExitNotifyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.FileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.HelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.UpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ConnectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.CloseMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -94,7 +97,7 @@ namespace DerekWare.Iris
             this.MenuStrip.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.MenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FileMenuItem});
+            this.FileMenuItem, HelpMenuItem});
             this.MenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip.Name = "MenuStrip";
             this.MenuStrip.Size = new System.Drawing.Size(2130, 33);
@@ -174,6 +177,29 @@ namespace DerekWare.Iris
             this.BridgeMenuItem.Text = "Connect to &Hue Bridge...";
             this.BridgeMenuItem.Click += new System.EventHandler(this.BridgeMenuItem_Click);
             // 
+            // HelpMenuItem
+            // 
+            this.HelpMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.UpdateMenuItem, this.AboutMenuItem});
+            this.HelpMenuItem.Name = "HelpMenuItem";
+            this.HelpMenuItem.Size = new System.Drawing.Size(54, 29);
+            this.HelpMenuItem.Text = "&Help";
+            // 
+            // UpdateMenuItem
+            // 
+            this.UpdateMenuItem.Name = "UpdateMenuItem";
+            this.UpdateMenuItem.Size = new System.Drawing.Size(373, 34);
+            this.UpdateMenuItem.Text = "Check for &Updates...";
+            this.UpdateMenuItem.Click += new System.EventHandler(this.UpdateMenuItem_Click);
+            // 
+            // AboutMenuItem
+            // 
+            this.AboutMenuItem.Name = "AboutMenuItem";
+            this.AboutMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.F1)));
+            this.AboutMenuItem.Size = new System.Drawing.Size(373, 34);
+            this.AboutMenuItem.Text = "&About...";
+            this.AboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -205,7 +231,10 @@ namespace DerekWare.Iris
         private System.Windows.Forms.ToolStripMenuItem ExitNotifyMenuItem;
         private System.Windows.Forms.MenuStrip MenuStrip;
         private System.Windows.Forms.ToolStripMenuItem FileMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem HelpMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ConnectMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AboutMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem UpdateMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem ExitMenuItem;
         private System.Windows.Forms.ToolStripMenuItem CloseMenuItem;

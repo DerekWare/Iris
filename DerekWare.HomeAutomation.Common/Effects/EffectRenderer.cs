@@ -81,12 +81,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 var cycleTime = renderState.TotalElapsed.TotalSeconds / Duration.TotalSeconds;
                 var cycleCount = (int)cycleTime;
                 var cyclePosition = cycleTime - cycleCount;
-                var cycleIncrement = cyclePosition - renderState.CyclePosition;
-
-                while(cycleIncrement < 0)
-                {
-                    cycleIncrement += 1;
-                }
+                var cycleIncrement = cyclePosition >= renderState.CyclePosition
+                    ? cyclePosition - renderState.CyclePosition
+                    : (1 - renderState.CyclePosition) + cyclePosition;
 
                 renderState.CycleCountChanged = renderState.CycleCount != cycleCount;
                 renderState.CycleCount = cycleCount;

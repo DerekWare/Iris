@@ -126,6 +126,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
             ipAddress ??= BroadcastAddress;
 
             // Debug.Trace(null, $"Sending {address}: {data.FormatByteArray()}");
+
             try
             {
                 return Socket.SendAsync(data, data.Length, ipAddress, Port);
@@ -135,26 +136,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
                 Debug.Warning(this, e);
                 return Task.FromException(e);
             }
-
-            // TODO
-#if false
-            // Throttle the number of messages we send to each device so as to
-            // not overrun their UDP receive buffer. The docs recommend no more
-            // than 20 messages per second.
-            if(device is null)
-            {
-                return;
-            }
-
-            var now = DateTime.Now;
-            var wait = NetworkThrottle - (now - device.LastMessageTime);
-            device.LastMessageTime = now;
-
-            if(wait > TimeSpan.Zero)
-            {
-                await Task.Delay(wait);
-            }
-#endif
         }
 
         void GetServiceLoop()

@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
+using AutoUpdaterDotNET;
 using DerekWare.Collections;
-using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.Iris.Properties;
 using DerekWare.Strings;
@@ -25,6 +26,9 @@ namespace DerekWare.Iris
 
         protected override void OnLoad(EventArgs e)
         {
+            AutoUpdater.ApplicationExitEvent += OnApplicationExitEvent;
+            AutoUpdater.InstalledVersion = new Version(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion);
+
             Settings.Default.LifxDevices ??= new StringCollection();
             Settings.Default.LifxDevices.OfType<string>().ForEach(LifxClient.Instance.Connect);
 
@@ -33,6 +37,7 @@ namespace DerekWare.Iris
                 HueClient.Instance.Connect(Settings.Default.HueBridgeAddress, Settings.Default.HueApiKey);
             }
 
+            CheckForUpdates();
             base.OnLoad(e);
         }
 
@@ -44,6 +49,11 @@ namespace DerekWare.Iris
             }
 
             base.OnResize(e);
+        }
+
+        void CheckForUpdates()
+        {
+            AutoUpdater.Start("http://www.derekware.com/software/iris/AutoUpdater.xml");
         }
 
         void MinimizeToTray()
@@ -63,6 +73,11 @@ namespace DerekWare.Iris
         }
 
         #region Event Handlers
+
+        void AboutMenuItem_Click(object sender, EventArgs e)
+        {
+            new AboutBox().ShowDialog(this);
+        }
 
         void BridgeMenuItem_Click(object sender, EventArgs e)
         {
@@ -103,7 +118,7 @@ namespace DerekWare.Iris
                 RootLayoutPanel.Controls.Remove(i);
                 i.Dispose();
             }
-            
+
             if(e.Node is not DeviceTreeView.DeviceNode node)
             {
                 return;
@@ -158,41 +173,22 @@ namespace DerekWare.Iris
             RestoreFromTray();
         }
 
+        void OnApplicationExitEvent()
+        {
+            IsExiting = true;
+            Close();
+        }
+
         void ShowWindowMenuItem_Click(object sender, EventArgs e)
         {
             RestoreFromTray();
         }
 
-        #endregion
-
-        class TabSortComparer : IComparer<TabPage>
+        void UpdateMenuItem_Click(object sender, EventArgs e)
         {
-            public static readonly TabSortComparer Instance = new();
-
-            #region Equality
-
-            public int Compare(TabPage x, TabPage y)
-            {
-                // Order: groups, devices
-                if(x.Tag is IDeviceGroup)
-                {
-                    if(y.Tag is IDeviceGroup)
-                    {
-                        return x.Text.CompareTo(y.Text);
-                    }
-
-                    return -1;
-                }
-
-                if(y.Tag is IDeviceGroup)
-                {
-                    return 1;
-                }
-
-                return x.Text.CompareTo(y.Text);
-            }
-
-            #endregion
+            CheckForUpdates();
         }
+
+        #endregion
     }
 }
