@@ -17,6 +17,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     {
         public new const ushort MessageType = 25;
 
+        public LabelResponse()
+            : base(MessageType)
+        {
+        }
+
         public string Label { get; private set; }
 
         #region Conversion

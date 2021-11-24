@@ -32,6 +32,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     {
         public new const ushort MessageType = 509;
 
+        public MultiZoneEffectResponse()
+            : base(MessageType)
+        {
+        }
+
         public MultiZoneEffectSettings Settings { get; } = new();
 
         #region Conversion

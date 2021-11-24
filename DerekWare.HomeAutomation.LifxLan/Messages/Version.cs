@@ -17,6 +17,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     {
         public new const ushort MessageType = 33;
 
+        public VersionResponse()
+            : base(MessageType)
+        {
+        }
+
         public uint ProductId { get; private set; }
         public uint VendorId { get; private set; }
 

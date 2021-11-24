@@ -18,6 +18,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     {
         public new const ushort MessageType = 22;
 
+        public PowerResponse()
+            : base(MessageType)
+        {
+        }
+
         public PowerState Power { get; private set; }
 
         #region Conversion

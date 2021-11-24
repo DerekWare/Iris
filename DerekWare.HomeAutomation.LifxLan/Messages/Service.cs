@@ -19,6 +19,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     {
         public new const ushort MessageType = 3;
 
+        public ServiceResponse()
+            : base(MessageType)
+        {
+        }
+
         public uint Port { get; private set; }
         public byte Service { get; private set; }
 

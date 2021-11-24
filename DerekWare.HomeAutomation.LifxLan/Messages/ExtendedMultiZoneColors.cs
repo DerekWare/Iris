@@ -20,6 +20,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     {
         public new const ushort MessageType = 512;
 
+        public ExtendedMultiZoneColorsResponse()
+            : base(MessageType)
+        {
+        }
+
         public byte ColorCount { get; private set; }
         public Color[] Colors { get; private set; }
         public byte ZoneCount { get; private set; }

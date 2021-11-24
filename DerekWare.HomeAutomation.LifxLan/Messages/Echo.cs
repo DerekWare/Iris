@@ -23,6 +23,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     {
         public new const ushort MessageType = 59;
 
+        public EchoResponse()
+            : base(MessageType)
+        {
+        }
+
         #region Conversion
 
         public override bool Parse()

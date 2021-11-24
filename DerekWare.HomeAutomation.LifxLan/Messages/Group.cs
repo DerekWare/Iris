@@ -22,6 +22,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     {
         public new const ushort MessageType = 53;
 
+        public GroupResponse()
+            : base(MessageType)
+        {
+        }
+
         public string Label { get; protected set; }
         public string Uuid { get; protected set; }
 

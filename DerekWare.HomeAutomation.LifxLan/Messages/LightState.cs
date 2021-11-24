@@ -9,6 +9,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     {
         public new const ushort MessageType = 107;
 
+        public LightStateResponse()
+            : base(MessageType)
+        {
+        }
+
         public Color Color { get; private set; }
         public byte[] Label { get; private set; }
         public double Power { get; private set; }

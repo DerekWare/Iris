@@ -4,6 +4,11 @@
     {
         public new const ushort MessageType = 45;
 
+        public Acknowledgement()
+            : base(MessageType)
+        {
+        }
+
         #region Conversion
 
         public override bool Parse()
