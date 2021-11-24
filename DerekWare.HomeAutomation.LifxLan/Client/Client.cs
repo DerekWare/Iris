@@ -19,19 +19,16 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
     {
         public const string BroadcastAddress = "255.255.255.255";
         public const int Port = 56700;
-
         public static readonly Client Instance = new();
+        public static readonly TimeSpan ServiceInterval = TimeSpan.FromSeconds(30);
 
         internal SynchronizedDictionary<string, Device> InternalDevices = new(StringComparer.OrdinalIgnoreCase);
         internal SynchronizedDictionary<string, DeviceGroup> InternalGroups = new(StringComparer.OrdinalIgnoreCase);
 
-        readonly TimeSpan GetServiceInterval = TimeSpan.FromSeconds(30);
-        readonly CancellationTokenSource GetServiceTaskCancellationTokenSource = new();
-        readonly TimeSpan NetworkThrottle = TimeSpan.FromSeconds(1.0 / 20);
-        readonly CancellationTokenSource ReceiveTaskCancellationTokenSource = new();
-
-        Task GetServiceTask;
         Task ReceiveTask;
+        CancellationTokenSource ReceiveTaskCancellationTokenSource = new();
+        Task ServiceTask;
+        CancellationTokenSource ServiceTaskCancellationTokenSource = new();
         UdpClient Socket;
 
         public event EventHandler<DeviceEventArgs> PropertiesChanged;
@@ -75,8 +72,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
         public void Start()
         {
             Socket = new UdpClient(new IPEndPoint(IPAddress.Any, Port)) { Client = { Blocking = false, EnableBroadcast = true } };
-            ReceiveTask = Task.Run(ReceiveLoop, ReceiveTaskCancellationTokenSource.Token);
-            GetServiceTask = Task.Run(GetServiceLoop, GetServiceTaskCancellationTokenSource.Token);
+            ReceiveTask = Task.Run(ReceiveWorker, ReceiveTaskCancellationTokenSource.Token);
+            ServiceTask = Task.Run(ServiceWorker, ServiceTaskCancellationTokenSource.Token);
         }
 
         internal bool CreateDevice(string ipAddress, ServiceResponse response, out Device device)
@@ -125,35 +122,23 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
         {
             ipAddress ??= BroadcastAddress;
 
-            // Debug.Trace(this, $"Sending {address}: {data.FormatByteArray()}");
-
             try
             {
                 return Socket.SendAsync(data, data.Length, ipAddress, Port);
             }
-            catch(Exception e)
+            catch(SocketException e)
             {
-                Debug.Warning(this, e);
+                Debug.Error(this, e);
                 return Task.FromException(e);
             }
         }
 
-        void GetServiceLoop()
-        {
-            var request = new GetServiceRequest().SerializeBinary();
-
-            while(!GetServiceTaskCancellationTokenSource.IsCancellationRequested)
-            {
-                SendMessage(null, request);
-                GetServiceTaskCancellationTokenSource.Token.WaitHandle.WaitOne(GetServiceInterval);
-            }
-        }
-
-        void ReceiveLoop()
+        void ReceiveWorker()
         {
             while(!ReceiveTaskCancellationTokenSource.IsCancellationRequested)
             {
                 var receiveTask = Socket.ReceiveAsync();
+                Message message;
 
                 try
                 {
@@ -163,13 +148,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
                 {
                     return;
                 }
-
-                if(receiveTask.Result.Buffer.Length <= 0)
+                catch(Exception ex)
                 {
-                    continue;
+                    Debug.Error(this, ex);
+                    return;
                 }
-
-                Message message;
 
                 try
                 {
@@ -181,18 +164,27 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
                     continue;
                 }
 
-                Debug.Trace(this, $"Received {receiveTask.Result.RemoteEndPoint.Address}: {message}");
-
-                if(ServiceResponse.MessageType == message.MessageType)
-                {
-                    var response = new ServiceResponse();
-                    response.Messages.Add(message);
-                    CreateDevice(receiveTask.Result.RemoteEndPoint.Address.ToString(), response, out var device);
-                }
-                else
+                if(ServiceResponse.MessageType != message.MessageType)
                 {
                     Dispatcher.Instance.OnMessageReceived(receiveTask.Result.RemoteEndPoint, message);
+                    continue;
                 }
+
+                Debug.Trace(this, $"Received {receiveTask.Result.RemoteEndPoint.Address}: {message}");
+                var response = new ServiceResponse();
+                response.Messages.Add(message);
+                CreateDevice(receiveTask.Result.RemoteEndPoint.Address.ToString(), response, out var device);
+            }
+        }
+
+        void ServiceWorker()
+        {
+            var request = new GetServiceRequest().SerializeBinary();
+
+            while(!ServiceTaskCancellationTokenSource.IsCancellationRequested)
+            {
+                SendMessage(null, request);
+                ServiceTaskCancellationTokenSource.Token.WaitHandle.WaitOne(ServiceInterval);
             }
         }
 
@@ -200,13 +192,17 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
 
         public void Dispose()
         {
-            GetServiceTaskCancellationTokenSource.Cancel(false);
-            GetServiceTask.Wait();
+            ServiceTaskCancellationTokenSource?.Cancel(false);
+            ReceiveTaskCancellationTokenSource?.Cancel(false);
+            ServiceTask?.Wait();
+            ReceiveTask?.Wait();
 
-            ReceiveTaskCancellationTokenSource.Cancel(false);
-            ReceiveTask.Wait();
+            ServiceTaskCancellationTokenSource = null;
+            ReceiveTaskCancellationTokenSource = null;
+            ServiceTask = null;
+            ReceiveTask = null;
 
-            Socket.Dispose();
+            Extensions.Dispose(ref Socket);
         }
 
         #endregion

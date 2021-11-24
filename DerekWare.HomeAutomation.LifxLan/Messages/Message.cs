@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 {
@@ -32,8 +33,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 
     class Message
     {
-        public const int ExpectedSource = 68;
         public const int PacketHeaderSize = 36;
+        public static readonly uint ExpectedSource = (uint)new Random().Next(2, int.MaxValue);
 
         static readonly object SequenceLock = new();
         static byte NextSequenceValue;
@@ -57,7 +58,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
         // Incoming message
         protected Message(Stream stream)
         {
-            var b = new BinaryReader(stream);
+            using var b = new BinaryReader(stream);
             var packetSize = b.ReadUInt16();
 
             if(packetSize < PacketHeaderSize)

@@ -29,6 +29,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
 
         public void OnMessageReceived(IPEndPoint endpoint, Message message)
         {
+            Debug.Trace(this, $"Received {endpoint.Address}: {message}");
+
             var responseKey = new ResponseKey(message);
 
             lock(PendingResponses.SyncRoot)

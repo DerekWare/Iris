@@ -13,5 +13,10 @@
     class LocationResponse : GroupResponse
     {
         public new const ushort MessageType = 50;
+
+        public LocationResponse()
+            : base(MessageType)
+        {
+        }
     }
 }
