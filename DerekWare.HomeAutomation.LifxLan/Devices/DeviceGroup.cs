@@ -12,7 +12,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 {
     public class DeviceGroup : Common.DeviceGroup
     {
-        internal readonly SynchronizedList<Device> InternalDevices = new();
+        internal readonly SynchronizedHashSet<Device> InternalDevices = new();
 
         public override event EventHandler<DeviceEventArgs> PropertiesChanged;
         public override event EventHandler<DeviceEventArgs> StateChanged;

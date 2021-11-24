@@ -24,14 +24,14 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         Products.Product _Product;
         Products.Vendor _Vendor;
         WaveformSettings _Waveform;
-        int _ZoneCount;
+        int _ZoneCount = 1;
 
         internal Device(string ipAddress, StateService response)
         {
             Controller = new DeviceController(ipAddress);
             _Name = ipAddress;
 
-            OnCreate();
+            RefreshState();
         }
 
         [Browsable(false), XmlIgnore]
@@ -60,8 +60,21 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         {
             await Controller.GetVersion(response =>
             {
-                _Vendor = Products.GetVendor((int)response.VendorId);
-                _Product = _Vendor.GetProduct((int)response.ProductId);
+                var vendor = Products.GetVendor((int)response.VendorId);
+
+                if(!Equals(vendor, _Vendor))
+                {
+                    _Vendor = vendor;
+                    OnPropertiesChanged();
+                }
+
+                var product = _Vendor.GetProduct((int)response.ProductId);
+
+                if(!Equals(product, _Product))
+                {
+                    _Product = product;
+                    OnPropertiesChanged();
+                }
             });
 
             await Controller.GetGroup(response =>
@@ -80,10 +93,14 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
             await Controller.GetLabel(response =>
             {
-                _Name = response.Label;
-            });
+                var name = response.Label;
 
-            OnPropertiesChanged();
+                if(!Equals(name, _Name))
+                {
+                    _Name = name;
+                    OnPropertiesChanged();
+                }
+            });
         }
 
         public override void RefreshState()
@@ -93,6 +110,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public async Task RefreshStateAsync()
         {
+            await RefreshPropertiesAsync();
+            
             await Controller.GetPower(response =>
             {
                 if(response.Power != _Power)
@@ -227,12 +246,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         {
             base.OnStateChanged(e);
             Lan.Client.Instance.OnStateChanged(this);
-        }
-
-        async void OnCreate()
-        {
-            await RefreshPropertiesAsync();
-            await RefreshStateAsync();
         }
     }
 }

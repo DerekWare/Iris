@@ -149,11 +149,9 @@ namespace DerekWare.Iris
             }
 
             // Update the device list, pruning any addresses that were unreachable
-            // TODO make a standard way of detecting valid devices
+            // TODO add a way to purge/delete devices
             Settings.Default.LifxDevices = new StringCollection();
-            Settings.Default.LifxDevices.AddRange(LifxClient.Instance.Devices.WhereNotNull(i => i.Product)
-                                                            .Select(i => i.Uuid)
-                                                            .ToArray()); // TODO don't use Uuid?
+            Settings.Default.LifxDevices.AddRange(LifxClient.Instance.Devices.Select(i => i.Uuid).ToArray()); // TODO don't use Uuid?
             Settings.Default.Save();
         }
 
