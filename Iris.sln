@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DerekWare.HomeAutomation.Ph
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iris", "Iris.csproj", "{BD6281D8-DE6F-4A5A-B01A-727525394883}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoUpdateManifest", "AutoUpdateManifest\AutoUpdateManifest.csproj", "{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{BD6281D8-DE6F-4A5A-B01A-727525394883}.Release|x64.Build.0 = Release|x64
 		{BD6281D8-DE6F-4A5A-B01A-727525394883}.Release|x86.ActiveCfg = Release|x86
 		{BD6281D8-DE6F-4A5A-B01A-727525394883}.Release|x86.Build.0 = Release|x86
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Debug|x64.Build.0 = Debug|Any CPU
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Debug|x86.Build.0 = Debug|Any CPU
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Release|x64.ActiveCfg = Release|x64
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Release|x64.Build.0 = Release|x64
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Release|x86.ActiveCfg = Release|Any CPU
+		{34991B4D-EFBE-4071-B61D-06ACE8DB51EB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

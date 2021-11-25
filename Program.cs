@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Forms;
 using DerekWare.HomeAutomation.Lifx.Lan;
 using DerekWare.Iris.Properties;
 
 namespace DerekWare.Iris
 {
-    static class Program
+    public static class Program
     {
-        /// <summary>
-        ///     The main entry point for the application.
-        /// </summary>
+        public static Version AutoUpdaterVersion => new Version(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion);
+
         [STAThread]
         static void Main()
         {

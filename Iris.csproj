@@ -158,6 +158,11 @@
     <Compile Include="ActionPanel.Designer.cs">
       <DependentUpon>ActionPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="AssemblyVersion.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssemblyVersion.tt</DependentUpon>
+    </Compile>
     <Compile Include="ConnectBridgeDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -292,7 +297,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AutoUpdater.xml" />
+    <Content Include="AssemblyVersion.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssemblyVersion.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>powershell Compress-Archive '$(SolutionDir)$(OutDir)*' -DestinationPath '$(SolutionDir)Publish\$(TargetName).zip' -force
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

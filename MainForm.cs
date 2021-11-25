@@ -27,7 +27,7 @@ namespace DerekWare.Iris
         protected override void OnLoad(EventArgs e)
         {
             AutoUpdater.ApplicationExitEvent += OnApplicationExitEvent;
-            AutoUpdater.InstalledVersion = new Version(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion);
+            AutoUpdater.InstalledVersion = Program.AutoUpdaterVersion;
             
             // the reminder and skip both have a bug, so don't use them
             AutoUpdater.ShowRemindLaterButton = false;

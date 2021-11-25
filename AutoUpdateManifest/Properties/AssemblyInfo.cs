@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DerekWare Iris")]
-[assembly: AssemblyDescription("Allows you to control your LIFX and Philips Hue lights from Windows, including custom functionality not available in the official applications.")]
+[assembly: AssemblyTitle("AutoUpdateManifest")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DerekWare")]
-[assembly: AssemblyProduct("DerekWare Iris")]
-[assembly: AssemblyCopyright("Copyright © Derek Smith 2021")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("AutoUpdateManifest")]
+[assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("bd6281d8-de6f-4a5a-b01a-727525394883")]
+[assembly: Guid("34991b4d-efbe-4071-b61d-06ace8db51eb")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,3 +33,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
