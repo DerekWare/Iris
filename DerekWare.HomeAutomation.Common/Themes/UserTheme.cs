@@ -3,12 +3,12 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
 
-namespace DerekWare.HomeAutomation.Common.Scenes
+namespace DerekWare.HomeAutomation.Common.Themes
 {
-    [Browsable(false), Description("The user scene is created via a scene editor and saved in the application settings.")]
-    public class UserScene : Scene
+    [Browsable(false), Description("The user theme is created via a theme editor and saved in the application settings.")]
+    public class UserTheme : Theme
     {
-        protected string _Name;
+        protected string _Name = "My Theme";
 
         [Browsable(false), XmlIgnore]
         public override bool IsDynamic => false;

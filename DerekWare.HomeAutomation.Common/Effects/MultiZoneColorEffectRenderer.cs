@@ -20,7 +20,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected int ZoneCount => Device.ZoneCount;
 
-        // The original colors from the scene or device
+        // The original colors from the theme or device
         protected virtual IReadOnlyList<Color> Palette { get; private set; }
 
         protected override void DoWork(Thread sender, DoWorkEventArgs e)

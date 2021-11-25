@@ -4,11 +4,11 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
 
-namespace DerekWare.HomeAutomation.Common.Scenes
+namespace DerekWare.HomeAutomation.Common.Themes
 {
-    public class Spectrum : Scene
+    public class Spectrum : Theme
     {
-        public enum SceneDirection
+        public enum ThemeDirection
         {
             Forward,
             Backward
@@ -24,7 +24,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         public double Brightness { get; set; } = 1;
 
-        public SceneDirection Direction { get; set; }
+        public ThemeDirection Direction { get; set; }
 
         public double Kelvin { get; set; } = 1;
 
@@ -40,7 +40,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         public override IReadOnlyCollection<Color> GetPalette(IDevice targetDevice)
         {
-            var palette = new Color[targetDevice.ZoneCount];
+            var colors = new List<Color>();
             var offset = RandomOffset ? Random.NextDouble() : 0;
 
             for(var i = 0; i < targetDevice.ZoneCount; ++i)
@@ -49,15 +49,15 @@ namespace DerekWare.HomeAutomation.Common.Scenes
                 hue += offset;
                 hue -= (int)hue;
 
-                if(Direction == SceneDirection.Backward)
-                {
-                    hue = 1 - hue;
-                }
-
-                palette[i] = new Color { Hue = hue, Saturation = Saturation, Brightness = Brightness, Kelvin = Kelvin };
+                colors.Add(new Color { Hue = hue, Saturation = Saturation, Brightness = Brightness, Kelvin = Kelvin });
             }
 
-            return palette;
+            if(Direction == ThemeDirection.Backward)
+            {
+                colors.Reverse();
+            }
+
+            return colors;
         }
     }
 }

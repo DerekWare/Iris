@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using AutoUpdaterDotNET;
 using DerekWare.Collections;
@@ -28,7 +26,7 @@ namespace DerekWare.Iris
         {
             AutoUpdater.ApplicationExitEvent += OnApplicationExitEvent;
             AutoUpdater.InstalledVersion = Program.AutoUpdaterVersion;
-            
+
             // the reminder and skip both have a bug, so don't use them
             AutoUpdater.ShowRemindLaterButton = false;
             AutoUpdater.ShowSkipButton = false;

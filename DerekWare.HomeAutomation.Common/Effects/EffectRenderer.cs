@@ -73,7 +73,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                     continue;
                 }
 
-                // Update the scene by giving it the position within the cycle (e.g. if we're 30 seconds through
+                // Update the theme by giving it the position within the cycle (e.g. if we're 30 seconds through
                 // a 60-second cycle, the position is 0.5. Likewise if we're 90 seconds through a 60-second cycle.
                 renderState.TotalElapsed = currentTime - startTime;
                 renderState.UpdateElapsed = currentTime - lastUpdateTime;

@@ -31,7 +31,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
             if(typeof(string) == sourceType)
             {
-                var field = typeof(StandardColors).GetField(value.ToString(), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Static);
+                var field = typeof(Colors).GetField(value.ToString(), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Static);
 
                 if(field is not null)
                 {
@@ -56,8 +56,8 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
             if(typeof(string) == destinationType)
             {
-                var field = typeof(StandardColors).GetFields(BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Static)
-                                                  .FirstOrDefault(field => field.GetValue(null).Equals(color));
+                var field = typeof(Colors).GetFields(BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Static)
+                                          .FirstOrDefault(field => field.GetValue(null).Equals(color));
 
                 if(field is not null)
                 {

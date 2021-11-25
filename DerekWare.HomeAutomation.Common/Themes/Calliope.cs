@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
 
-namespace DerekWare.HomeAutomation.Common.Scenes
+namespace DerekWare.HomeAutomation.Common.Themes
 {
-    public class Calliope : Scene
+    public class Calliope : Theme
     {
         readonly Random Random = new();
 
@@ -29,10 +29,15 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         [Range(typeof(double), "0", "1")]
         public double MinSaturation { get; set; } = 0.25;
 
+        public override object Clone()
+        {
+            return MemberwiseClone();
+        }
+
         public override IReadOnlyCollection<Color> GetPalette(IDevice targetDevice)
         {
             var palette = new Color[targetDevice.ZoneCount];
-            
+
             for(var i = 0; i < targetDevice.ZoneCount; ++i)
             {
                 palette[i] = new Color
@@ -45,11 +50,6 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             }
 
             return palette;
-        }
-
-        public override object Clone()
-        {
-            return MemberwiseClone();
         }
     }
 }

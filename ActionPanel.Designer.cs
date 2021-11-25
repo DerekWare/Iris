@@ -39,8 +39,8 @@ namespace DerekWare.Iris
             this.ZoneColorBand = new ColorBand();
             this.EffectGroupBox = new System.Windows.Forms.GroupBox();
             this.EffectLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.SceneGroupBox = new System.Windows.Forms.GroupBox();
-            this.SceneLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.ThemeGroupBox = new System.Windows.Forms.GroupBox();
+            this.ThemeLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.SolidColorGroupBox = new System.Windows.Forms.GroupBox();
             this.SolidColorPanel = new SolidColorPanel();
             this.PowerGroupBox = new System.Windows.Forms.GroupBox();
@@ -50,7 +50,7 @@ namespace DerekWare.Iris
             this.StateLayoutPanel.SuspendLayout();
             this.ZoneColorGroupBox.SuspendLayout();
             this.EffectGroupBox.SuspendLayout();
-            this.SceneGroupBox.SuspendLayout();
+            this.ThemeGroupBox.SuspendLayout();
             this.SolidColorGroupBox.SuspendLayout();
             this.PowerGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -101,7 +101,7 @@ namespace DerekWare.Iris
             this.StateLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.StateLayoutPanel.Controls.Add(this.ZoneColorGroupBox, 0, 2);
             this.StateLayoutPanel.Controls.Add(this.EffectGroupBox, 0, 4);
-            this.StateLayoutPanel.Controls.Add(this.SceneGroupBox, 0, 3);
+            this.StateLayoutPanel.Controls.Add(this.ThemeGroupBox, 0, 3);
             this.StateLayoutPanel.Controls.Add(this.SolidColorGroupBox, 0, 1);
             this.StateLayoutPanel.Controls.Add(this.PowerGroupBox, 0, 0);
             this.StateLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -171,36 +171,36 @@ namespace DerekWare.Iris
             this.EffectLayoutPanel.Size = new System.Drawing.Size(698, 139);
             this.EffectLayoutPanel.TabIndex = 0;
             // 
-            // SceneGroupBox
+            // ThemeGroupBox
             // 
-            this.SceneGroupBox.Controls.Add(this.SceneLayoutPanel);
-            this.SceneGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SceneGroupBox.Location = new System.Drawing.Point(8, 361);
-            this.SceneGroupBox.Margin = new System.Windows.Forms.Padding(8);
-            this.SceneGroupBox.Name = "SceneGroupBox";
-            this.SceneGroupBox.Padding = new System.Windows.Forms.Padding(8);
-            this.SceneGroupBox.Size = new System.Drawing.Size(714, 172);
-            this.SceneGroupBox.TabIndex = 10;
-            this.SceneGroupBox.TabStop = false;
-            this.SceneGroupBox.Text = "Scenes";
+            this.ThemeGroupBox.Controls.Add(this.ThemeLayoutPanel);
+            this.ThemeGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ThemeGroupBox.Location = new System.Drawing.Point(8, 361);
+            this.ThemeGroupBox.Margin = new System.Windows.Forms.Padding(8);
+            this.ThemeGroupBox.Name = "ThemeGroupBox";
+            this.ThemeGroupBox.Padding = new System.Windows.Forms.Padding(8);
+            this.ThemeGroupBox.Size = new System.Drawing.Size(714, 172);
+            this.ThemeGroupBox.TabIndex = 10;
+            this.ThemeGroupBox.TabStop = false;
+            this.ThemeGroupBox.Text = "Themes";
             // 
-            // SceneLayoutPanel
+            // ThemeLayoutPanel
             // 
-            this.SceneLayoutPanel.ColumnCount = 4;
-            this.SceneLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.SceneLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.SceneLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.SceneLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.SceneLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SceneLayoutPanel.Location = new System.Drawing.Point(8, 27);
-            this.SceneLayoutPanel.Name = "SceneLayoutPanel";
-            this.SceneLayoutPanel.RowCount = 4;
-            this.SceneLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.SceneLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.SceneLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.SceneLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.SceneLayoutPanel.Size = new System.Drawing.Size(698, 137);
-            this.SceneLayoutPanel.TabIndex = 0;
+            this.ThemeLayoutPanel.ColumnCount = 4;
+            this.ThemeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.ThemeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.ThemeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.ThemeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.ThemeLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ThemeLayoutPanel.Location = new System.Drawing.Point(8, 27);
+            this.ThemeLayoutPanel.Name = "ThemeLayoutPanel";
+            this.ThemeLayoutPanel.RowCount = 4;
+            this.ThemeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.ThemeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.ThemeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.ThemeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.ThemeLayoutPanel.Size = new System.Drawing.Size(698, 137);
+            this.ThemeLayoutPanel.TabIndex = 0;
             // 
             // SolidColorGroupBox
             // 
@@ -264,7 +264,7 @@ namespace DerekWare.Iris
             this.StateLayoutPanel.ResumeLayout(false);
             this.ZoneColorGroupBox.ResumeLayout(false);
             this.EffectGroupBox.ResumeLayout(false);
-            this.SceneGroupBox.ResumeLayout(false);
+            this.ThemeGroupBox.ResumeLayout(false);
             this.SolidColorGroupBox.ResumeLayout(false);
             this.PowerGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -277,11 +277,11 @@ namespace DerekWare.Iris
         private System.Windows.Forms.GroupBox PropertiesGroupBox;
         private System.Windows.Forms.PropertyGrid PropertyGrid;
         private System.Windows.Forms.TableLayoutPanel StateLayoutPanel;
-        private System.Windows.Forms.GroupBox SceneGroupBox;
+        private System.Windows.Forms.GroupBox ThemeGroupBox;
         private System.Windows.Forms.GroupBox SolidColorGroupBox;
         private System.Windows.Forms.GroupBox PowerGroupBox;
         private System.Windows.Forms.ComboBox PowerComboBox;
-        private System.Windows.Forms.TableLayoutPanel SceneLayoutPanel;
+        private System.Windows.Forms.TableLayoutPanel ThemeLayoutPanel;
         private System.Windows.Forms.GroupBox EffectGroupBox;
         private System.Windows.Forms.TableLayoutPanel EffectLayoutPanel;
         private System.Windows.Forms.GroupBox ZoneColorGroupBox;

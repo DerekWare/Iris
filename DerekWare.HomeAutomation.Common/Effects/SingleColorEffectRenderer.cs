@@ -1,5 +1,4 @@
-﻿using System;
-using DerekWare.HomeAutomation.Common.Colors;
+﻿using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {

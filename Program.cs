@@ -9,7 +9,7 @@ namespace DerekWare.Iris
 {
     public static class Program
     {
-        public static Version AutoUpdaterVersion => new Version(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion);
+        public static Version AutoUpdaterVersion => new(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion);
 
         [STAThread]
         static void Main()

@@ -19,7 +19,7 @@ namespace DerekWare.HomeAutomation.Common
     // properties on the group, this class propagates the changes to all devices within
     // the group. Lights are split into collections of multizone and single zone, with all
     // single zone lights treated as a single multizone light, providing a better experience
-    // with multizone scenes and effects.
+    // with multizone themes and effects.
     public abstract class DeviceGroup : IDeviceGroup
     {
         public abstract event EventHandler<DeviceEventArgs> PropertiesChanged;

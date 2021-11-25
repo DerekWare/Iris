@@ -4,10 +4,10 @@ using System.Xml.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Reflection;
 
-namespace DerekWare.HomeAutomation.Common.Scenes
+namespace DerekWare.HomeAutomation.Common.Themes
 {
-    [Name("Warm White")]
-    public class WarmWhite : Scene
+    [Name("Bright White")]
+    public class BrightWhite : Theme
     {
         [Browsable(false), XmlIgnore]
         public override bool IsDynamic => true;
@@ -22,7 +22,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         public override IReadOnlyCollection<Color> GetPalette(IDevice targetDevice)
         {
-            return new[] { StandardColors.WarmWhite };
+            return new[] { Colors.Colors.White };
         }
     }
 }

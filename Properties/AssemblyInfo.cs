@@ -5,7 +5,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DerekWare Iris")]
-[assembly: AssemblyDescription("Allows you to control your LIFX and Philips Hue lights from Windows, including custom functionality not available in the official applications.")]
+[assembly:
+    AssemblyDescription(
+        "Allows you to control your LIFX and Philips Hue lights from Windows, including custom functionality not available in the official applications.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("DerekWare")]
 [assembly: AssemblyProduct("DerekWare Iris")]

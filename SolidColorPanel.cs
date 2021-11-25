@@ -20,7 +20,7 @@ namespace DerekWare.Iris
 
             InUpdate = true;
 
-            StandardColorsComboBox.Items.AddRange(StandardColors.All.ToArray());
+            StandardColorsComboBox.Items.AddRange(Colors.All.ToArray());
 
             InUpdate = false;
         }

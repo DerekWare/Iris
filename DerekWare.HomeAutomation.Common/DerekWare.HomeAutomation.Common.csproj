@@ -135,7 +135,7 @@
     <Compile Include="Colors\ColorExtensions.cs" />
     <Compile Include="Colors\ColorZone.cs" />
     <Compile Include="Colors\ColorZoneExtensions.cs" />
-    <Compile Include="Colors\StandardColors.cs" />
+    <Compile Include="Colors\Colors.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="FactoryExtensions.cs" />
@@ -143,13 +143,14 @@
     <Compile Include="DeviceGroup.cs" />
     <Compile Include="PowerState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scenes\BrightWhite.cs" />
-    <Compile Include="Scenes\Calliope.cs" />
-    <Compile Include="Scenes\Scene.cs" />
-    <Compile Include="Scenes\SceneFactory.cs" />
-    <Compile Include="Scenes\Spectrum.cs" />
-    <Compile Include="Scenes\UserScene.cs" />
-    <Compile Include="Scenes\WarmWhite.cs" />
+    <Compile Include="Themes\BrightWhite.cs" />
+    <Compile Include="Themes\Calliope.cs" />
+    <Compile Include="Themes\Flame.cs" />
+    <Compile Include="Themes\Theme.cs" />
+    <Compile Include="Themes\ThemeFactory.cs" />
+    <Compile Include="Themes\Spectrum.cs" />
+    <Compile Include="Themes\UserTheme.cs" />
+    <Compile Include="Themes\WarmWhite.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DerekWare.Misc\DerekWare.Misc.csproj">

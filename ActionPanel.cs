@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
-using DerekWare.HomeAutomation.Common.Scenes;
+using DerekWare.HomeAutomation.Common.Themes;
 using DerekWare.Strings;
 using PowerState = DerekWare.HomeAutomation.Common.PowerState;
 
@@ -28,7 +28,7 @@ namespace DerekWare.Iris
             Device.StateChanged += OnDeviceStateChanged;
             Device.PropertiesChanged += OnDevicePropertiesChanged;
 
-            UpdateScenes();
+            UpdateThemes();
             UpdateEffects();
             UpdateProperties();
             UpdateState();
@@ -60,10 +60,7 @@ namespace DerekWare.Iris
             {
                 var button = new Button
                 {
-                    Dock = DockStyle.Fill,
-                    Text = effect.Name,
-                    Tag = effect,
-                    Enabled = effect.Family.IsNullOrEmpty() || effect.Family.Equals(Device.Family)
+                    Dock = DockStyle.Fill, Text = effect.Name, Tag = effect, Enabled = effect.Family.IsNullOrEmpty() || effect.Family.Equals(Device.Family)
                 };
 
                 if(!effect.Description.IsNullOrEmpty())
@@ -76,24 +73,24 @@ namespace DerekWare.Iris
             }
         }
 
-        protected void UpdateScenes()
+        protected void UpdateThemes()
         {
-            SceneLayoutPanel.Controls.Clear();
+            ThemeLayoutPanel.Controls.Clear();
 
-            foreach(var scene in SceneFactory.Instance)
+            foreach(var theme in ThemeFactory.Instance)
             {
                 var button = new Button
                 {
-                    Dock = DockStyle.Fill, Text = scene.Name, Tag = scene, Enabled = scene.Family.IsNullOrEmpty() || scene.Family.Equals(Device.Family)
+                    Dock = DockStyle.Fill, Text = theme.Name, Tag = theme, Enabled = theme.Family.IsNullOrEmpty() || theme.Family.Equals(Device.Family)
                 };
 
-                if(!scene.Description.IsNullOrEmpty())
+                if(!theme.Description.IsNullOrEmpty())
                 {
-                    new ToolTip().SetToolTip(button, scene.Description);
+                    new ToolTip().SetToolTip(button, theme.Description);
                 }
 
-                button.Click += SceneButton_Click;
-                SceneLayoutPanel.Controls.Add(button);
+                button.Click += ThemeButton_Click;
+                ThemeLayoutPanel.Controls.Add(button);
             }
         }
 
@@ -190,26 +187,26 @@ namespace DerekWare.Iris
             InUpdate = false;
         }
 
-        void SceneButton_Click(object sender, EventArgs e)
+        void SolidColorPanel_ColorChanged(object sender, ColorChangedEventArgs e)
         {
-            var scene = SceneFactory.Instance.CreateInstance(((Button)sender).Text);
+            InUpdate = true;
+            EffectFactory.Instance.StopEffect(Device);
+            Device.Color = e.Color;
+            InUpdate = false;
+        }
 
-            if(DialogResult.OK != PropertyEditor.Show(this, scene))
+        void ThemeButton_Click(object sender, EventArgs e)
+        {
+            var theme = ThemeFactory.Instance.CreateInstance(((Button)sender).Text);
+
+            if(DialogResult.OK != PropertyEditor.Show(this, theme))
             {
                 return;
             }
 
             InUpdate = true;
             EffectFactory.Instance.StopEffect(Device);
-            scene.Apply(Device);
-            InUpdate = false;
-        }
-
-        void SolidColorPanel_ColorChanged(object sender, ColorChangedEventArgs e)
-        {
-            InUpdate = true;
-            EffectFactory.Instance.StopEffect(Device);
-            Device.Color = e.Color;
+            theme.Apply(Device);
             InUpdate = false;
         }
 
@@ -222,6 +219,5 @@ namespace DerekWare.Iris
         }
 
         #endregion
-
     }
 }

@@ -6,35 +6,35 @@ using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 
-namespace DerekWare.HomeAutomation.Common.Scenes
+namespace DerekWare.HomeAutomation.Common.Themes
 {
-    public interface IReadOnlySceneProperties : IDescription, IFamily, IName, IEquatable<IReadOnlySceneProperties>
+    public interface IReadOnlyThemeProperties : IDescription, IFamily, IName, IEquatable<IReadOnlyThemeProperties>
     {
-        [Description("True if the scene chooses its own colors.")]
+        [Description("True if the theme chooses its own colors.")]
         public abstract bool IsDynamic { get; }
 
         [Description("True if the effect runs on the device as opposed to running in this application.")]
         public bool IsFirmware { get; }
 
-        [Description("True if the scene is intended for multizone lights, such as the LIFX Z strip.")]
+        [Description("True if the theme is intended for multizone lights, such as the LIFX Z strip.")]
         public abstract bool IsMultiZone { get; }
     }
 
-    public interface IScene : ISceneProperties, ICloneable
+    public interface ITheme : IThemeProperties, ICloneable
     {
         public void Apply(IDevice device);
     }
 
-    public interface ISceneProperties : IReadOnlySceneProperties
+    public interface IThemeProperties : IReadOnlyThemeProperties
     {
     }
 
-    public abstract class Scene : IScene
+    public abstract class Theme : ITheme
     {
-        [Description("True if the scene chooses its own colors."), Browsable(false), XmlIgnore]
+        [Description("True if the theme chooses its own colors."), Browsable(false), XmlIgnore]
         public abstract bool IsDynamic { get; }
 
-        [Description("True if the scene is intended for multizone lights, such as the LIFX Z strip."), Browsable(false), XmlIgnore]
+        [Description("True if the theme is intended for multizone lights, such as the LIFX Z strip."), Browsable(false), XmlIgnore]
         public abstract bool IsMultiZone { get; }
 
         public abstract IReadOnlyCollection<Color> GetPalette(IDevice targetDevice);
@@ -62,7 +62,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             // Retrieve the color palette
             var palette = GetPalette(device);
 
-            // Turn on the device and apply the scene
+            // Turn on the device and apply the theme
             device.Power = PowerState.On;
 
             if(palette.Count > 1)
@@ -87,7 +87,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         #region Equality
 
-        public bool Equals(IReadOnlySceneProperties other)
+        public bool Equals(IReadOnlyThemeProperties other)
         {
             if(ReferenceEquals(null, other))
             {
@@ -119,7 +119,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
                 return false;
             }
 
-            return Equals((IReadOnlySceneProperties)obj);
+            return Equals((IReadOnlyThemeProperties)obj);
         }
 
         public override int GetHashCode()
@@ -127,19 +127,19 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             return Name != null ? Name.GetHashCode() : 0;
         }
 
-        public static bool operator ==(Scene left, Scene right)
+        public static bool operator ==(Theme left, Theme right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(Scene left, Scene right)
+        public static bool operator !=(Theme left, Theme right)
         {
             return !Equals(left, right);
         }
 
         #endregion
 
-        #region IScene
+        #region ITheme
 
         public void Apply(IDevice device)
         {

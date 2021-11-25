@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
-using DerekWare.HomeAutomation.Common.Scenes;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {

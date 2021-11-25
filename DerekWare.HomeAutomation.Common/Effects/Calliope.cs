@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using DerekWare.HomeAutomation.Common.Colors;
@@ -9,19 +8,19 @@ namespace DerekWare.HomeAutomation.Common.Effects
     [Description("Repeatedly applies the Calliope effect with new colors.")]
     public class Calliope : MultiZoneColorEffectRenderer
     {
-        readonly Scenes.Calliope Scene = new();
+        readonly Themes.Calliope Theme = new();
 
         [Range(typeof(double), "0", "1")]
-        public double Brightness { get => Scene.Brightness; set => Scene.Brightness = value; }
+        public double Brightness { get => Theme.Brightness; set => Theme.Brightness = value; }
 
         [Range(typeof(double), "0", "1")]
-        public double Kelvin { get => Scene.Kelvin; set => Scene.Kelvin = value; }
+        public double Kelvin { get => Theme.Kelvin; set => Theme.Kelvin = value; }
 
         [Range(typeof(double), "0", "1")]
-        public double MaxSaturation { get => Scene.MaxSaturation; set => Scene.MaxSaturation = value; }
+        public double MaxSaturation { get => Theme.MaxSaturation; set => Theme.MaxSaturation = value; }
 
         [Range(typeof(double), "0", "1")]
-        public double MinSaturation { get => Scene.MinSaturation; set => Scene.MinSaturation = value; }
+        public double MinSaturation { get => Theme.MinSaturation; set => Theme.MinSaturation = value; }
 
         public override object Clone()
         {
@@ -35,7 +34,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 return false;
             }
 
-            colors = Scene.GetPalette(Device).ToArray();
+            colors = Theme.GetPalette(Device).ToArray();
             return true;
         }
     }

@@ -17,21 +17,6 @@ namespace DerekWare.HomeAutomation.Common.Audio
             Source = source;
         }
 
-        public void Update(float[] samples)
-        {
-            Samples = samples;
-        }
-
-        public void Update()
-        {
-            Update(Source.GetSamples());
-        }
-
-        public void Update(TimeSpan range)
-        {
-            Update(Source.GetSamples(range));
-        }
-
         /// <summary>
         ///     Applies a filter to the captured samples.
         /// </summary>
@@ -58,6 +43,21 @@ namespace DerekWare.HomeAutomation.Common.Audio
         public float GetPeakRms(int windowSize)
         {
             return GetPeakRms(Samples, windowSize);
+        }
+
+        public void Update(float[] samples)
+        {
+            Samples = samples;
+        }
+
+        public void Update()
+        {
+            Update(Source.GetSamples());
+        }
+
+        public void Update(TimeSpan range)
+        {
+            Update(Source.GetSamples(range));
         }
 
         #region IDisposable

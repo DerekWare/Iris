@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Colors
 {
-    public static class StandardColors
+    public static class Colors
     {
         public static readonly Color Black = new(0, 0, 0, 0);
         public static readonly Color Blue = new(240 / 360.0, 1, 1, 1);
@@ -20,13 +20,13 @@ namespace DerekWare.HomeAutomation.Common.Colors
         public static readonly Color Yellow = new(60 / 360.0, 1, 1, 1);
 
         public static IEnumerable<Color> All =>
-            from field in typeof(StandardColors).GetFields(BindingFlags.Public | BindingFlags.Static)
+            from field in typeof(Colors).GetFields(BindingFlags.Public | BindingFlags.Static)
             let value = (Color)field.GetValue(null)
             select value;
 
         public static string GetColorName(this Color color)
         {
-            return (from field in typeof(StandardColors).GetFields(BindingFlags.Public | BindingFlags.Static)
+            return (from field in typeof(Colors).GetFields(BindingFlags.Public | BindingFlags.Static)
                     let value = (Color)field.GetValue(null)
                     where Equals(color, value)
                     select field.Name).FirstOrDefault();

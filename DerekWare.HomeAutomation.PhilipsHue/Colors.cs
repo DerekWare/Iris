@@ -63,6 +63,31 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             m = (int)(MiredMin + (src.Kelvin * (MiredMax - MiredMin)));
         }
 
+        public static LightCommand ToLightCommand(this Color src)
+        {
+            // For colors, set hue, saturation, brightness; for white, set brightness and mired/colortemp
+            ToHueColor(src, out var h, out var s, out var b, out var m);
+
+            var cmd = new LightCommand();
+
+            if(src.IsWhite)
+            {
+                cmd.Hue = null;
+                cmd.Saturation = null;
+                cmd.Brightness = b;
+                cmd.ColorTemperature = m;
+            }
+            else
+            {
+                cmd.Hue = h;
+                cmd.Saturation = s;
+                cmd.Brightness = b;
+                cmd.ColorTemperature = null;
+            }
+
+            return cmd;
+        }
+
         public static void ToState(this Color src, State state)
         {
             // For colors, set hue, saturation, brightness; for white, set brightness and mired/colortemp
@@ -82,31 +107,6 @@ namespace DerekWare.HomeAutomation.PhilipsHue
                 state.Brightness = b;
                 state.ColorTemperature = null;
             }
-        }
-
-        public static LightCommand ToLightCommand(this Color src)
-        {
-            // For colors, set hue, saturation, brightness; for white, set brightness and mired/colortemp
-            ToHueColor(src, out var h, out var s, out var b, out var m);
-            
-            var cmd = new LightCommand();
-
-            if(src.IsWhite)
-            {
-                cmd.Hue = null;
-                cmd.Saturation = null;
-                cmd.Brightness = b;
-                cmd.ColorTemperature = m;
-            }
-            else
-            {
-                cmd.Hue = h;
-                cmd.Saturation = s;
-                cmd.Brightness = b;
-                cmd.ColorTemperature = null;
-            }
-
-            return cmd;
         }
     }
 }

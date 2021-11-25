@@ -30,7 +30,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         }
 
         [Description("The color of the unused portions of the device."), Browsable(false), XmlIgnore]
-        public Color BackgroundColor => StandardColors.Black;
+        public Color BackgroundColor => Colors.Colors.Black;
 
         [Browsable(false), XmlIgnore]
         public double Kelvin => 1;

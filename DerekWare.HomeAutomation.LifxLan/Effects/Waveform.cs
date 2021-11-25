@@ -17,7 +17,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
         public Waveform()
         {
             WaveformType = WaveformType.Sine;
-            Color = StandardColors.Black;
+            Color = Common.Colors.Colors.Black;
             Duration = TimeSpan.FromSeconds(30);
             RefreshRate = TimeSpan.FromSeconds(30);
         }

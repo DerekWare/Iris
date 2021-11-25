@@ -13,7 +13,7 @@ namespace DerekWare.HomeAutomation.Common
     // This class helps work around some limitations in the XmlSerializer (can't serialize
     // TimeSpan, IDictionary, etc.) as well as application settings (can't add keys at
     // runtime) by using reflection to create and serialize a list of browsable, writable
-    // properties used by Effects and Scenes.
+    // properties used by Effects and Themes.
     public static class PropertyCache
     {
         static readonly Dictionary<Type, Dictionary<string, object>> Items = new();
