@@ -28,6 +28,10 @@ namespace DerekWare.Iris
         {
             AutoUpdater.ApplicationExitEvent += OnApplicationExitEvent;
             AutoUpdater.InstalledVersion = new Version(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion);
+            
+            // the reminder and skip both have a bug, so don't use them
+            AutoUpdater.ShowRemindLaterButton = false;
+            AutoUpdater.ShowSkipButton = false;
 
             Settings.Default.LifxDevices ??= new StringCollection();
             Settings.Default.LifxDevices.OfType<string>().ForEach(LifxClient.Instance.Connect);
