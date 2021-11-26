@@ -8,7 +8,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
 {
     public class Spectrum : Theme
     {
-        public enum ThemeDirection
+        public enum SpectrumDirection
         {
             Forward,
             Backward
@@ -24,7 +24,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
         public double Brightness { get; set; } = 1;
 
-        public ThemeDirection Direction { get; set; }
+        public SpectrumDirection Direction { get; set; }
 
         public double Kelvin { get; set; } = 1;
 
@@ -52,7 +52,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
                 colors.Add(new Color { Hue = hue, Saturation = Saturation, Brightness = Brightness, Kelvin = Kelvin });
             }
 
-            if(Direction == ThemeDirection.Backward)
+            if(Direction == SpectrumDirection.Backward)
             {
                 colors.Reverse();
             }

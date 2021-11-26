@@ -8,7 +8,7 @@ namespace DerekWare.Collections
     {
         public static IEnumerable<string> AsEnumerable(this string item, bool removeNull = false)
         {
-            return removeNull && item.IsNullOrEmpty() ? System.Linq.Enumerable.Empty<string>() : new[] { item };
+            return removeNull && item.IsNullOrEmpty<char>() ? System.Linq.Enumerable.Empty<string>() : new[] { item };
         }
 
         public static string FirstEquals(this IEnumerable<string> items, string value, StringComparison comparison = StringComparison.Ordinal)

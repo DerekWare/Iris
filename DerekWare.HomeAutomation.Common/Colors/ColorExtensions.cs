@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DerekWare.HomeAutomation.Common.Colors
 {
-    public static partial class Extensions
+    public static partial class Colors
     {
         public static Color Average(this IEnumerable<Color> colors)
         {
@@ -50,6 +50,14 @@ namespace DerekWare.HomeAutomation.Common.Colors
                 4 => System.Drawing.Color.FromArgb(255, t, p, v),
                 _ => System.Drawing.Color.FromArgb(255, v, p, q)
             };
+        }
+
+        public static Color Interpolate(Color x, Color y, double position)
+        {
+            return new Color((x.Hue * (1 - position)) + (y.Hue * position),
+                             (x.Saturation * (1 - position)) + (y.Saturation * position),
+                             (x.Brightness * (1 - position)) + (y.Brightness * position),
+                             (x.Kelvin * (1 - position)) + (y.Kelvin * position));
         }
 
         public static void RgbToHsv(this System.Drawing.Color color, out double hue, out double saturation, out double value)

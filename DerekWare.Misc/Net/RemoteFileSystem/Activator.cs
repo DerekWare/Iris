@@ -1,7 +1,7 @@
 ﻿using System;
+using DerekWare.Collections;
 using DerekWare.IO;
 using DerekWare.Net.RemoteFileSystem.Local;
-using DerekWare.Strings;
 
 namespace DerekWare.Net.RemoteFileSystem
 {

@@ -6,29 +6,29 @@ namespace DerekWare.Iris
     {
         static PropertyCache()
         {
-            Load();
+            Deserialize();
         }
 
-        public static void Load()
+        public static void Deserialize()
         {
-            HomeAutomation.Common.PropertyCache.Load(Settings.Default.PropertyCache);
+            HomeAutomation.Common.PropertyCache.Instance.Deserialize(Settings.Default.PropertyCache);
         }
 
-        public static void LoadProperties(object obj)
+        public static void Read(object obj)
         {
-            HomeAutomation.Common.PropertyCache.LoadProperties(obj);
+            HomeAutomation.Common.PropertyCache.Instance.Read(obj);
         }
 
-        public static void Save()
+        public static void Serialize()
         {
-            Settings.Default.PropertyCache = HomeAutomation.Common.PropertyCache.Save();
+            Settings.Default.PropertyCache = HomeAutomation.Common.PropertyCache.Instance.Serialize();
             Settings.Default.Save();
         }
 
-        public static void SaveProperties(object obj)
+        public static void Write(object obj)
         {
-            HomeAutomation.Common.PropertyCache.SaveProperties(obj);
-            Save();
+            HomeAutomation.Common.PropertyCache.Instance.Write(obj);
+            Serialize();
         }
     }
 }

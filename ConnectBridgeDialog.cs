@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.PhilipsHue;
-using DerekWare.Strings;
 using HueClient = DerekWare.HomeAutomation.PhilipsHue.Client;
 
 namespace DerekWare.Iris

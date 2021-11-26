@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Colors
 {
-    public static class Colors
+    public static partial class Colors
     {
         public static readonly Color Black = new(0, 0, 0, 0);
         public static readonly Color Blue = new(240 / 360.0, 1, 1, 1);

@@ -1,12 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Serialization;
-using DerekWare.Collections;
 using DerekWare.Diagnostics;
-using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -14,20 +12,21 @@ namespace DerekWare.HomeAutomation.Common
     // TimeSpan, IDictionary, etc.) as well as application settings (can't add keys at
     // runtime) by using reflection to create and serialize a list of browsable, writable
     // properties used by Effects and Themes.
-    public static class PropertyCache
+    public class PropertyCache : Dictionary<Type, PropertyBag>, IPropertyStore
     {
-        static readonly Dictionary<Type, Dictionary<string, object>> Items = new();
-        static readonly XmlSerializer Serializer = new(typeof(List<PropertyList>));
+        public static readonly PropertyCache Instance = new();
 
-        public static void Load(string cache)
+        protected readonly XmlSerializer Serializer = new(typeof(List<PropertyCacheSerializableItem>));
+
+        #region IPropertyStore
+
+        // Deserializes from XML
+        public void Deserialize(string cache)
         {
-            Items.Clear();
-
-            // Deserialize the string collection as a set of PropertyLists
             try
             {
                 using var reader = new StringReader(cache);
-                var properties = (List<PropertyList>)Serializer.Deserialize(reader);
+                var properties = (List<PropertyCacheSerializableItem>)Serializer.Deserialize(reader);
 
                 foreach(var i in properties)
                 {
@@ -38,7 +37,7 @@ namespace DerekWare.HomeAutomation.Common
                         continue;
                     }
 
-                    Items.Add(type, i.Properties.ToDictionary(entry => entry.Name, entry => entry.Value));
+                    Add(type, new PropertyBag(i.Properties));
                 }
             }
             catch(Exception e)
@@ -47,87 +46,58 @@ namespace DerekWare.HomeAutomation.Common
             }
         }
 
-        public static void LoadProperties(object obj)
+        // Loads all properties from an object into the store
+        public void Read(object obj, Type type = null)
         {
-            var type = obj.GetType();
+            type ??= obj.GetType();
+            var propertyBag = new PropertyBag();
+            propertyBag.Read(obj, type);
+            this[type] = propertyBag;
+        }
 
-            if(!Items.TryGetValue(type, out var cache))
+        // Serializes to XML
+        public string Serialize()
+        {
+            using var writer = new StringWriter();
+            var cache = this.Select(i => new PropertyCacheSerializableItem(i.Key, i.Value)).ToList();
+            Serializer.Serialize(writer, cache);
+            return writer.ToString();
+        }
+
+        public IEnumerable ToSerializableTypes()
+        {
+            return this.Select(i => new PropertyCacheSerializableItem(i.Key, i.Value));
+        }
+
+        // Writes all stored properties to an object
+        public void Write(object obj, Type type = null)
+        {
+            type ??= obj.GetType();
+
+            if(!TryGetValue(type, out var propertyBag))
             {
                 return;
             }
 
-            var properties = Factory.GetWritableProperties(type).Select(i => new KeyValuePair<string, PropertyInfo>(i.Name, i)).ToDictionary();
-
-            foreach(var cacheItem in cache)
-            {
-                if(!properties.TryGetValue(cacheItem.Key, out var property))
-                {
-                    continue;
-                }
-
-                var propertyValue = cacheItem.Value;
-
-                // Special-case non-serializable types
-                if(typeof(TimeSpan) == property.PropertyType)
-                {
-                    propertyValue = TimeSpan.Parse((string)cacheItem.Value);
-                }
-
-                property.SetValue(obj, propertyValue);
-            }
+            propertyBag.Write(obj);
         }
 
-        public static string Save()
-        {
-            var properties = Items.Select(i => new PropertyList
-                                  {
-                                      Type = i.Key.AssemblyQualifiedName,
-                                      Properties = new List<PropertyEntry>(i.Value.Select(j => new PropertyEntry { Name = j.Key, Value = j.Value }))
-                                  })
-                                  .ToList();
+        #endregion
+    }
 
-            using var writer = new StringWriter();
-            Serializer.Serialize(writer, properties);
-            return writer.ToString();
+    public class PropertyCacheSerializableItem
+    {
+        public List<PropertyBagSerializableItem> Properties;
+        public string Type;
+
+        public PropertyCacheSerializableItem()
+        {
         }
 
-        public static void SaveProperties(object obj)
+        public PropertyCacheSerializableItem(Type type, PropertyBag properties)
         {
-            var type = obj.GetType();
-            var properties = Factory.GetWritableProperties(type);
-            var cache = new Dictionary<string, object>();
-
-            // Special-case non-serializable types
-            foreach(var property in properties)
-            {
-                var propertyValue = property.GetValue(obj);
-
-                if(typeof(TimeSpan) == property.PropertyType)
-                {
-                    propertyValue = ((TimeSpan)propertyValue).ToString();
-                }
-                else if(typeof(Color) == property.PropertyType)
-                {
-                    // TODO why can't we serialize Color?
-                    continue;
-                }
-
-                cache[property.Name] = propertyValue;
-            }
-
-            Items[obj.GetType()] = cache;
-        }
-
-        public class PropertyEntry
-        {
-            public string Name;
-            public object Value;
-        }
-
-        public class PropertyList
-        {
-            public List<PropertyEntry> Properties;
-            public string Type;
+            Type = type.AssemblyQualifiedName;
+            Properties = properties.ToSerializableTypes().Cast<PropertyBagSerializableItem>().ToList();
         }
     }
 }

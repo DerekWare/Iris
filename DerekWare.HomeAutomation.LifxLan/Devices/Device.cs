@@ -186,23 +186,21 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public override void SetFirmwareEffect(object effect)
         {
-            if(effect is null)
-            {
-                Controller.SetMultiZoneEffect(new MultiZoneEffectSettings { EffectType = MultiZoneEffectType.Off });
-                return;
-            }
+            effect ??= new MultiZoneEffectSettings { EffectType = MultiZoneEffectType.Off };
 
-            if(effect is MultiZoneEffectSettings effectSettings)
+            switch(effect)
             {
-                SetMultiZoneEffect(effectSettings);
-            }
-            else if(effect is WaveformSettings waveformSettings)
-            {
-                SetWaveform(waveformSettings);
-            }
-            else
-            {
-                Debug.Warning(this, "Invalid effect settings");
+                case MultiZoneEffectSettings effectSettings:
+                    SetMultiZoneEffect(effectSettings);
+                    break;
+
+                case WaveformSettings waveformSettings:
+                    SetWaveform(waveformSettings);
+                    break;
+
+                default:
+                    Debug.Warning(this, "Invalid effect settings");
+                    break;
             }
         }
 
@@ -216,18 +214,15 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             }
             else
             {
-                Controller.SetColor(_Color, transitionDuration);
+                Controller.SetColor(Color, transitionDuration);
             }
         }
 
         public void SetMultiZoneEffect(MultiZoneEffectSettings settings)
         {
-            if(IsMultiZone || IsExtendedMultiZone)
-            {
-                _MultiZoneEffect = settings.Clone();
-                Controller.SetMultiZoneEffect(_MultiZoneEffect);
-                OnStateChanged();
-            }
+            _MultiZoneEffect = settings.Clone();
+            Controller.SetMultiZoneEffect(_MultiZoneEffect);
+            OnStateChanged();
         }
 
         public override void SetPower(PowerState power)
@@ -238,12 +233,9 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public void SetWaveform(WaveformSettings settings)
         {
-            if(IsMultiZone || IsExtendedMultiZone)
-            {
-                _Waveform = settings.Clone();
-                Controller.SetWaveform(_Waveform);
-                OnStateChanged();
-            }
+            _Waveform = settings.Clone();
+            Controller.SetWaveform(_Waveform);
+            OnStateChanged();
         }
 
         protected override void OnPropertiesChanged(DeviceEventArgs e)

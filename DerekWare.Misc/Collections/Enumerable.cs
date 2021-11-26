@@ -65,6 +65,13 @@ namespace DerekWare.Collections
 
     public static partial class Enumerable
     {
+        public static bool IsNullOrEmpty(this string value)
+        {
+            // This is here instead of in one of the string classes because of possible confusion
+            // with IsNullOrEmpty<IEnumerable<char>>.
+            return string.IsNullOrEmpty(value);
+        }
+
         /// <summary>
         ///     Takes every Nth item from a collection.
         /// </summary>

@@ -45,6 +45,11 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
         #endregion
 
+        protected Theme()
+        {
+            Name = this.GetName();
+        }
+
         [XmlIgnore]
         public string Description => this.GetDescription();
 
@@ -55,7 +60,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
         public bool IsFirmware => false;
 
         [Browsable(false), XmlIgnore]
-        public string Name => this.GetName();
+        public virtual string Name { get; set; }
 
         public void Apply(IDevice device, TimeSpan duration)
         {

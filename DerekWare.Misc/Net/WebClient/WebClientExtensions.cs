@@ -1,7 +1,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Cache;
-using DerekWare.Strings;
+using DerekWare.Collections;
 using Path = DerekWare.IO.Path;
 
 namespace DerekWare.Net

@@ -69,5 +69,17 @@ namespace DerekWare.Iris.Properties {
                 this["LifxDevices"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UserScenes {
+            get {
+                return ((string)(this["UserScenes"]));
+            }
+            set {
+                this["UserScenes"] = value;
+            }
+        }
     }
 }

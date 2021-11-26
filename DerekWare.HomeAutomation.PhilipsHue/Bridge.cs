@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using DerekWare.Strings;
+using DerekWare.Collections;
 using Newtonsoft.Json;
 using Q42.HueApi.Models.Bridge;
 

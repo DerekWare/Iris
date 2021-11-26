@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using DerekWare.Strings;
+using DerekWare.Collections;
 
 namespace DerekWare
 {

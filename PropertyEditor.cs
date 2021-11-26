@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using DerekWare.HomeAutomation.Common;
 
@@ -32,13 +33,13 @@ namespace DerekWare.Iris
         public static DialogResult Show(IWin32Window owner, object obj)
         {
             // Don't bother showing anything if there's nothing to set
-            if(obj.GetWritablePropertyValues().Count <= 0)
+            if(!obj.GetWritableProperties().Any())
             {
                 return DialogResult.OK;
             }
 
             // Load cached properties
-            PropertyCache.LoadProperties(obj);
+            PropertyCache.Write(obj);
 
             // Show the dialog
             var result = new PropertyEditor(obj).ShowDialog(owner);
@@ -48,8 +49,8 @@ namespace DerekWare.Iris
                 return result;
             }
 
-            // Save the properties
-            PropertyCache.SaveProperties(obj);
+            // Save the properties from the editor
+            PropertyCache.Read(obj);
             return result;
         }
     }

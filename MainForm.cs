@@ -5,8 +5,8 @@ using System.Windows.Forms;
 using AutoUpdaterDotNET;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Effects;
+using DerekWare.HomeAutomation.Common.Themes;
 using DerekWare.Iris.Properties;
-using DerekWare.Strings;
 using LifxClient = DerekWare.HomeAutomation.Lifx.Lan.Client;
 using HueClient = DerekWare.HomeAutomation.PhilipsHue.Client;
 
@@ -38,6 +38,8 @@ namespace DerekWare.Iris
             {
                 HueClient.Instance.Connect(Settings.Default.HueBridgeAddress, Settings.Default.HueApiKey);
             }
+
+            ThemeFactory.Instance.LoadUserThemes(Settings.Default.UserScenes);
 
             CheckForUpdates();
             base.OnLoad(e);
@@ -94,6 +96,7 @@ namespace DerekWare.Iris
 
             Settings.Default.HueBridgeAddress = dlg.IpAddress;
             Settings.Default.HueApiKey = dlg.ApiKey;
+            Settings.Default.Save();
         }
 
         void CloseMenuItem_Click(object sender, EventArgs e)
@@ -155,6 +158,9 @@ namespace DerekWare.Iris
             Settings.Default.LifxDevices.AddRange(LifxClient.Instance.Devices.Where(i => i.IsValid)
                                                             .Select(i => i.Uuid)
                                                             .ToArray()); // HACK using internal knowledge that Uuid == IpAddress
+
+            // Save user themes
+            Settings.Default.UserScenes = ThemeFactory.Instance.SaveUserThemes();
             Settings.Default.Save();
         }
 

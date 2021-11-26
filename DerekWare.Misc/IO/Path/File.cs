@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.Strings;
 using Microsoft.VisualBasic.FileIO;

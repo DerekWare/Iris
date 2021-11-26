@@ -243,11 +243,6 @@ namespace DerekWare.Strings
                     select new KeyValuePair<string, int>?(new KeyValuePair<string, int>(i, index))).FirstOrDefault();
         }
 
-        public static bool IsNullOrEmpty(this string value)
-        {
-            return string.IsNullOrEmpty(value);
-        }
-
         public static string RemoveBlocks(this string @this, IReadOnlyList<StringBlockMarker> markers, StringSplitOptions options = default)
         {
             return SplitBlocks(@this, markers, options | StringSplitOptions.RemoveEmptyEntries).WhereNull(b => b.Key).Select(b => b.Value).JoinWords();

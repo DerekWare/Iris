@@ -2,10 +2,10 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Themes;
-using DerekWare.Strings;
 using PowerState = DerekWare.HomeAutomation.Common.PowerState;
 
 namespace DerekWare.Iris

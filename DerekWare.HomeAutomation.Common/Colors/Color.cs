@@ -83,7 +83,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
         public System.Drawing.Color ToRgb()
         {
-            return Extensions.HsvToRgb(Hue * 360, Saturation, Brightness);
+            return Colors.HsvToRgb(Hue * 360, Saturation, Brightness);
         }
 
         public override string ToString()

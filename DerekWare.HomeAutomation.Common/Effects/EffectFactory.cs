@@ -49,9 +49,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // Stop any firmware effects that might be running
             device.SetFirmwareEffect(null);
 
-            // Stop all effects we're aware of on the given device. RunningEffects returns
-            // a copy of the list, so there's no worry about modifying the list during
-            // enumeration.
+            // Stop all effects we're aware of on the given device
             GetRunningEffects(device).ForEach(effect => effect.Stop());
         }
 
