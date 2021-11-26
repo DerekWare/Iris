@@ -1,4 +1,6 @@
-﻿using DerekWare.Iris.Properties;
+﻿using System;
+using DerekWare.Diagnostics;
+using DerekWare.Iris.Properties;
 
 namespace DerekWare.Iris
 {
@@ -13,7 +15,14 @@ namespace DerekWare.Iris
 
         public static void Deserialize()
         {
-            Instance.Deserialize(Settings.Default.PropertyCache);
+            try
+            {
+                Instance.Deserialize(Settings.Default.PropertyCache);
+            }
+            catch(Exception ex)
+            {
+                Debug.Warning(null, ex);
+            }
         }
 
         public static void WriteToObject(object obj)

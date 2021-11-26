@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using DerekWare.Diagnostics;
 using DerekWare.Reflection;
-using TypeConverter = System.ComponentModel.TypeConverter;
 
 namespace DerekWare.HomeAutomation.Common
 {

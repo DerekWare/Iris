@@ -58,6 +58,7 @@ namespace DerekWare.IO.Serialization
             using(var stream = new MemoryStream())
             {
                 serializer.Serialize(obj, stream);
+                stream.Position = 0;
 
                 using(var reader = new StreamReader(stream))
                 {
