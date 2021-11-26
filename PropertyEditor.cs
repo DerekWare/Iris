@@ -39,7 +39,7 @@ namespace DerekWare.Iris
             }
 
             // Load cached properties
-            PropertyCache.Write(obj);
+            PropertyCache.WriteToObject(obj);
 
             // Show the dialog
             var result = new PropertyEditor(obj).ShowDialog(owner);
@@ -50,7 +50,7 @@ namespace DerekWare.Iris
             }
 
             // Save the properties from the editor
-            PropertyCache.Read(obj);
+            PropertyCache.ReadFromObject(obj);
             return result;
         }
     }

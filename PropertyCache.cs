@@ -4,6 +4,8 @@ namespace DerekWare.Iris
 {
     public static class PropertyCache
     {
+        static readonly HomeAutomation.Common.PropertyCache Instance = new();
+
         static PropertyCache()
         {
             Deserialize();
@@ -11,23 +13,23 @@ namespace DerekWare.Iris
 
         public static void Deserialize()
         {
-            HomeAutomation.Common.PropertyCache.Instance.Deserialize(Settings.Default.PropertyCache);
+            Instance.Deserialize(Settings.Default.PropertyCache);
         }
 
-        public static void Read(object obj)
+        public static void WriteToObject(object obj)
         {
-            HomeAutomation.Common.PropertyCache.Instance.Read(obj);
+            Instance.WriteToObject(obj);
         }
 
         public static void Serialize()
         {
-            Settings.Default.PropertyCache = HomeAutomation.Common.PropertyCache.Instance.Serialize();
+            Settings.Default.PropertyCache = Instance.Serialize();
             Settings.Default.Save();
         }
 
-        public static void Write(object obj)
+        public static void ReadFromObject(object obj)
         {
-            HomeAutomation.Common.PropertyCache.Instance.Write(obj);
+            Instance.ReadFromObject(obj);
             Serialize();
         }
     }

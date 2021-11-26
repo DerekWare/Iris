@@ -14,9 +14,7 @@ namespace DerekWare.HomeAutomation.Common
     // properties used by Effects and Themes.
     public class PropertyCache : Dictionary<Type, PropertyBag>, IPropertyStore
     {
-        public static readonly PropertyCache Instance = new();
-
-        protected readonly XmlSerializer Serializer = new(typeof(List<PropertyCacheSerializableItem>));
+        protected static readonly XmlSerializer Serializer = new(typeof(List<PropertyCacheSerializableItem>));
 
         #region IPropertyStore
 
@@ -46,12 +44,12 @@ namespace DerekWare.HomeAutomation.Common
             }
         }
 
-        // Loads all properties from an object into the store
-        public void Read(object obj, Type type = null)
+        // Reads properties from the object into the cache
+        public void ReadFromObject(object obj, Type type = null)
         {
             type ??= obj.GetType();
             var propertyBag = new PropertyBag();
-            propertyBag.Read(obj, type);
+            propertyBag.ReadFromObject(obj, type);
             this[type] = propertyBag;
         }
 
@@ -69,8 +67,8 @@ namespace DerekWare.HomeAutomation.Common
             return this.Select(i => new PropertyCacheSerializableItem(i.Key, i.Value));
         }
 
-        // Writes all stored properties to an object
-        public void Write(object obj, Type type = null)
+        // Reads from the property cache, writing values to the object
+        public void WriteToObject(object obj, Type type = null)
         {
             type ??= obj.GetType();
 
@@ -79,7 +77,7 @@ namespace DerekWare.HomeAutomation.Common
                 return;
             }
 
-            propertyBag.Write(obj);
+            propertyBag.WriteToObject(obj);
         }
 
         #endregion
