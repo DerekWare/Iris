@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using DerekWare.Diagnostics;
 using DerekWare.Reflection;
+using Newtonsoft.Json.Serialization;
 
 namespace DerekWare.HomeAutomation.Common
 {

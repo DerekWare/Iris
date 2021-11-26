@@ -31,10 +31,10 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
     public abstract class Theme : ITheme
     {
-        [Description("True if the theme chooses its own colors."), Browsable(false), JsonIgnore]
+        [Description("True if the theme chooses its own colors."), Browsable(false)]
         public abstract bool IsDynamic { get; }
 
-        [Description("True if the theme is intended for multizone lights, such as the LIFX Z strip."), Browsable(false), JsonIgnore]
+        [Description("True if the theme is intended for multizone lights, such as the LIFX Z strip."), Browsable(false)]
         public abstract bool IsMultiZone { get; }
 
         public abstract IReadOnlyCollection<Color> GetPalette(IDevice targetDevice);
@@ -53,13 +53,13 @@ namespace DerekWare.HomeAutomation.Common.Themes
         [JsonIgnore]
         public string Description => this.GetDescription();
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual string Family => null;
 
-        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false), JsonIgnore]
+        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false)]
         public bool IsFirmware => false;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual string Name { get; set; }
 
         public void Apply(IDevice device, TimeSpan duration)

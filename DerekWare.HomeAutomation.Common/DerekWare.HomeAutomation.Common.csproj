@@ -126,6 +126,7 @@
     <Compile Include="DeviceExtensions.cs" />
     <Compile Include="Effects\GraphicEQ.cs" />
     <Compile Include="Effects\VUMeter.cs" />
+    <Compile Include="JsonSerializer.cs" />
     <Compile Include="PropertyBag.cs" />
     <Compile Include="Reflection.cs" />
     <Compile Include="Interfaces.cs" />

@@ -29,10 +29,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
             RefreshRate = TimeSpan.FromMilliseconds(200);
         }
 
-        [Description("The color of the unused portions of the device."), Browsable(false), JsonIgnore]
+        [Description("The color of the unused portions of the device."), Browsable(false)]
         public Color BackgroundColor => Colors.Colors.Black;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public double Kelvin => 1;
 
 #if UseRms || UseBandPassFilter
@@ -50,7 +50,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 #endif
 
         // Unused
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public new TimeSpan Duration { get; set; }
 
         public double MaxBrightness { get; set; } = 1;

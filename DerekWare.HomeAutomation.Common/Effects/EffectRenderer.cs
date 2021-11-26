@@ -14,7 +14,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected Thread Thread;
 
-        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false), JsonIgnore]
+        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false)]
         public override bool IsFirmware => false;
 
         [Description("The time it takes for the effect to complete a full cycle and start over.")]

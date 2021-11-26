@@ -23,10 +23,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
     public abstract class Effect : IEffect
     {
-        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false), JsonIgnore]
+        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false)]
         public abstract bool IsFirmware { get; }
 
-        [Description("True if the effect is intended for multizone lights or light groups."), Browsable(false), JsonIgnore]
+        [Description("True if the effect is intended for multizone lights or light groups."), Browsable(false)]
         public abstract bool IsMultiZone { get; }
 
         protected abstract void StartEffect();
@@ -41,16 +41,16 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [JsonIgnore]
         public string Description => this.GetDescription();
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual string Family => null;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public bool IsRunning => Device is not null;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public string Name => this.GetName();
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public IDevice Device { get; private set; }
 
         #region Equality

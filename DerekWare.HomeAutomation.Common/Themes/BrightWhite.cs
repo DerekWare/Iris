@@ -9,10 +9,10 @@ namespace DerekWare.HomeAutomation.Common.Themes
     [Name("Bright White")]
     public class BrightWhite : Theme
     {
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public override bool IsDynamic => true;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public override bool IsMultiZone => false;
 
         public override object Clone()

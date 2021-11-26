@@ -7,10 +7,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
     [Name("Stop"), Description("Stops all other effects.")]
     public class NullEffect : Effect
     {
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public override bool IsFirmware => false;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public override bool IsMultiZone => false;
 
         public override object Clone()

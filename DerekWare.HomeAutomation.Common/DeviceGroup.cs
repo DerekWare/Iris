@@ -39,21 +39,21 @@ namespace DerekWare.HomeAutomation.Common
 
         public virtual int DeviceCount => Devices.Count;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
 
         public virtual string Family => Client.Family;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual IReadOnlyCollection<IDeviceGroup> Groups => Array.Empty<IDeviceGroup>();
 
         public virtual bool IsColor { get { return Devices.Any(i => i.IsColor); } }
         public virtual bool IsMultiZone => true;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public bool IsValid => Devices.Any(i => i.IsValid);
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual string Product => null;
 
         public virtual int ZoneCount
@@ -69,10 +69,10 @@ namespace DerekWare.HomeAutomation.Common
             }
         }
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual Color Color { get => Devices.FirstOrDefault()?.Color ?? new Color(); set => SetColor(value, TimeSpan.Zero); }
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual IReadOnlyCollection<Color> MultiZoneColors
         {
             get
@@ -94,7 +94,7 @@ namespace DerekWare.HomeAutomation.Common
             set => SetMultiZoneColors(value, TimeSpan.Zero);
         }
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public PowerState Power { get { return Devices.Any(i => i.Power == PowerState.On) ? PowerState.On : PowerState.Off; } set => SetPower(value); }
 
         public override string ToString()

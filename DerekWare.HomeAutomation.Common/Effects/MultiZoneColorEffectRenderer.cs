@@ -15,7 +15,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         // The target colors to set
         Color[] Colors;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public override bool IsMultiZone => true;
 
         protected int ZoneCount => Device.ZoneCount;

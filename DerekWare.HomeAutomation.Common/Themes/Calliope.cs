@@ -11,10 +11,10 @@ namespace DerekWare.HomeAutomation.Common.Themes
     {
         readonly Random Random = new();
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public override bool IsDynamic => true;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public override bool IsMultiZone => true;
 
         [Range(typeof(double), "0", "1")]

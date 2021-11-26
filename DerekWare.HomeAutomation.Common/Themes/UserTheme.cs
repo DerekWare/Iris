@@ -8,10 +8,10 @@ namespace DerekWare.HomeAutomation.Common.Themes
     [Browsable(false), Description("The user theme is created via a theme editor and saved in the application settings.")]
     public class UserTheme : Theme
     {
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public override bool IsDynamic => false;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public override bool IsMultiZone => Palette.Count > 1;
 
         public override string Name { get => base.Name; set => base.Name = value; }

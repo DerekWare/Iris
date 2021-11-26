@@ -74,18 +74,18 @@ namespace DerekWare.HomeAutomation.Common
         public event EventHandler<DeviceEventArgs> PropertiesChanged;
         public event EventHandler<DeviceEventArgs> StateChanged;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
 
         public virtual string Family => Client.Family;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual Color Color { get => _Color; set => SetColor(value, TimeSpan.Zero); }
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual IReadOnlyCollection<Color> MultiZoneColors { get => _MultiZoneColors; set => SetMultiZoneColors(value, TimeSpan.Zero); }
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual PowerState Power { get => _Power; set => SetPower(value); }
 
         public override string ToString()

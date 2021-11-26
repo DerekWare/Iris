@@ -17,10 +17,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
         int TargetCount = -1;
         int ZoneIndex;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public double Kelvin => 1;
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public override TimeSpan Duration { get => RefreshRate; set { } }
 
         [Range(0.0, 1.0)]

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
-using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -12,11 +10,6 @@ namespace DerekWare.HomeAutomation.Common
     // properties used by Effects and Themes.
     public class PropertyCache : ObservableDictionary<string, PropertyBag>, ISerializablePropertyStore<string, PropertyBag>
     {
-        protected static readonly JsonSerializer Serializer = new()
-        {
-            DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore
-        };
-
         #region IPropertyStore<string,PropertyBag>
 
         public void ReadFromObject(object obj, Type type = null)
@@ -46,18 +39,12 @@ namespace DerekWare.HomeAutomation.Common
         public void Deserialize(string cache)
         {
             Debug.Trace(this, cache);
-            using var stringReader = new StringReader(cache);
-            using var jsonReader = new JsonTextReader(stringReader);
-            var obj = Serializer.Deserialize<PropertyCache>(jsonReader);
-            AddRange(obj);
+            AddRange(JsonSerializer.Deserialize<PropertyCache>(cache));
         }
 
         public string Serialize()
         {
-            using var stringWriter = new StringWriter();
-            using var jsonWriter = new JsonTextWriter(stringWriter);
-            Serializer.Serialize(jsonWriter, this);
-            var cache = stringWriter.ToString();
+            var cache = JsonSerializer.Serialize(this);
             Debug.Trace(this, cache);
             return cache;
         }
