@@ -7,20 +7,25 @@ namespace DerekWare.HomeAutomation.Common
 {
     public interface IPropertyStore<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
     {
-        // Reads all visible, writable properties from a given object into the dictionary
+        /// <summary>
+        ///     Reads all visible, writable properties from a given object into the dictionary
+        /// </summary>
+        /// <param name="obj">The source object</param>
+        /// <param name="type">The base type to use when loading properties or null to use the object type.</param>
         void ReadFromObject(object obj, Type type = null);
 
-        // Applies all stored properties to the given object. The reflection extension
-        // SetPropertyValue will attempt to convert to the correct type used by the object.
+        /// <summary>
+        ///     Applies all stored properties to the given object. The reflection extension
+        ///     SetPropertyValue will attempt to convert to the correct type used by the object.
+        /// </summary>
+        /// <param name="obj">The target object</param>
+        /// <param name="type">The base type to use when loading properties or null to use the object type.</param>
         void WriteToObject(object obj, Type type = null);
     }
 
     public interface ISerializablePropertyStore<TKey, TValue> : IPropertyStore<TKey, TValue>
     {
-        // Deserializes properties from storage
         void Deserialize(string cache);
-
-        // Serializes the properties to storage
         string Serialize();
     }
 
@@ -28,15 +33,12 @@ namespace DerekWare.HomeAutomation.Common
     {
         #region IPropertyStore<string,object>
 
-        // Reads all visible, writable properties from a given object into the dictionary
         public void ReadFromObject(object obj, Type type = null)
         {
             type ??= obj.GetType();
             AddRange(type.GetWritableProperties().Select(i => new KeyValuePair<string, object>(i.Name, i.GetValue(obj))));
         }
 
-        // Applies all stored properties to the given object. The reflection extension
-        // SetPropertyValue will attempt to convert to the correct type used by the object.
         public void WriteToObject(object obj, Type type = null)
         {
             this.ForEach(i => obj.SetPropertyValue(i.Key, i.Value, type));

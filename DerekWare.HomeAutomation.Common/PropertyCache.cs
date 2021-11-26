@@ -4,10 +4,12 @@ using DerekWare.Diagnostics;
 
 namespace DerekWare.HomeAutomation.Common
 {
-    // This class helps work around some limitations in the XmlSerializer (can't serialize
-    // TimeSpan, IDictionary, etc.) as well as application settings (can't add keys at
-    // runtime) by using reflection to create and serialize a list of browsable, writable
-    // properties used by Effects and Themes.
+    // PropertyCache uses reflection to read and write properties for a given type. This
+    // is useful because the JSON serializer doesn't do well with serializing 'object', so
+    // we use reflection to pull all the browsable, writable properties from any object
+    // and store them in the PropertyBag for serializing. A typical pattern for using this
+    // is to call WriteToObject, then display a PropertyGrid dialog to let the user change
+    // any properties, then call ReadFromObject to save those changes as the new defaults.
     public class PropertyCache : ObservableDictionary<string, PropertyBag>, ISerializablePropertyStore<string, PropertyBag>
     {
         #region IPropertyStore<string,PropertyBag>
