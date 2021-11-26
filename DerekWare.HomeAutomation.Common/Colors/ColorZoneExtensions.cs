@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DerekWare.HomeAutomation.Common.Colors
 {
-    public static partial class Extensions
+    public static class Extensions
     {
         // From a collection of raw color values, produce a list that has no sequential
         // redundant values, reducing the total size of the data to as little as possible.

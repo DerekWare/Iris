@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
@@ -36,10 +35,10 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             InternalDevices.CollectionChanged += OnContentsChanged;
         }
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public override IClient Client => Lan.Client.Instance;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public override IReadOnlyCollection<IDevice> Devices => InternalDevices;
 
         public override string Name { get; }

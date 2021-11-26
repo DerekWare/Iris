@@ -25,9 +25,10 @@ namespace DerekWare.Iris
             }
         }
 
-        public static void WriteToObject(object obj)
+        public static void ReadFromObject(object obj)
         {
-            Instance.WriteToObject(obj);
+            Instance.ReadFromObject(obj);
+            Serialize();
         }
 
         public static void Serialize()
@@ -36,10 +37,9 @@ namespace DerekWare.Iris
             Settings.Default.Save();
         }
 
-        public static void ReadFromObject(object obj)
+        public static void WriteToObject(object obj)
         {
-            Instance.ReadFromObject(obj);
-            Serialize();
+            Instance.WriteToObject(obj);
         }
     }
 }

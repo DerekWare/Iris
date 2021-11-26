@@ -5,11 +5,11 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Audio;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Reflection;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
@@ -29,10 +29,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
             RefreshRate = TimeSpan.FromMilliseconds(200);
         }
 
-        [Description("The color of the unused portions of the device."), Browsable(false), XmlIgnore]
+        [Description("The color of the unused portions of the device."), Browsable(false), JsonIgnore]
         public Color BackgroundColor => Colors.Colors.Black;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public double Kelvin => 1;
 
 #if UseRms || UseBandPassFilter
@@ -50,7 +50,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 #endif
 
         // Unused
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public new TimeSpan Duration { get; set; }
 
         public double MaxBrightness { get; set; } = 1;

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Themes
 {
@@ -31,10 +31,10 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
     public abstract class Theme : ITheme
     {
-        [Description("True if the theme chooses its own colors."), Browsable(false), XmlIgnore]
+        [Description("True if the theme chooses its own colors."), Browsable(false), JsonIgnore]
         public abstract bool IsDynamic { get; }
 
-        [Description("True if the theme is intended for multizone lights, such as the LIFX Z strip."), Browsable(false), XmlIgnore]
+        [Description("True if the theme is intended for multizone lights, such as the LIFX Z strip."), Browsable(false), JsonIgnore]
         public abstract bool IsMultiZone { get; }
 
         public abstract IReadOnlyCollection<Color> GetPalette(IDevice targetDevice);
@@ -50,16 +50,16 @@ namespace DerekWare.HomeAutomation.Common.Themes
             Name = this.GetName();
         }
 
-        [XmlIgnore]
+        [JsonIgnore]
         public string Description => this.GetDescription();
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public virtual string Family => null;
 
-        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false), XmlIgnore]
+        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false), JsonIgnore]
         public bool IsFirmware => false;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public virtual string Name { get; set; }
 
         public void Apply(IDevice device, TimeSpan duration)

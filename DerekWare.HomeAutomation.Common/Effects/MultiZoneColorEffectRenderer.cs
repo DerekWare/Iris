@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Xml.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Threading;
+using Newtonsoft.Json;
 using DoWorkEventArgs = DerekWare.Threading.DoWorkEventArgs;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -15,7 +15,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         // The target colors to set
         Color[] Colors;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public override bool IsMultiZone => true;
 
         protected int ZoneCount => Device.ZoneCount;

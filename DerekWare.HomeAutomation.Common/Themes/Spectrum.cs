@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Themes
 {
@@ -16,10 +16,10 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
         readonly Random Random = new();
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public override bool IsDynamic => true;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public override bool IsMultiZone => true;
 
         public double Brightness { get; set; } = 1;

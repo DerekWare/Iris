@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
@@ -38,7 +37,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public override IClient Client => PhilipsHue.Client.Instance;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public override IReadOnlyCollection<IDevice> Devices => InternalDevices;
 
         public string ModelId => HueDevice.ModelId;

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
@@ -17,10 +17,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
         int TargetCount = -1;
         int ZoneIndex;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public double Kelvin => 1;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public override TimeSpan Duration { get => RefreshRate; set { } }
 
         [Range(0.0, 1.0)]

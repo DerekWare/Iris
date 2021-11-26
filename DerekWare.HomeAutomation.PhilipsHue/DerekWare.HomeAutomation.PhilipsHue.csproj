@@ -77,7 +77,8 @@
       <HintPath>..\..\Iris\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\Iris\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Q42.HueApi, Version=3.18.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\Iris\packages\Q42.HueApi.3.18.1\lib\net45\Q42.HueApi.dll</HintPath>

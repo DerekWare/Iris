@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
@@ -23,10 +23,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
     public abstract class Effect : IEffect
     {
-        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false), XmlIgnore]
+        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false), JsonIgnore]
         public abstract bool IsFirmware { get; }
 
-        [Description("True if the effect is intended for multizone lights or light groups."), Browsable(false), XmlIgnore]
+        [Description("True if the effect is intended for multizone lights or light groups."), Browsable(false), JsonIgnore]
         public abstract bool IsMultiZone { get; }
 
         protected abstract void StartEffect();
@@ -38,19 +38,19 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         #endregion
 
-        [XmlIgnore]
+        [JsonIgnore]
         public string Description => this.GetDescription();
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public virtual string Family => null;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public bool IsRunning => Device is not null;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public string Name => this.GetName();
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public IDevice Device { get; private set; }
 
         #region Equality

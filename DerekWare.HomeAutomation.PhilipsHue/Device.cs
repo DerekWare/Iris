@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Xml.Serialization;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Colors;
@@ -21,10 +20,10 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             RefreshState();
         }
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public override IClient Client => PhilipsHue.Client.Instance;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public override IReadOnlyCollection<IDeviceGroup> Groups => PhilipsHue.Client.Instance.Groups.Where(i => i.Devices.Contains(this)).ToList();
 
         public string Id => HueDevice.Id;
@@ -33,7 +32,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public override bool IsMultiZone => false; // TODO can the gradient strip be addressed as more than one zone without the entertainment API?
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public override bool IsValid => true;
 
         public string LuminaireUniqueId => HueDevice.LuminaireUniqueId;

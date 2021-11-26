@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
@@ -33,10 +32,10 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             RefreshState();
         }
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public override IClient Client => Lan.Client.Instance;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public override IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups;
 
         public string IpAddress => Controller.IpAddress;
@@ -47,7 +46,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public override bool IsMultiZone => _Product?.features.multizone ?? false;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public override bool IsValid => !_Name.IsNullOrEmpty();
 
         public override string Name => _Name.IsNullOrEmpty() ? IpAddress : _Name;
@@ -60,10 +59,10 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public override int ZoneCount => _ZoneCount;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public MultiZoneEffectSettings MultiZoneEffect { get => _MultiZoneEffect; set => SetMultiZoneEffect(value); }
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false)]
         public WaveformSettings Waveform { get => _Waveform; set => SetWaveform(value); }
 
         public async Task RefreshPropertiesAsync()

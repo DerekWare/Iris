@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel;
-using System.Xml.Serialization;
 using DerekWare.Reflection;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
     [Name("Stop"), Description("Stops all other effects.")]
     public class NullEffect : Effect
     {
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public override bool IsFirmware => false;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public override bool IsMultiZone => false;
 
         public override object Clone()

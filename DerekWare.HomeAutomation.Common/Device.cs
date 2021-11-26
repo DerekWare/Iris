@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Xml.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -74,18 +74,18 @@ namespace DerekWare.HomeAutomation.Common
         public event EventHandler<DeviceEventArgs> PropertiesChanged;
         public event EventHandler<DeviceEventArgs> StateChanged;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
 
         public virtual string Family => Client.Family;
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public virtual Color Color { get => _Color; set => SetColor(value, TimeSpan.Zero); }
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public virtual IReadOnlyCollection<Color> MultiZoneColors { get => _MultiZoneColors; set => SetMultiZoneColors(value, TimeSpan.Zero); }
 
-        [Browsable(false), XmlIgnore]
+        [Browsable(false), JsonIgnore]
         public virtual PowerState Power { get => _Power; set => SetPower(value); }
 
         public override string ToString()
