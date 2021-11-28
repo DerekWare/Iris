@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DerekWare.Iris.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="PropertyCache" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="HueBridgeAddress" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -15,6 +12,12 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Scenes" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Themes" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Effects" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

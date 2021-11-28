@@ -9,7 +9,7 @@ using DerekWare.Diagnostics;
 
 namespace DerekWare.HomeAutomation.Common.Scenes
 {
-    public class SceneFactory : IFactory<Scene, Scene>
+    public class SceneFactory : ISerializableFactory<Scene>
     {
         public static readonly SceneFactory Instance = new();
 
@@ -29,31 +29,9 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         public int Count => Items.Count;
 
-        public void Deserialize(string text)
-        {
-            List<Scene> items;
-
-            try
-            {
-                items = JsonSerializer.Deserialize<List<Scene>>(text);
-            }
-            catch(Exception ex)
-            {
-                Debug.Error(this, ex);
-                return;
-            }
-
-            Items.AddRange(items.SafeEmpty());
-        }
-
         public bool Remove(Scene scene)
         {
             return Items.Remove(scene);
-        }
-
-        public string Serialize()
-        {
-            return JsonSerializer.Serialize(Items.ToList());
         }
 
         #region IEnumerable
@@ -76,6 +54,15 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         #region IFactory<Scene,Scene>
 
+        public string Serialize()
+        {
+            return JsonSerializer.Serialize(Items.ToList());
+        }
+
+        #endregion
+
+        #region ISerializableFactory<Scene,Scene>
+
         public Scene CreateInstance(string name)
         {
             var scene = new Scene(name);
@@ -86,6 +73,18 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             }
 
             return scene;
+        }
+
+        public void Deserialize(string cache)
+        {
+            try
+            {
+                Items.AddRange(JsonSerializer.Deserialize<List<Scene>>(cache));
+            }
+            catch(Exception ex)
+            {
+                Debug.Error(this, ex);
+            }
         }
 
         #endregion

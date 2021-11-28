@@ -80,7 +80,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 
         public WaveformSettings Clone()
         {
-            return (WaveformSettings)MemberwiseClone();
+            return (WaveformSettings)Common.Reflection.Clone(this);
         }
 
         #endregion

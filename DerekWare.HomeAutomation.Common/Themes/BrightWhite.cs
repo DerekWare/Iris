@@ -16,7 +16,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
         public override object Clone()
         {
-            return MemberwiseClone();
+            return Reflection.Clone(this);
         }
 
         public override IReadOnlyCollection<Color> GetPalette(IDevice targetDevice)

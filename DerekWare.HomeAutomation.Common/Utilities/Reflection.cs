@@ -5,11 +5,36 @@ using System.Linq;
 using System.Reflection;
 using DerekWare.Diagnostics;
 using DerekWare.Reflection;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common
 {
     public static class Reflection
     {
+        /// <summary>
+        ///     Perform a deep copy of the object via reflection. All public, writable properties and
+        ///     fields are copied, regardless of attributes. This can be implemented by a base type
+        ///     as the reflection uses GetType, not typeof(T).
+        /// </summary>
+        /// <typeparam name="T">The type of object being copied.</typeparam>
+        /// <param name="src">The object instance to copy.</param>
+        /// <returns>A deep copy of the object.</returns>
+        public static T Clone<T>(this T src)
+            where T : class
+        {
+            if(ReferenceEquals(src, null))
+            {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(src,
+                                                                                src.GetType(),
+                                                                                new JsonSerializerSettings
+                                                                                {
+                                                                                    ObjectCreationHandling = ObjectCreationHandling.Replace
+                                                                                }));
+        }
+
         public static string GetDescription(this Type type)
         {
             return type.GetCustomAttributes<DescriptionAttribute>(true).FirstOrDefault()?.Description;

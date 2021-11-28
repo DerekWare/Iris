@@ -224,9 +224,9 @@ namespace DerekWare.Collections
             return base.Remove(key) || _ModifiedKeys.Remove(key);
         }
 
-        public override bool SetValue(TKey key, string value, bool force = false)
+        public override bool SetValue(TKey key, string value)
         {
-            if(!base.SetValue(key, value ?? "", force))
+            if(!base.SetValue(key, value ?? ""))
             {
                 return false;
             }
@@ -241,9 +241,9 @@ namespace DerekWare.Collections
             return true;
         }
 
-        public bool SetValue(TKey key, object value, bool force = false)
+        public bool SetValue(TKey key, object value)
         {
-            if(!base.SetValue(key, value.SafeToString(), force))
+            if(!base.SetValue(key, value.SafeToString()))
             {
                 return false;
             }
@@ -258,24 +258,24 @@ namespace DerekWare.Collections
             return true;
         }
 
-        public bool SetValue(KeyValuePair<TKey, string> value, bool force = false)
+        public bool SetValue(KeyValuePair<TKey, string> value)
         {
-            return SetValue(value.Key, value.Value, force);
+            return SetValue(value.Key, value.Value);
         }
 
-        public bool SetValue<TValue>(KeyValuePair<TKey, TValue> value, bool force = false)
+        public bool SetValue<TValue>(KeyValuePair<TKey, TValue> value)
         {
-            return SetValue(value.Key, value.Value.SafeToString(), force);
+            return SetValue(value.Key, value.Value.SafeToString());
         }
 
-        public int SetValues(IEnumerable<KeyValuePair<TKey, string>> values, bool force = false)
+        public int SetValues(IEnumerable<KeyValuePair<TKey, string>> values)
         {
-            return values.Count(v => SetValue(v, force));
+            return values.Count(v => SetValue(v));
         }
 
-        public int SetValues<TValue>(IEnumerable<KeyValuePair<TKey, TValue>> values, bool force = false)
+        public int SetValues<TValue>(IEnumerable<KeyValuePair<TKey, TValue>> values)
         {
-            return values.Count(v => SetValue(v, force));
+            return values.Count(v => SetValue(v));
         }
 
         public TCollection ToCollection<TCollection, TTargetKey, TTargetValue>()

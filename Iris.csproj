@@ -194,7 +194,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyEditor.cs">
       <SubType>Form</SubType>
     </Compile>

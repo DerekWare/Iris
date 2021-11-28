@@ -137,7 +137,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             public RenderState Clone()
             {
-                return (RenderState)MemberwiseClone();
+                return (RenderState)Reflection.Clone(this);
             }
 
             #endregion

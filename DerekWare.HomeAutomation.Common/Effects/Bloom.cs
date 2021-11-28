@@ -36,7 +36,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         public override object Clone()
         {
-            return MemberwiseClone();
+            return Reflection.Clone(this);
         }
 
         protected override bool UpdateColors(RenderState renderState, ref Color[] colors)

@@ -7,6 +7,7 @@ using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Scenes;
+using DerekWare.HomeAutomation.Common.Themes;
 using DerekWare.Iris.Properties;
 using LifxClient = DerekWare.HomeAutomation.Lifx.Lan.Client;
 using HueClient = DerekWare.HomeAutomation.PhilipsHue.Client;
@@ -32,14 +33,19 @@ namespace DerekWare.Iris
             AutoUpdater.ShowRemindLaterButton = false;
             AutoUpdater.ShowSkipButton = false;
 
+            // Load cached LIFX devices
             Settings.Default.LifxDevices ??= new StringCollection();
             Settings.Default.LifxDevices.OfType<string>().ForEach(LifxClient.Instance.Connect);
 
+            // Connect to the Hue bridge
             if(!Settings.Default.HueBridgeAddress.IsNullOrEmpty() && !Settings.Default.HueApiKey.IsNullOrEmpty())
             {
                 HueClient.Instance.Connect(Settings.Default.HueBridgeAddress, Settings.Default.HueApiKey);
             }
 
+            // Deserialize cached effect, them and scene settings
+            EffectFactory.Instance.Deserialize(Settings.Default.Effects);
+            ThemeFactory.Instance.Deserialize(Settings.Default.Themes);
             SceneFactory.Instance.Deserialize(Settings.Default.Scenes);
 
             CheckForUpdates();
@@ -173,7 +179,9 @@ namespace DerekWare.Iris
                                                             .Select(i => i.Uuid)
                                                             .ToArray()); // HACK using internal knowledge that Uuid == IpAddress
 
-            // Save the scene list to the settings
+            // Cache other settings
+            Settings.Default.Effects = EffectFactory.Instance.Serialize();
+            Settings.Default.Themes = ThemeFactory.Instance.Serialize();
             Settings.Default.Scenes = SceneFactory.Instance.Serialize();
             Settings.Default.Save();
         }

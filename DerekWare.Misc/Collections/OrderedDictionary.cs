@@ -54,7 +54,7 @@ namespace DerekWare.Collections
             return false;
         }
 
-        public override bool SetValue(TKey key, TValue value, bool force = false)
+        public override bool SetValue(TKey key, TValue value)
         {
             throw new NotSupportedException();
         }

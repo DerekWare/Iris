@@ -180,11 +180,11 @@ namespace DerekWare.Collections
             }
         }
 
-        public override bool SetValue(TKey key, TValue value, bool force = false)
+        public override bool SetValue(TKey key, TValue value)
         {
             lock(SyncRoot)
             {
-                return base.SetValue(key, value, force);
+                return base.SetValue(key, value);
             }
         }
 

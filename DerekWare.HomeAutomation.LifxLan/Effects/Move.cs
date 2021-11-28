@@ -32,7 +32,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
 
         public override object Clone()
         {
-            return MemberwiseClone();
+            return Common.Reflection.Clone(this);
         }
 
         protected override void StartEffect()

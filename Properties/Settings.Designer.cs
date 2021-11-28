@@ -26,18 +26,6 @@ namespace DerekWare.Iris.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string PropertyCache {
-            get {
-                return ((string)(this["PropertyCache"]));
-            }
-            set {
-                this["PropertyCache"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string HueBridgeAddress {
             get {
                 return ((string)(this["HueBridgeAddress"]));
@@ -79,6 +67,30 @@ namespace DerekWare.Iris.Properties {
             }
             set {
                 this["Scenes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Themes {
+            get {
+                return ((string)(this["Themes"]));
+            }
+            set {
+                this["Themes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Effects {
+            get {
+                return ((string)(this["Effects"]));
+            }
+            set {
+                this["Effects"] = value;
             }
         }
     }

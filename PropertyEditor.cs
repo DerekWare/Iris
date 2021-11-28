@@ -38,20 +38,7 @@ namespace DerekWare.Iris
                 return DialogResult.OK;
             }
 
-            // Load cached properties
-            PropertyCache.WriteToObject(obj);
-
-            // Show the dialog
-            var result = new PropertyEditor(obj).ShowDialog(owner);
-
-            if(DialogResult.OK != result)
-            {
-                return result;
-            }
-
-            // Save the properties from the editor
-            PropertyCache.ReadFromObject(obj);
-            return result;
+            return new PropertyEditor(obj).ShowDialog(owner);
         }
     }
 }

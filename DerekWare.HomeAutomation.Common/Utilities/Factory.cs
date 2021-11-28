@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DerekWare.Collections;
+using DerekWare.Diagnostics;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -17,10 +18,24 @@ namespace DerekWare.HomeAutomation.Common
         TObject CreateInstance(string name);
     }
 
-    public class Factory<TObject, TProperties> : IFactory<TObject, TProperties>
+    public interface IFactory<TObject> : IFactory<TObject, TObject>
+    {
+    }
+
+    public interface ISerializableFactory<TObject, TProperties> : IFactory<TObject, TProperties>
+    {
+        void Deserialize(string cache);
+        string Serialize();
+    }
+
+    public interface ISerializableFactory<TObject> : ISerializableFactory<TObject, TObject>
+    {
+    }
+
+    public class Factory<TObject, TProperties> : ISerializableFactory<TObject, TProperties>
         where TProperties : ICloneable, IName where TObject : TProperties
     {
-        protected readonly SynchronizedDictionary<string, TProperties> Items = new();
+        protected readonly SynchronizedDictionary<string, TObject> Items = new();
 
         public event NotifyCollectionChangedEventHandler CollectionChanged
         {
@@ -32,10 +47,10 @@ namespace DerekWare.HomeAutomation.Common
 
         public Factory()
         {
-            // Find all classes in this assembly that subclass from TType and add them
+            // Find all classes in all assemblies that subclass from TObject and add them
             // to the list automagically.
             AddRange(from type in Reflection.GetVisibleTypes()
-                     where type.IsSubclassOf(typeof(TObject)) || type.GetInterfaces().Contains(typeof(TObject))
+                     where type.IsSubclassOf(typeof(TObject))
                      orderby type.GetName()
                      select type);
         }
@@ -45,20 +60,21 @@ namespace DerekWare.HomeAutomation.Common
 
         public void Add(Type type)
         {
-            Add(() => (TObject)Activator.CreateInstance(type));
-        }
-
-        public void Add(Func<TObject> activator)
-        {
-            Add(activator());
+            var obj = (TObject)Activator.CreateInstance(type);
+            Items[obj.Name] = obj;
         }
 
         public void Add(TObject obj)
         {
-            Items.Add(obj.Name, obj);
+            Items[obj.Name] = (TObject)obj.Clone();
         }
 
         public void AddRange(IEnumerable<Type> types)
+        {
+            types.ForEach(Add);
+        }
+
+        public void AddRange(IEnumerable<TObject> types)
         {
             types.ForEach(Add);
         }
@@ -76,7 +92,7 @@ namespace DerekWare.HomeAutomation.Common
 
         public IEnumerator<TProperties> GetEnumerator()
         {
-            return Items.Values.GetEnumerator();
+            return Items.Values.Cast<TProperties>().GetEnumerator();
         }
 
         #endregion
@@ -86,6 +102,28 @@ namespace DerekWare.HomeAutomation.Common
         public TObject CreateInstance(string name)
         {
             return (TObject)Items[name].Clone();
+        }
+
+        #endregion
+
+        #region ISerializableFactory<TObject,TProperties>
+
+        public void Deserialize(string cache)
+        {
+            try
+            {
+                // TODO validate the type exists in the app domain? There could be old entries.
+                AddRange(JsonSerializer.Deserialize<List<TObject>>(cache));
+            }
+            catch(Exception ex)
+            {
+                Debug.Error(this, ex);
+            }
+        }
+
+        public string Serialize()
+        {
+            return JsonSerializer.Serialize(Items.Values.ToList());
         }
 
         #endregion

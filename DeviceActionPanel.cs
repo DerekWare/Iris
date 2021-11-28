@@ -156,6 +156,7 @@ namespace DerekWare.Iris
 
         void EffectButton_Click(object sender, EventArgs e)
         {
+            // Create the effect
             var effect = EffectFactory.Instance.CreateInstance(((Button)sender).Text);
 
             if(DialogResult.OK != PropertyEditor.Show(this, effect))
@@ -163,6 +164,10 @@ namespace DerekWare.Iris
                 return;
             }
 
+            // Cache property edits
+            EffectFactory.Instance.Add(effect);
+
+            // Apply the effect
             InUpdate = true;
             Device.Effect = effect;
             InUpdate = false;
@@ -214,6 +219,7 @@ namespace DerekWare.Iris
 
         void ThemeButton_Click(object sender, EventArgs e)
         {
+            // Create the them
             var theme = ThemeFactory.Instance.CreateInstance(((Button)sender).Text);
 
             if(DialogResult.OK != PropertyEditor.Show(this, theme))
@@ -221,6 +227,10 @@ namespace DerekWare.Iris
                 return;
             }
 
+            // Cache property edits
+            ThemeFactory.Instance.Add(theme);
+
+            // Apply the theme
             InUpdate = true;
             Device.Effect = null;
             theme.Apply(Device);

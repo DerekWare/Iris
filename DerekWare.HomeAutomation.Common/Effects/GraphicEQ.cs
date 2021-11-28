@@ -37,7 +37,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         public override object Clone()
         {
-            return MemberwiseClone();
+            return Reflection.Clone(this);
         }
 
         protected override void StartEffect()

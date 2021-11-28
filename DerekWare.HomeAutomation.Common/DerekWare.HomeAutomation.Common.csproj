@@ -129,7 +129,6 @@
     <Compile Include="Effects\VUMeter.cs" />
     <Compile Include="Scenes\SceneItem.cs" />
     <Compile Include="Utilities\JsonSerializer.cs" />
-    <Compile Include="Utilities\PropertyBag.cs" />
     <Compile Include="Utilities\Reflection.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Effects\Move.cs" />
@@ -147,7 +146,6 @@
     <Compile Include="Clients\ClientFactory.cs" />
     <Compile Include="Devices\Device.cs" />
     <Compile Include="Utilities\Factory.cs" />
-    <Compile Include="Utilities\PropertyCache.cs" />
     <Compile Include="Devices\DeviceGroup.cs" />
     <Compile Include="PowerState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -82,19 +82,9 @@ namespace DerekWare.Collections
             return Items[key];
         }
 
-        public virtual bool SetValue(TKey key, TValue value, bool force = false)
+        public virtual bool SetValue(TKey key, TValue value)
         {
-            var exists = false;
-
-            if(!force)
-            {
-                exists = Items.ContainsKey(key);
-
-                if(exists && Equals(Items[key], value))
-                {
-                    return false;
-                }
-            }
+            var exists = Items.ContainsKey(key);
 
             Items[key] = value;
 
