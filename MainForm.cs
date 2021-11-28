@@ -130,34 +130,6 @@ namespace DerekWare.Iris
             ApplySceneToolStripMenuItem.Enabled = e.Node is ComponentTreeView.SceneNode;
         }
 
-        void ComponentTreeView_OnAfterCheck(object sender, TreeViewEventArgs e)
-        {
-            var scenePanel = RootLayoutPanel.Controls.OfType<ScenePanel>().FirstOrDefault();
-
-            if(scenePanel is null)
-            {
-                Debug.Error(this, "Unexpected check event (no scene panel)");
-                return;
-            }
-
-            var device = (e.Node as DeviceTreeView.DeviceNode)?.Device;
-
-            if(device is null)
-            {
-                Debug.Error(this, "Unexpected check event (not a device)");
-                return;
-            }
-
-            if(e.Node.Checked)
-            {
-                scenePanel.Scene.Add(device);
-            }
-            else
-            {
-                scenePanel.Scene.Remove(device);
-            }
-        }
-
         void ConnectMenuItem_Click(object sender, EventArgs e)
         {
             var dlg = new ConnectDeviceDialog();

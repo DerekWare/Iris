@@ -257,7 +257,6 @@ namespace DerekWare.Iris
             this.RootLayoutPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.ComponentTreeView.AfterCheck += ComponentTreeView_OnAfterCheck;
 
         }
 

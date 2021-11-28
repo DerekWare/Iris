@@ -34,7 +34,8 @@ namespace DerekWare.HomeAutomation.Common
         {
             DefaultValueHandling = DefaultValueHandling.Ignore,
             NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = new WritablePropertiesOnlyResolver()
+            ContractResolver = new WritablePropertiesOnlyResolver(),
+            TypeNameHandling = TypeNameHandling.All
         };
 
         public static T Deserialize<T>(string text)
