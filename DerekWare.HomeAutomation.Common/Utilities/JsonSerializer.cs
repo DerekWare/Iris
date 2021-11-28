@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using DerekWare.Collections;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -38,13 +39,23 @@ namespace DerekWare.HomeAutomation.Common
 
         public static T Deserialize<T>(string text)
         {
+            if(text.IsNullOrEmpty())
+            {
+                return default;
+            }
+
             using var stringReader = new StringReader(text);
             using var jsonReader = new JsonTextReader(stringReader);
             return Serializer.Deserialize<T>(jsonReader);
         }
 
-        public static string Serialize(object obj)
+        public static string Serialize<T>(T obj)
         {
+            if(obj is null)
+            {
+                return null;
+            }
+
             using var stringWriter = new StringWriter();
             using var jsonWriter = new JsonTextWriter(stringWriter);
             Serializer.Serialize(jsonWriter, obj);

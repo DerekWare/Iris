@@ -4,9 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DerekWare.Collections;
-using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
-using Q42.HueApi;
 using Q42.HueApi.Models.Groups;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
@@ -15,9 +13,6 @@ namespace DerekWare.HomeAutomation.PhilipsHue
     {
         internal readonly Group HueDevice;
         internal readonly SynchronizedList<Device> InternalDevices = new();
-
-        public override event EventHandler<DeviceEventArgs> PropertiesChanged;
-        public override event EventHandler<DeviceEventArgs> StateChanged;
 
         internal DeviceGroup(Group hueDevice)
         {
@@ -41,9 +36,13 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public override IReadOnlyCollection<IDevice> Devices => InternalDevices;
 
         public string ModelId => HueDevice.ModelId;
+
         public override string Name => HueDevice.Name;
+
         public GroupType? Type => HueDevice.Type;
+
         public override string Uuid => HueDevice.Id;
+
         public override string Vendor => null;
 
         public override void Dispose()
@@ -62,30 +61,21 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             }
         }
 
-        public override void SetFirmwareEffect(object effect)
-        {
-            if(effect is string effectName)
-            {
-                if(Enum.TryParse(effectName, true, out Effect value))
-                {
-                    var cmd = new LightCommand { Effect = value };
-
-                    cmd.SendCommandAsync(new[] { HueDevice.Id });
-                }
-                else
-                {
-                    Debug.Warning(this, $"Unknown effect: {effectName}");
-                }
-            }
-            else
-            {
-                Debug.Warning(this, "Invalid effect settings");
-            }
-        }
-
         public override string ToString()
         {
             return $"{Name} ({Family})";
+        }
+
+        protected override void OnPropertiesChanged()
+        {
+            base.OnPropertiesChanged();
+            PhilipsHue.Client.Instance.OnPropertiesChanged(this);
+        }
+
+        protected override void OnStateChanged()
+        {
+            base.OnStateChanged();
+            PhilipsHue.Client.Instance.OnStateChanged(this);
         }
 
         #region Event Handlers
@@ -94,28 +84,21 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         {
             foreach(Device device in e.OldItems.SafeEmpty())
             {
-                device.StateChanged -= OnStateChanged;
+                device.StateChanged -= OnDeviceStateChanged;
             }
 
             foreach(Device device in e.NewItems.SafeEmpty())
             {
-                device.StateChanged += OnStateChanged;
+                device.StateChanged += OnDeviceStateChanged;
             }
 
-            OnStateChanged(null, null);
-            OnPropertiesChanged(null, null);
+            OnStateChanged();
+            OnPropertiesChanged();
         }
 
-        void OnPropertiesChanged(object sender, DeviceEventArgs e)
+        void OnDeviceStateChanged(object sender, DeviceEventArgs e)
         {
-            PropertiesChanged?.Invoke(this, new DeviceEventArgs { Device = this });
-            PhilipsHue.Client.Instance.OnPropertiesChanged(this);
-        }
-
-        void OnStateChanged(object sender, DeviceEventArgs e)
-        {
-            StateChanged?.Invoke(this, new DeviceEventArgs { Device = this });
-            PhilipsHue.Client.Instance.OnStateChanged(this);
+            OnStateChanged();
         }
 
         #endregion

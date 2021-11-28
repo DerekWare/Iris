@@ -73,12 +73,12 @@ namespace DerekWare.Iris.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string UserScenes {
+        public string Scenes {
             get {
-                return ((string)(this["UserScenes"]));
+                return ((string)(this["Scenes"]));
             }
             set {
-                this["UserScenes"] = value;
+                this["Scenes"] = value;
             }
         }
     }

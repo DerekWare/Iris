@@ -1,12 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using DerekWare.Diagnostics;
 using DerekWare.Reflection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DerekWare.HomeAutomation.Common.Colors
 {
-    [TypeConverter(typeof(ColorConverter))]
-    public sealed class Color : ICloneable<Color>, IEquatable<Color>
+    [TypeConverter(typeof(ColorConverter)), Serializable, JsonObject]
+    public sealed class Color : ICloneable<Color>, IEquatable<Color>, ISerializable
     {
         double _Hue, _Saturation, _Brightness, _Kelvin;
 
@@ -37,6 +40,11 @@ namespace DerekWare.HomeAutomation.Common.Colors
             Saturation = s;
             Brightness = b;
             Kelvin = k;
+        }
+
+        public Color(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
         }
 
         public bool IsWhite => Saturation == 0;
@@ -88,8 +96,24 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
         public override string ToString()
         {
-            return $"{{ Hue:{Hue}, Saturation:{Saturation}, Brightness:{Brightness}, Kelvin:{Kelvin} }}";
+            return new JObject(new JProperty(nameof(Hue), Hue),
+                               new JProperty(nameof(Saturation), Saturation),
+                               new JProperty(nameof(Brightness), Brightness),
+                               new JProperty(nameof(Kelvin), Kelvin)).ToString();
         }
+
+        #region Conversion
+
+        public static Color Parse(string text)
+        {
+            var j = JObject.Parse(text);
+            return new Color(j[nameof(Hue)].Value<double>(),
+                             j[nameof(Saturation)].Value<double>(),
+                             j[nameof(Brightness)].Value<double>(),
+                             j[nameof(Kelvin)].Value<double>());
+        }
+
+        #endregion
 
         #region Equality
 
@@ -169,5 +193,29 @@ namespace DerekWare.HomeAutomation.Common.Colors
         }
 
         #endregion
+
+        #region ISerializable
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
+        }
+
+        #endregion
+
+        public static bool TryParse(string text, out Color color)
+        {
+            try
+            {
+                color = Parse(text);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Debug.Error(null, ex);
+                color = null;
+                return false;
+            }
+        }
     }
 }

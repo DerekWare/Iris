@@ -12,16 +12,15 @@ namespace DerekWare.HomeAutomation.Common
     // A typical pattern would be to instantiate the object with the Factory, load any saved
     // properties from the PropertyCache, display the PropertyGrid, then save the changes back
     // to the PropertyCache.
-    public interface IFactory<out TObject> : IReadOnlyObservableCollection<TObject>
-        where TObject : ICloneable, IName
+    public interface IFactory<TObject, TProperties> : IReadOnlyObservableCollection<TProperties>
     {
         TObject CreateInstance(string name);
     }
 
-    public class Factory<TObject> : IFactory<TObject>
-        where TObject : ICloneable, IName
+    public class Factory<TObject, TProperties> : IFactory<TObject, TProperties>
+        where TProperties : ICloneable, IName where TObject : TProperties
     {
-        protected readonly SynchronizedDictionary<string, TObject> Items = new();
+        protected readonly SynchronizedDictionary<string, TProperties> Items = new();
 
         public event NotifyCollectionChangedEventHandler CollectionChanged
         {
@@ -73,16 +72,16 @@ namespace DerekWare.HomeAutomation.Common
 
         #endregion
 
-        #region IEnumerable<TObject>
+        #region IEnumerable<TProperties>
 
-        public IEnumerator<TObject> GetEnumerator()
+        public IEnumerator<TProperties> GetEnumerator()
         {
             return Items.Values.GetEnumerator();
         }
 
         #endregion
 
-        #region IFactory<TObject>
+        #region IFactory<TObject,TProperties>
 
         public TObject CreateInstance(string name)
         {

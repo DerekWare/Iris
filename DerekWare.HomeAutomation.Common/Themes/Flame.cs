@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Themes
 {
-    [Description("Apply the colors of flame of various temperatures.")]
-    public class Flame : Theme
+    [Description("Apply the colors of flame of various temperatures."), Serializable, JsonObject]
+    public class Flame : Theme, ISerializable
     {
         public enum FlameDirection
         {
@@ -19,6 +21,15 @@ namespace DerekWare.HomeAutomation.Common.Themes
             Cool,
             Warm,
             Hot
+        }
+
+        public Flame()
+        {
+        }
+
+        public Flame(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
         }
 
         public override bool IsDynamic => true;
@@ -95,6 +106,15 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
             return colors;
         }
+
+        #region ISerializable
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
+        }
+
+        #endregion
 
         static Color GetColor(Color min, Color max, int index, int count)
         {

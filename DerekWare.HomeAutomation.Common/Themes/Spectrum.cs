@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
 using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Themes
 {
-    public class Spectrum : Theme
+    [Serializable, JsonObject]
+    public class Spectrum : Theme, ISerializable
     {
         public enum SpectrumDirection
         {
@@ -15,6 +17,15 @@ namespace DerekWare.HomeAutomation.Common.Themes
         }
 
         readonly Random Random = new();
+
+        public Spectrum()
+        {
+        }
+
+        public Spectrum(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
+        }
 
         [Browsable(false)]
         public override bool IsDynamic => true;
@@ -59,5 +70,14 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
             return colors;
         }
+
+        #region ISerializable
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
+        }
+
+        #endregion
     }
 }

@@ -10,11 +10,11 @@ using PowerState = DerekWare.HomeAutomation.Common.PowerState;
 
 namespace DerekWare.Iris
 {
-    public partial class ActionPanel : UserControl
+    public partial class DeviceActionPanel : UserControl
     {
         bool InUpdate;
 
-        public ActionPanel(IDevice device)
+        public DeviceActionPanel(IDevice device)
         {
             Device = device;
 
@@ -22,6 +22,26 @@ namespace DerekWare.Iris
         }
 
         public IDevice Device { get; }
+
+        public string Description
+        {
+            get => DescriptionLabel.Text;
+            set
+            {
+                if(value.IsNullOrEmpty())
+                {
+                    DescriptionLabel.Text = null;
+                    DescriptionLabel.Visible = false;
+                    BaseLayoutPanel.RowStyles[0] = new RowStyle(SizeType.Absolute, 0);
+                }
+                else
+                {
+                    DescriptionLabel.Text = value;
+                    DescriptionLabel.Visible = true;
+                    BaseLayoutPanel.RowStyles[0] = new RowStyle(SizeType.AutoSize);
+                }
+            }
+        }
 
         protected void AttachDevice()
         {
@@ -111,12 +131,10 @@ namespace DerekWare.Iris
             SolidColorPanel.Color = Device.Color;
             ZoneColorBand.Colors = Device.MultiZoneColors.ToArray();
 
-            var activeEffects = Device.Effects;
-
             foreach(var button in EffectLayoutPanel.Controls.OfType<Button>())
             {
-                var effect = (IReadOnlyEffectProperties)button.Tag;
-                var isActive = activeEffects.Contains(effect);
+                var effect = (Effect)button.Tag;
+                var isActive = Device.Effect == effect;
 
                 if(isActive)
                 {
@@ -146,7 +164,7 @@ namespace DerekWare.Iris
             }
 
             InUpdate = true;
-            effect.Start(Device);
+            Device.Effect = effect;
             InUpdate = false;
         }
 
@@ -182,7 +200,6 @@ namespace DerekWare.Iris
             var powerState = (PowerState)PowerComboBox.SelectedIndex;
 
             InUpdate = true;
-            EffectFactory.Instance.StopEffect(Device);
             Device.Power = powerState;
             InUpdate = false;
         }
@@ -190,7 +207,7 @@ namespace DerekWare.Iris
         void SolidColorPanel_ColorChanged(object sender, ColorChangedEventArgs e)
         {
             InUpdate = true;
-            EffectFactory.Instance.StopEffect(Device);
+            Device.Effect = null;
             Device.Color = e.Color;
             InUpdate = false;
         }
@@ -205,7 +222,7 @@ namespace DerekWare.Iris
             }
 
             InUpdate = true;
-            EffectFactory.Instance.StopEffect(Device);
+            Device.Effect = null;
             theme.Apply(Device);
             InUpdate = false;
         }
@@ -213,7 +230,7 @@ namespace DerekWare.Iris
         void ZoneColorBand_ColorsChanged(object sender, ColorsChangedEventArgs e)
         {
             InUpdate = true;
-            EffectFactory.Instance.StopEffect(Device);
+            Device.Effect = null;
             Device.MultiZoneColors = e.Colors;
             InUpdate = false;
         }

@@ -14,7 +14,7 @@
     <Setting Name="LifxDevices" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="UserScenes" Type="System.String" Scope="User">
+    <Setting Name="Scenes" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

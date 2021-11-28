@@ -1,12 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Description("Moves the current colors forward, backward or back and forth.")]
-    public class Move : MultiZoneColorEffectRenderer
+    [Description("Moves the current colors forward, backward or back and forth."), Serializable, JsonObject]
+    public class Move : MultiZoneColorEffectRenderer, ISerializable
     {
         public enum EffectBehavior
         {
@@ -30,6 +32,11 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public Move()
         {
             RefreshRate = TimeSpan.FromSeconds(1);
+        }
+
+        public Move(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
         }
 
         public override bool IsMultiZone => true;
@@ -105,5 +112,14 @@ namespace DerekWare.HomeAutomation.Common.Effects
             refreshRate = Math.Max(refreshRate, 1.0 / Duration.TotalSeconds);
             return TimeSpan.FromSeconds(refreshRate);
         }
+
+        #region ISerializable
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
+        }
+
+        #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -10,6 +11,7 @@ namespace DerekWare.HomeAutomation.Common
     // and store them in the PropertyBag for serializing. A typical pattern for using this
     // is to call WriteToObject, then display a PropertyGrid dialog to let the user change
     // any properties, then call ReadFromObject to save those changes as the new defaults.
+    [Serializable, JsonObject]
     public class PropertyCache : ObservableDictionary<string, PropertyBag>, ISerializablePropertyStore<string, PropertyBag>
     {
         #region IPropertyStore<string,PropertyBag>

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Windows.Forms;
 using AutoUpdaterDotNET;
 using DerekWare.Collections;
+using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common.Effects;
-using DerekWare.HomeAutomation.Common.Themes;
+using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.Iris.Properties;
 using LifxClient = DerekWare.HomeAutomation.Lifx.Lan.Client;
 using HueClient = DerekWare.HomeAutomation.PhilipsHue.Client;
@@ -27,7 +28,7 @@ namespace DerekWare.Iris
             AutoUpdater.ApplicationExitEvent += OnApplicationExitEvent;
             AutoUpdater.InstalledVersion = Program.AutoUpdaterVersion;
 
-            // the reminder and skip both have a bug, so don't use them
+            // The reminder and skip both have a bug, so don't use them
             AutoUpdater.ShowRemindLaterButton = false;
             AutoUpdater.ShowSkipButton = false;
 
@@ -39,7 +40,7 @@ namespace DerekWare.Iris
                 HueClient.Instance.Connect(Settings.Default.HueBridgeAddress, Settings.Default.HueApiKey);
             }
 
-            ThemeFactory.Instance.LoadUserThemes(Settings.Default.UserScenes);
+            SceneFactory.Instance.Deserialize(Settings.Default.Scenes);
 
             CheckForUpdates();
             base.OnLoad(e);
@@ -47,9 +48,9 @@ namespace DerekWare.Iris
 
         protected override void OnResize(EventArgs e)
         {
-            if(FormWindowState.Minimized == WindowState)
+            if(FormWindowState.Minimized != WindowState)
             {
-                MinimizeToTray();
+                RestoreWindowState = WindowState;
             }
 
             base.OnResize(e);
@@ -62,7 +63,6 @@ namespace DerekWare.Iris
 
         void MinimizeToTray()
         {
-            RestoreWindowState = WindowState == FormWindowState.Maximized ? FormWindowState.Maximized : FormWindowState.Normal;
             WindowState = FormWindowState.Minimized;
             Visible = false;
             ShowInTaskbar = false;
@@ -81,6 +81,11 @@ namespace DerekWare.Iris
         void AboutMenuItem_Click(object sender, EventArgs e)
         {
             new AboutBox().ShowDialog(this);
+        }
+
+        void ApplySceneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ComponentTreeView.SelectedScene?.Apply();
         }
 
         void BridgeMenuItem_Click(object sender, EventArgs e)
@@ -104,6 +109,55 @@ namespace DerekWare.Iris
             Close();
         }
 
+        void ComponentTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            RootLayoutPanel.Controls.OfType<DeviceActionPanel>().ToList().ForEach(i => i.Dispose());
+            RootLayoutPanel.Controls.OfType<ScenePanel>().ToList().ForEach(i => i.Dispose());
+
+            if(e.Node is DeviceTreeView.DeviceNode deviceNode)
+            {
+                // deviceNode.Device.RefreshState();
+                RootLayoutPanel.Controls.Add(new DeviceActionPanel(deviceNode.Device) { Dock = DockStyle.Fill, Description = Resources.ActionPanelDescription },
+                                             1,
+                                             0);
+            }
+            else if(e.Node is ComponentTreeView.SceneNode sceneNode)
+            {
+                RootLayoutPanel.Controls.Add(new ScenePanel(sceneNode.Scene) { Dock = DockStyle.Fill }, 1, 0);
+            }
+
+            RemoveSceneToolStripMenuItem.Enabled = e.Node is ComponentTreeView.SceneNode;
+            ApplySceneToolStripMenuItem.Enabled = e.Node is ComponentTreeView.SceneNode;
+        }
+
+        void ComponentTreeView_OnAfterCheck(object sender, TreeViewEventArgs e)
+        {
+            var scenePanel = RootLayoutPanel.Controls.OfType<ScenePanel>().FirstOrDefault();
+
+            if(scenePanel is null)
+            {
+                Debug.Error(this, "Unexpected check event (no scene panel)");
+                return;
+            }
+
+            var device = (e.Node as DeviceTreeView.DeviceNode)?.Device;
+
+            if(device is null)
+            {
+                Debug.Error(this, "Unexpected check event (not a device)");
+                return;
+            }
+
+            if(e.Node.Checked)
+            {
+                scenePanel.Scene.Add(device);
+            }
+            else
+            {
+                scenePanel.Scene.Remove(device);
+            }
+        }
+
         void ConnectMenuItem_Click(object sender, EventArgs e)
         {
             var dlg = new ConnectDeviceDialog();
@@ -116,21 +170,9 @@ namespace DerekWare.Iris
             LifxClient.Instance.Connect(dlg.IpAddress);
         }
 
-        void DeviceTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        void CreateSceneToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach(var i in RootLayoutPanel.Controls.OfType<ActionPanel>())
-            {
-                RootLayoutPanel.Controls.Remove(i);
-                i.Dispose();
-            }
-
-            if(e.Node is not DeviceTreeView.DeviceNode node)
-            {
-                return;
-            }
-
-            node.Device.RefreshState();
-            RootLayoutPanel.Controls.Add(new ActionPanel(node.Device) { Dock = DockStyle.Fill }, 1, 0);
+            ComponentTreeView.CreateScene();
         }
 
         void ExitMenuItem_Click(object sender, EventArgs e)
@@ -159,8 +201,8 @@ namespace DerekWare.Iris
                                                             .Select(i => i.Uuid)
                                                             .ToArray()); // HACK using internal knowledge that Uuid == IpAddress
 
-            // Save user themes
-            Settings.Default.UserScenes = ThemeFactory.Instance.SaveUserThemes();
+            // Save the scene list to the settings
+            Settings.Default.Scenes = SceneFactory.Instance.Serialize();
             Settings.Default.Save();
         }
 
@@ -184,6 +226,11 @@ namespace DerekWare.Iris
         {
             IsExiting = true;
             Close();
+        }
+
+        void RemoveSceneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ComponentTreeView.RemoveSelectedScene();
         }
 
         void ShowWindowMenuItem_Click(object sender, EventArgs e)

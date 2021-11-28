@@ -1,329 +1,340 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
-            Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-    <Import
-        Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v16.0\TextTemplating\Microsoft.TextTemplating.targets" />
-    <PropertyGroup>
-        <TransformOnBuild>true</TransformOnBuild>
-        <OverwriteReadOnlyOutputFiles>true</OverwriteReadOnlyOutputFiles>
-        <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
-    </PropertyGroup>
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{BD6281D8-DE6F-4A5A-B01A-727525394883}</ProjectGuid>
-        <OutputType>WinExe</OutputType>
-        <RootNamespace>DerekWare.Iris</RootNamespace>
-        <AssemblyName>DerekWare Iris</AssemblyName>
-        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <Deterministic>true</Deterministic>
-        <IsWebBootstrapper>true</IsWebBootstrapper>
-        <PublishUrl>ftp://derekware.com/derekware.com/software/iris/</PublishUrl>
-        <Install>true</Install>
-        <InstallFrom>Web</InstallFrom>
-        <UpdateEnabled>true</UpdateEnabled>
-        <UpdateMode>Foreground</UpdateMode>
-        <UpdateInterval>7</UpdateInterval>
-        <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-        <UpdatePeriodically>false</UpdatePeriodically>
-        <UpdateRequired>false</UpdateRequired>
-        <MapFileExtensions>true</MapFileExtensions>
-        <InstallUrl>http://www.derekware.com/software/iris/</InstallUrl>
-        <SupportUrl>http://www.derekware.com/software/iris</SupportUrl>
-        <ProductName>DerekWare Iris</ProductName>
-        <PublisherName>DerekWare</PublisherName>
-        <SuiteName>DerekWare</SuiteName>
-        <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-        <WebPage>default.html</WebPage>
-        <ApplicationRevision>11</ApplicationRevision>
-        <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-        <UseApplicationTrust>false</UseApplicationTrust>
-        <PublishWizardCompleted>true</PublishWizardCompleted>
-        <BootstrapperEnabled>true</BootstrapperEnabled>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <LangVersion>latest</LangVersion>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <LangVersion>latest</LangVersion>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-        <DebugSymbols>true</DebugSymbols>
-        <OutputPath>bin\x64\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <DebugType>full</DebugType>
-        <PlatformTarget>x64</PlatformTarget>
-        <LangVersion>latest</LangVersion>
-        <ErrorReport>prompt</ErrorReport>
-        <Prefer32Bit>true</Prefer32Bit>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-        <OutputPath>bin\x64\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <Optimize>true</Optimize>
-        <DebugType>pdbonly</DebugType>
-        <PlatformTarget>x64</PlatformTarget>
-        <LangVersion>latest</LangVersion>
-        <ErrorReport>prompt</ErrorReport>
-        <Prefer32Bit>true</Prefer32Bit>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-        <DebugSymbols>true</DebugSymbols>
-        <OutputPath>bin\x86\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <DebugType>full</DebugType>
-        <PlatformTarget>x86</PlatformTarget>
-        <LangVersion>latest</LangVersion>
-        <ErrorReport>prompt</ErrorReport>
-        <Prefer32Bit>true</Prefer32Bit>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-        <OutputPath>bin\x86\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <Optimize>true</Optimize>
-        <DebugType>pdbonly</DebugType>
-        <PlatformTarget>x86</PlatformTarget>
-        <LangVersion>latest</LangVersion>
-        <ErrorReport>prompt</ErrorReport>
-        <Prefer32Bit>true</Prefer32Bit>
-        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-        <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-        <RunCodeAnalysis>false</RunCodeAnalysis>
-    </PropertyGroup>
-    <PropertyGroup>
-        <ApplicationIcon>Resources\colorcpl.exe[5] 256x256 32bpp.ico</ApplicationIcon>
-    </PropertyGroup>
-    <PropertyGroup>
-        <SignManifests>false</SignManifests>
-    </PropertyGroup>
-    <PropertyGroup>
-        <SignAssembly>false</SignAssembly>
-    </PropertyGroup>
-    <PropertyGroup>
-        <ManifestCertificateThumbprint>3D08507E7D6447A21C5B749B442FFE856F0CEABF</ManifestCertificateThumbprint>
-    </PropertyGroup>
-    <PropertyGroup>
-        <ManifestKeyFile>
-        </ManifestKeyFile>
-    </PropertyGroup>
-    <PropertyGroup>
-        <GenerateManifests>true</GenerateManifests>
-    </PropertyGroup>
-    <PropertyGroup>
-        <TargetZone>Internet</TargetZone>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference
-            Include="AutoUpdater.NET, Version=1.7.0.0, Culture=neutral, PublicKeyToken=501435c91b35f4bc, processorArchitecture=MSIL">
-            <HintPath>packages\Autoupdater.NET.Official.1.7.0\lib\net45\AutoUpdater.NET.dll</HintPath>
-        </Reference>
-        <Reference
-            Include="Cyotek.Windows.Forms.ColorPicker, Version=1.0.0.0, Culture=neutral, PublicKeyToken=58daa28b0b2de221, processorArchitecture=MSIL">
-            <HintPath>packages\Cyotek.Windows.Forms.ColorPicker.1.7.2\lib\net35\Cyotek.Windows.Forms.ColorPicker.dll</HintPath>
-        </Reference>
-        <Reference Include="PresentationFramework" />
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Runtime.Serialization" />
-        <Reference Include="System.Xaml" />
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Deployment" />
-        <Reference Include="System.Drawing" />
-        <Reference Include="System.Net.Http" />
-        <Reference Include="System.Windows.Forms" />
-        <Reference Include="System.Xml" />
-        <Reference Include="WindowsBase" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="AboutBox.cs">
-            <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="AboutBox.Designer.cs">
-            <DependentUpon>AboutBox.cs</DependentUpon>
-        </Compile>
-        <Compile Include="ActionPanel.cs">
-            <SubType>UserControl</SubType>
-        </Compile>
-        <Compile Include="ActionPanel.Designer.cs">
-            <DependentUpon>ActionPanel.cs</DependentUpon>
-        </Compile>
-        <Compile Include="AssemblyVersion.cs">
-            <AutoGen>True</AutoGen>
-            <DesignTime>True</DesignTime>
-            <DependentUpon>AssemblyVersion.tt</DependentUpon>
-        </Compile>
-        <Compile Include="ConnectBridgeDialog.cs">
-            <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="ConnectBridgeDialog.Designer.cs">
-            <DependentUpon>ConnectBridgeDialog.cs</DependentUpon>
-        </Compile>
-        <Compile Include="ConnectDeviceDialog.cs">
-            <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="ConnectDeviceDialog.Designer.cs">
-            <DependentUpon>ConnectDeviceDialog.cs</DependentUpon>
-        </Compile>
-        <Compile Include="ColorsChangedEventArgs.cs" />
-        <Compile Include="ColorChangedEventArgs.cs" />
-        <Compile Include="DeviceTreeView.cs">
-            <SubType>Component</SubType>
-        </Compile>
-        <Compile Include="Properties\Settings.Designer.cs">
-            <AutoGen>True</AutoGen>
-            <DesignTimeSharedInput>True</DesignTimeSharedInput>
-            <DependentUpon>Settings.settings</DependentUpon>
-        </Compile>
-        <Compile Include="PropertyCache.cs" />
-        <Compile Include="PropertyEditor.cs">
-            <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="PropertyEditor.Designer.cs">
-            <DependentUpon>PropertyEditor.cs</DependentUpon>
-        </Compile>
-        <Compile Include="Settings.cs" />
-        <Compile Include="SolidColorPanel.cs">
-            <SubType>UserControl</SubType>
-        </Compile>
-        <Compile Include="SolidColorPanel.Designer.cs">
-            <DependentUpon>SolidColorPanel.cs</DependentUpon>
-        </Compile>
-        <Compile Include="MainForm.cs">
-            <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="MainForm.Designer.cs">
-            <DependentUpon>MainForm.cs</DependentUpon>
-        </Compile>
-        <Compile Include="ColorBand.cs">
-            <SubType>UserControl</SubType>
-        </Compile>
-        <Compile Include="Program.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-        <EmbeddedResource Include="AboutBox.resx">
-            <DependentUpon>AboutBox.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="ActionPanel.resx">
-            <DependentUpon>ActionPanel.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="ConnectBridgeDialog.resx">
-            <DependentUpon>ConnectBridgeDialog.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="ConnectDeviceDialog.resx">
-            <DependentUpon>ConnectDeviceDialog.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="PropertyEditor.resx">
-            <DependentUpon>PropertyEditor.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="SolidColorPanel.resx">
-            <DependentUpon>SolidColorPanel.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="MainForm.resx">
-            <DependentUpon>MainForm.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Properties\Resources.resx">
-            <Generator>ResXFileCodeGenerator</Generator>
-            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-            <SubType>Designer</SubType>
-        </EmbeddedResource>
-        <Compile Include="Properties\Resources.Designer.cs">
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Resources.resx</DependentUpon>
-            <DesignTime>True</DesignTime>
-        </Compile>
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="App.config" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="DerekWare.HomeAutomation.Common\DerekWare.HomeAutomation.Common.csproj">
-            <Project>{7e59c277-b9ca-4577-bc00-0bd6a94f9b22}</Project>
-            <Name>DerekWare.HomeAutomation.Common</Name>
-        </ProjectReference>
-        <ProjectReference Include="DerekWare.HomeAutomation.LifxLan\DerekWare.HomeAutomation.Lifx.Lan.csproj">
-            <Project>{49420673-44bd-4d6d-a4bc-1bf2e022fdec}</Project>
-            <Name>DerekWare.HomeAutomation.Lifx.Lan</Name>
-        </ProjectReference>
-        <ProjectReference Include="DerekWare.HomeAutomation.PhilipsHue\DerekWare.HomeAutomation.PhilipsHue.csproj">
-            <Project>{2e1241e6-58cd-410d-a78b-9821b2538da9}</Project>
-            <Name>DerekWare.HomeAutomation.PhilipsHue</Name>
-        </ProjectReference>
-        <ProjectReference Include="DerekWare.Misc\DerekWare.Misc.csproj">
-            <Project>{713cbedf-3003-4a12-970c-000574bafeaf}</Project>
-            <Name>DerekWare.Misc</Name>
-        </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="packages.config" />
-        <None Include="Properties\app.manifest" />
-        <None Include="Properties\Settings.settings">
-            <Generator>SettingsSingleFileGenerator</Generator>
-            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-        </None>
-        <None Include="Resources\colorcpl.exe[5] 256x256 32bpp.ico" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="Resources\colorcpl.exe[5] 48x48 32bpp.ico" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="Resources\colorcpl.exe[5] 16x16 32bpp.ico" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="Resources\colorcpl.exe[5] 24x24 32bpp.ico" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="Resources\colorcpl.exe[5] 32x32 32bpp.ico" />
-    </ItemGroup>
-    <ItemGroup>
-        <BootstrapperPackage Include=".NETFramework,Version=v4.8">
-            <Visible>False</Visible>
-            <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
-            <Install>true</Install>
-        </BootstrapperPackage>
-        <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-            <Visible>False</Visible>
-            <ProductName>.NET Framework 3.5 SP1</ProductName>
-            <Install>false</Install>
-        </BootstrapperPackage>
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include="AssemblyVersion.tt">
-            <Generator>TextTemplatingFileGenerator</Generator>
-            <LastGenOutput>AssemblyVersion.cs</LastGenOutput>
-        </Content>
-    </ItemGroup>
-    <ItemGroup>
-        <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <PropertyGroup>
-        <PostBuildEvent>
-            powershell Compress-Archive '$(SolutionDir)$(OutDir)*' -DestinationPath '$(SolutionDir)Publish\$(TargetName).zip' -force
-        </PostBuildEvent>
-    </PropertyGroup>
-    <PropertyGroup>
-        <PreBuildEvent>
-        </PreBuildEvent>
-    </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v16.0\TextTemplating\Microsoft.TextTemplating.targets" />
+  <PropertyGroup>
+    <TransformOnBuild>true</TransformOnBuild>
+    <OverwriteReadOnlyOutputFiles>true</OverwriteReadOnlyOutputFiles>
+    <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BD6281D8-DE6F-4A5A-B01A-727525394883}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>DerekWare.Iris</RootNamespace>
+    <AssemblyName>DerekWare Iris</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>ftp://derekware.com/derekware.com/software/iris/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://www.derekware.com/software/iris/</InstallUrl>
+    <SupportUrl>http://www.derekware.com/software/iris</SupportUrl>
+    <ProductName>DerekWare Iris</ProductName>
+    <PublisherName>DerekWare</PublisherName>
+    <SuiteName>DerekWare</SuiteName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>default.html</WebPage>
+    <ApplicationRevision>11</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\colorcpl.exe[5] 256x256 32bpp.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>3D08507E7D6447A21C5B749B442FFE856F0CEABF</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>Internet</TargetZone>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoUpdater.NET, Version=1.7.0.0, Culture=neutral, PublicKeyToken=501435c91b35f4bc, processorArchitecture=MSIL">
+      <HintPath>packages\Autoupdater.NET.Official.1.7.0\lib\net45\AutoUpdater.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Cyotek.Windows.Forms.ColorPicker, Version=1.0.0.0, Culture=neutral, PublicKeyToken=58daa28b0b2de221, processorArchitecture=MSIL">
+      <HintPath>packages\Cyotek.Windows.Forms.ColorPicker.1.7.2\lib\net35\Cyotek.Windows.Forms.ColorPicker.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ComponentTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DeviceActionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DeviceActionPanel.Designer.cs">
+      <DependentUpon>DeviceActionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AssemblyVersion.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssemblyVersion.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectBridgeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConnectBridgeDialog.Designer.cs">
+      <DependentUpon>ConnectBridgeDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectDeviceDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConnectDeviceDialog.Designer.cs">
+      <DependentUpon>ConnectDeviceDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ColorsChangedEventArgs.cs" />
+    <Compile Include="ColorChangedEventArgs.cs" />
+    <Compile Include="DeviceTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyCache.cs" />
+    <Compile Include="PropertyEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyEditor.Designer.cs">
+      <DependentUpon>PropertyEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SceneListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ScenePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ScenePanel.Designer.cs">
+      <DependentUpon>ScenePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
+    <Compile Include="SolidColorPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SolidColorPanel.Designer.cs">
+      <DependentUpon>SolidColorPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ColorBand.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeviceActionPanel.resx">
+      <DependentUpon>DeviceActionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConnectBridgeDialog.resx">
+      <DependentUpon>ConnectBridgeDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConnectDeviceDialog.resx">
+      <DependentUpon>ConnectDeviceDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyEditor.resx">
+      <DependentUpon>PropertyEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScenePanel.resx">
+      <DependentUpon>ScenePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SolidColorPanel.resx">
+      <DependentUpon>SolidColorPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="DerekWare.HomeAutomation.Common\DerekWare.HomeAutomation.Common.csproj">
+      <Project>{7e59c277-b9ca-4577-bc00-0bd6a94f9b22}</Project>
+      <Name>DerekWare.HomeAutomation.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="DerekWare.HomeAutomation.LifxLan\DerekWare.HomeAutomation.Lifx.Lan.csproj">
+      <Project>{49420673-44bd-4d6d-a4bc-1bf2e022fdec}</Project>
+      <Name>DerekWare.HomeAutomation.Lifx.Lan</Name>
+    </ProjectReference>
+    <ProjectReference Include="DerekWare.HomeAutomation.PhilipsHue\DerekWare.HomeAutomation.PhilipsHue.csproj">
+      <Project>{2e1241e6-58cd-410d-a78b-9821b2538da9}</Project>
+      <Name>DerekWare.HomeAutomation.PhilipsHue</Name>
+    </ProjectReference>
+    <ProjectReference Include="DerekWare.Misc\DerekWare.Misc.csproj">
+      <Project>{713cbedf-3003-4a12-970c-000574bafeaf}</Project>
+      <Name>DerekWare.Misc</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\colorcpl.exe[5] 256x256 32bpp.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\colorcpl.exe[5] 48x48 32bpp.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\colorcpl.exe[5] 16x16 32bpp.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\colorcpl.exe[5] 24x24 32bpp.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\colorcpl.exe[5] 32x32 32bpp.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AssemblyVersion.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssemblyVersion.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>md "$(SolutionDir)Publish"
+powershell Compress-Archive '$(SolutionDir)$(OutDir)*' -DestinationPath '$(SolutionDir)Publish\$(TargetName).zip' -force
+</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -2,34 +2,22 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using DerekWare.Collections;
+using System.Runtime.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
 using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Themes
 {
-    public interface IReadOnlyThemeProperties : IDescription, IFamily, IName, IEquatable<IReadOnlyThemeProperties>
+    public interface IReadOnlyThemeProperties : ICloneable, IName, IDescription, IFamily
     {
-        [Description("True if the theme chooses its own colors.")]
-        public abstract bool IsDynamic { get; }
-
-        [Description("True if the effect runs on the device as opposed to running in this application.")]
-        public bool IsFirmware { get; }
-
-        [Description("True if the theme is intended for multizone lights, such as the LIFX Z strip.")]
-        public abstract bool IsMultiZone { get; }
-    }
-
-    public interface ITheme : IThemeProperties, ICloneable
-    {
-        public void Apply(IDevice device);
     }
 
     public interface IThemeProperties : IReadOnlyThemeProperties
     {
+        public new string Name { get; set; }
     }
 
-    public abstract class Theme : ITheme
+    public abstract class Theme : IThemeProperties, ISerializable
     {
         [Description("True if the theme chooses its own colors."), Browsable(false)]
         public abstract bool IsDynamic { get; }
@@ -62,7 +50,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
         [Browsable(false)]
         public virtual string Name { get; set; }
 
-        public void Apply(IDevice device, TimeSpan duration)
+        public void Apply(IDevice device)
         {
             // Retrieve the color palette
             var palette = GetPalette(device);
@@ -80,19 +68,9 @@ namespace DerekWare.HomeAutomation.Common.Themes
             }
         }
 
-        public void Apply(IEnumerable<IDevice> devices, TimeSpan duration)
-        {
-            devices.ForEach(device => Apply(device, duration));
-        }
-
-        public void Apply(IReadOnlyCollection<IDevice> devices)
-        {
-            devices.ForEach(Apply);
-        }
-
         #region Equality
 
-        public bool Equals(IReadOnlyThemeProperties other)
+        public bool Equals(Theme other)
         {
             if(ReferenceEquals(null, other))
             {
@@ -124,13 +102,15 @@ namespace DerekWare.HomeAutomation.Common.Themes
                 return false;
             }
 
-            return Equals((IReadOnlyThemeProperties)obj);
+            return Equals((Theme)obj);
         }
 
         public override int GetHashCode()
         {
             return Name != null ? Name.GetHashCode() : 0;
         }
+
+        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 
         public static bool operator ==(Theme left, Theme right)
         {
@@ -140,15 +120,6 @@ namespace DerekWare.HomeAutomation.Common.Themes
         public static bool operator !=(Theme left, Theme right)
         {
             return !Equals(left, right);
-        }
-
-        #endregion
-
-        #region ITheme
-
-        public void Apply(IDevice device)
-        {
-            Apply(device, TimeSpan.Zero);
         }
 
         #endregion

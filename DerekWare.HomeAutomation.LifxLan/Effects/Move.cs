@@ -1,16 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 using DerekWare.Reflection;
+using Newtonsoft.Json;
 using Device = DerekWare.HomeAutomation.Lifx.Lan.Devices.Device;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
 {
-    [Name("Move (LIFX firmware)")]
+    [Name("Move (LIFX firmware)"), Serializable, JsonObject]
     public class Move : Effect
     {
         protected MultiZoneEffectSettings Settings = new() { EffectType = MultiZoneEffectType.Move };
@@ -18,6 +20,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
         public Move()
         {
             Direction = MultiZoneEffectDirection.Left;
+        }
+
+        public Move(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
         }
 
         public override string Family => Client.Instance.Family;
@@ -33,6 +40,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
         public override object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
         }
 
         protected override void StartEffect()

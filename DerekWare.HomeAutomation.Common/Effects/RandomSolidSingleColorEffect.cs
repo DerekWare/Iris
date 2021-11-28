@@ -1,15 +1,26 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Reflection;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Name("Random Solid"), Description("Selects a random color to apply to the device.")]
-    public class RandomSolidSingleColorEffect : SingleColorEffectRenderer
+    [Name("Random Solid"), Description("Selects a random color to apply to the device."), Serializable, JsonObject]
+    public class RandomSolidSingleColorEffect : SingleColorEffectRenderer, ISerializable
     {
         readonly Random Random = new();
+
+        public RandomSolidSingleColorEffect()
+        {
+        }
+
+        public RandomSolidSingleColorEffect(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
+        }
 
         [Range(typeof(double), "0", "1")]
         public double Brightness { get; set; } = 1;
@@ -46,5 +57,14 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             return true;
         }
+
+        #region ISerializable
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
+        }
+
+        #endregion
     }
 }

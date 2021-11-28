@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Audio;
 using DerekWare.HomeAutomation.Common.Colors;
@@ -10,7 +11,8 @@ using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Name("Graphic Equalizer"), Description("Hooks your sound device and responds to sounds made by your PC, including music."), Browsable(false)]
+    [Name("Graphic Equalizer"), Description("Hooks your sound device and responds to sounds made by your PC, including music."), Browsable(false), Serializable,
+     JsonObject]
     public class GraphicEQ : MultiZoneColorEffectRenderer
     {
         AudioRecorder AudioRecorder;
@@ -19,6 +21,11 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public GraphicEQ()
         {
             RefreshRate = TimeSpan.FromMilliseconds(200);
+        }
+
+        public GraphicEQ(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
         }
 
         [Description("The color of the unused portions of the device."), Browsable(false)]
@@ -39,6 +46,11 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public override object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
         }
 
         protected override void StartEffect()

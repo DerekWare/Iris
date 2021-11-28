@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Audio;
 using DerekWare.HomeAutomation.Common.Colors;
@@ -13,8 +14,8 @@ using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Name("VU Meter"), Description("Hooks your sound device and responds to sounds made by your PC, including music.")]
-    public class VUMeter : MultiZoneColorEffectRenderer
+    [Name("VU Meter"), Description("Hooks your sound device and responds to sounds made by your PC, including music."), Serializable, JsonObject]
+    public class VUMeter : MultiZoneColorEffectRenderer, ISerializable
     {
         static readonly TimeSpan MaxRecorderBufferDuration = TimeSpan.FromSeconds(0.25);
 
@@ -27,6 +28,16 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public VUMeter()
         {
             RefreshRate = TimeSpan.FromMilliseconds(200);
+        }
+
+        public VUMeter(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
         }
 
         [Description("The color of the unused portions of the device."), Browsable(false)]
@@ -62,7 +73,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public int Offset { get; set; }
 
         [Description("Set all devices to the same color rather than treating them as a multizone device.")]
-        public bool SingleColor { get; set; } = false;
+        public bool SingleColor { get; set; }
 
         public override object Clone()
         {

@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 using DerekWare.Reflection;
+using Newtonsoft.Json;
 using Device = DerekWare.HomeAutomation.Lifx.Lan.Devices.Device;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
 {
-    [Name("Waveform (LIFX firmware)")]
+    [Name("Waveform (LIFX firmware)"), Serializable, JsonObject]
     public class Waveform : Effect
     {
         protected WaveformSettings Settings = new();
@@ -20,6 +22,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
             Color = Common.Colors.Colors.Black;
             Duration = TimeSpan.FromSeconds(30);
             RefreshRate = TimeSpan.FromSeconds(30);
+        }
+
+        public Waveform(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
         }
 
         public override string Family => Client.Instance.Family;
@@ -42,6 +49,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
         public override object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
         }
 
         protected override void StartEffect()

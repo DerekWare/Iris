@@ -3,7 +3,6 @@ using System.ComponentModel;
 using DerekWare.Diagnostics;
 using DerekWare.Reflection;
 using DerekWare.Threading;
-using Newtonsoft.Json;
 using DoWorkEventArgs = DerekWare.Threading.DoWorkEventArgs;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -31,7 +30,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void StartEffect()
         {
-            Thread = new Thread { Name = $"{GetType().Name}", SupportsCancellation = true };
+            Thread = new Thread { Name = $"{GetType().Name}", SupportsCancellation = true, KeepAlive = false };
             Thread.DoWork += DoWork;
             Thread.Start();
         }

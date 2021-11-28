@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DerekWare.Collections;
+using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -29,8 +30,18 @@ namespace DerekWare.HomeAutomation.Common
         string Serialize();
     }
 
+    [Serializable, JsonObject]
     public class PropertyBag : ObservableDictionary<string, object>, IPropertyStore<string, object>
     {
+        public PropertyBag()
+        {
+        }
+
+        public PropertyBag(object obj, Type type = null)
+        {
+            ReadFromObject(obj, type);
+        }
+
         #region IPropertyStore<string,object>
 
         public void ReadFromObject(object obj, Type type = null)

@@ -5,7 +5,6 @@ using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
-using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -20,43 +19,26 @@ namespace DerekWare.HomeAutomation.Common
     // the group. Lights are split into collections of multizone and single zone, with all
     // single zone lights treated as a single multizone light, providing a better experience
     // with multizone themes and effects.
-    public abstract class DeviceGroup : IDeviceGroup
+    public abstract class DeviceGroup : Device, IDeviceGroup, IEquatable<DeviceGroup>
     {
-        public abstract event EventHandler<DeviceEventArgs> PropertiesChanged;
-        public abstract event EventHandler<DeviceEventArgs> StateChanged;
-
-        public abstract IClient Client { get; }
         public abstract IReadOnlyCollection<IDevice> Devices { get; }
-        public abstract string Name { get; }
-        public abstract string Uuid { get; }
-        public abstract string Vendor { get; }
-
-        #region IDisposable
-
-        public abstract void Dispose();
-
-        #endregion
 
         public virtual int DeviceCount => Devices.Count;
 
         [Browsable(false)]
-        public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
+        public override IReadOnlyCollection<IDeviceGroup> Groups => Array.Empty<IDeviceGroup>();
 
-        public virtual string Family => Client.Family;
+        public override bool IsColor { get { return Devices.Any(i => i.IsColor); } }
 
-        [Browsable(false)]
-        public virtual IReadOnlyCollection<IDeviceGroup> Groups => Array.Empty<IDeviceGroup>();
-
-        public virtual bool IsColor { get { return Devices.Any(i => i.IsColor); } }
-        public virtual bool IsMultiZone => true;
+        public override bool IsMultiZone => true;
 
         [Browsable(false)]
-        public bool IsValid => Devices.Any(i => i.IsValid);
+        public override bool IsValid => Devices.All(i => i.IsValid);
 
         [Browsable(false)]
-        public virtual string Product => null;
+        public override string Product => null;
 
-        public virtual int ZoneCount
+        public override int ZoneCount
         {
             get
             {
@@ -65,15 +47,25 @@ namespace DerekWare.HomeAutomation.Common
                 var multizoneCount = multizone.IsNullOrEmpty() ? 0 : multizone.Max(i => i.ZoneCount);
                 var singleCount = singles.Count;
 
-                return Math.Max(multizoneCount, singleCount);
+                return Math.Max(1, Math.Max(multizoneCount, singleCount));
             }
         }
 
         [Browsable(false)]
-        public virtual Color Color { get => Devices.FirstOrDefault()?.Color ?? new Color(); set => SetColor(value, TimeSpan.Zero); }
+        public override Color Color { get => Devices.FirstOrDefault()?.Color ?? new Color(); set => base.Color = value; }
+
+        public override Effect Effect
+        {
+            get => base.Effect;
+            set
+            {
+                Devices.ForEach(i => i.Effect = null);
+                base.Effect = value;
+            }
+        }
 
         [Browsable(false)]
-        public virtual IReadOnlyCollection<Color> MultiZoneColors
+        public override IReadOnlyCollection<Color> MultiZoneColors
         {
             get
             {
@@ -91,25 +83,19 @@ namespace DerekWare.HomeAutomation.Common
 
                 return singles.Select(i => i.Color).ToList();
             }
-            set => SetMultiZoneColors(value, TimeSpan.Zero);
+            set => base.MultiZoneColors = value;
         }
 
         [Browsable(false)]
-        public PowerState Power { get { return Devices.Any(i => i.Power == PowerState.On) ? PowerState.On : PowerState.Off; } set => SetPower(value); }
-
-        public override string ToString()
+        public override PowerState Power
         {
-            return $"{Name} ({Family})";
+            get { return Devices.Any(i => i.Power == PowerState.On) ? PowerState.On : PowerState.Off; }
+            set => base.Power = value;
         }
 
         #region Equality
 
-        public virtual bool Equals(IDevice other)
-        {
-            return Equals(other as IDeviceGroup);
-        }
-
-        public virtual bool Equals(IDeviceGroup other)
+        public bool Equals(DeviceGroup other)
         {
             if(ReferenceEquals(null, other))
             {
@@ -129,9 +115,19 @@ namespace DerekWare.HomeAutomation.Common
             return Uuid.Equals(other.Uuid);
         }
 
+        public override bool Equals(IDevice other)
+        {
+            return Equals(other as DeviceGroup);
+        }
+
+        public virtual bool Equals(IDeviceGroup other)
+        {
+            return Equals(other as DeviceGroup);
+        }
+
         public override bool Equals(object obj)
         {
-            return Equals(obj as IDeviceGroup);
+            return Equals(obj as DeviceGroup);
         }
 
         public override int GetHashCode()
@@ -139,26 +135,36 @@ namespace DerekWare.HomeAutomation.Common
             return Uuid != null ? Uuid.GetHashCode() : 0;
         }
 
+        public static bool operator ==(DeviceGroup left, DeviceGroup right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(DeviceGroup left, DeviceGroup right)
+        {
+            return !Equals(left, right);
+        }
+
         #endregion
 
         #region IDeviceState
 
-        public virtual void RefreshState()
+        public override void RefreshState()
         {
             Devices.ForEach(i => i.RefreshState());
         }
 
-        public virtual void SetColor(Color color, TimeSpan transitionDuration)
+        public override void SetColor(Color color, TimeSpan transitionDuration)
         {
             Devices.ForEach(i => i.SetColor(color, transitionDuration));
         }
 
-        public virtual void SetFirmwareEffect(object effect)
+        public override void SetFirmwareEffect(object effect)
         {
             Devices.ForEach(i => i.SetFirmwareEffect(effect));
         }
 
-        public virtual void SetMultiZoneColors(IReadOnlyCollection<Color> _colors, TimeSpan transitionDuration)
+        public override void SetMultiZoneColors(IReadOnlyCollection<Color> _colors, TimeSpan transitionDuration)
         {
             SplitDeviceTypes(Devices, out var multizone, out var singles);
 
@@ -193,7 +199,7 @@ namespace DerekWare.HomeAutomation.Common
             }
         }
 
-        public virtual void SetPower(PowerState power)
+        public override void SetPower(PowerState power)
         {
             Devices.ForEach(i => i.SetPower(power));
         }

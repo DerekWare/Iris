@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Runtime.Serialization;
 using DerekWare.Reflection;
-using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
@@ -18,17 +19,14 @@ namespace DerekWare.HomeAutomation.Common.Effects
             return MemberwiseClone();
         }
 
-        public override void Start(IDevice device)
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            EffectFactory.Instance.StopEffect(device);
-        }
-
-        public override void Stop(bool wait = true)
-        {
+            throw new NotImplementedException();
         }
 
         protected override void StartEffect()
         {
+            Stop();
         }
 
         protected override void StopEffect(bool wait)

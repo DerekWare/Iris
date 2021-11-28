@@ -1,14 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Description("Randomly selects a zone and color and expands outward.")]
-    public class Bloom : MultiZoneColorEffectRenderer
+    [Description("Randomly selects a zone and color and expands outward."), Serializable, JsonObject]
+    public class Bloom : MultiZoneColorEffectRenderer, ISerializable
     {
         readonly Random Random = new();
 
@@ -16,6 +17,15 @@ namespace DerekWare.HomeAutomation.Common.Effects
         int CurrentCount;
         int TargetCount = -1;
         int ZoneIndex;
+
+        public Bloom()
+        {
+        }
+
+        public Bloom(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
+        }
 
         [Browsable(false)]
         public double Kelvin => 1;
@@ -67,5 +77,14 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             return true;
         }
+
+        #region ISerializable
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
+        }
+
+        #endregion
     }
 }

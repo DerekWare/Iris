@@ -3,7 +3,7 @@ using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.Iris
 {
-    partial class ActionPanel
+    partial class DeviceActionPanel
     {
         /// <summary> 
         /// Required designer variable.
@@ -36,15 +36,16 @@ namespace DerekWare.Iris
             this.PropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.StateLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.ZoneColorGroupBox = new System.Windows.Forms.GroupBox();
-            this.ZoneColorBand = new ColorBand();
+            this.ZoneColorBand = new DerekWare.Iris.ColorBand();
             this.EffectGroupBox = new System.Windows.Forms.GroupBox();
             this.EffectLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.ThemeGroupBox = new System.Windows.Forms.GroupBox();
             this.ThemeLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.SolidColorGroupBox = new System.Windows.Forms.GroupBox();
-            this.SolidColorPanel = new SolidColorPanel();
+            this.SolidColorPanel = new DerekWare.Iris.SolidColorPanel();
             this.PowerGroupBox = new System.Windows.Forms.GroupBox();
             this.PowerComboBox = new System.Windows.Forms.ComboBox();
+            this.DescriptionLabel = new System.Windows.Forms.Label();
             this.BaseLayoutPanel.SuspendLayout();
             this.PropertiesGroupBox.SuspendLayout();
             this.StateLayoutPanel.SuspendLayout();
@@ -60,14 +61,16 @@ namespace DerekWare.Iris
             this.BaseLayoutPanel.ColumnCount = 2;
             this.BaseLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.BaseLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.BaseLayoutPanel.Controls.Add(this.PropertiesGroupBox, 1, 0);
-            this.BaseLayoutPanel.Controls.Add(this.StateLayoutPanel, 0, 0);
+            this.BaseLayoutPanel.Controls.Add(this.PropertiesGroupBox, 1, 1);
+            this.BaseLayoutPanel.Controls.Add(this.StateLayoutPanel, 0, 1);
+            this.BaseLayoutPanel.Controls.Add(this.DescriptionLabel, 0, 0);
             this.BaseLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BaseLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.BaseLayoutPanel.Name = "BaseLayoutPanel";
-            this.BaseLayoutPanel.RowCount = 1;
+            this.BaseLayoutPanel.RowCount = 2;
+            this.BaseLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.BaseLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.BaseLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 737F));
+            this.BaseLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.BaseLayoutPanel.Size = new System.Drawing.Size(1472, 737);
             this.BaseLayoutPanel.TabIndex = 5;
             // 
@@ -77,11 +80,11 @@ namespace DerekWare.Iris
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PropertiesGroupBox.Controls.Add(this.PropertyGrid);
-            this.PropertiesGroupBox.Location = new System.Drawing.Point(744, 8);
+            this.PropertiesGroupBox.Location = new System.Drawing.Point(744, 28);
             this.PropertiesGroupBox.Margin = new System.Windows.Forms.Padding(8);
             this.PropertiesGroupBox.Name = "PropertiesGroupBox";
             this.PropertiesGroupBox.Padding = new System.Windows.Forms.Padding(8);
-            this.PropertiesGroupBox.Size = new System.Drawing.Size(720, 721);
+            this.PropertiesGroupBox.Size = new System.Drawing.Size(720, 701);
             this.PropertiesGroupBox.TabIndex = 5;
             this.PropertiesGroupBox.TabStop = false;
             this.PropertiesGroupBox.Text = "Properties";
@@ -92,7 +95,7 @@ namespace DerekWare.Iris
             this.PropertyGrid.Location = new System.Drawing.Point(8, 27);
             this.PropertyGrid.Margin = new System.Windows.Forms.Padding(8);
             this.PropertyGrid.Name = "PropertyGrid";
-            this.PropertyGrid.Size = new System.Drawing.Size(704, 686);
+            this.PropertyGrid.Size = new System.Drawing.Size(704, 666);
             this.PropertyGrid.TabIndex = 0;
             // 
             // StateLayoutPanel
@@ -105,15 +108,15 @@ namespace DerekWare.Iris
             this.StateLayoutPanel.Controls.Add(this.SolidColorGroupBox, 0, 1);
             this.StateLayoutPanel.Controls.Add(this.PowerGroupBox, 0, 0);
             this.StateLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.StateLayoutPanel.Location = new System.Drawing.Point(3, 3);
+            this.StateLayoutPanel.Location = new System.Drawing.Point(3, 23);
             this.StateLayoutPanel.Name = "StateLayoutPanel";
             this.StateLayoutPanel.RowCount = 5;
             this.StateLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.StateLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 180F));
+            this.StateLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.StateLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.StateLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.StateLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.StateLayoutPanel.Size = new System.Drawing.Size(730, 731);
+            this.StateLayoutPanel.Size = new System.Drawing.Size(730, 711);
             this.StateLayoutPanel.TabIndex = 8;
             // 
             // ZoneColorGroupBox
@@ -124,7 +127,7 @@ namespace DerekWare.Iris
             this.ZoneColorGroupBox.Margin = new System.Windows.Forms.Padding(8);
             this.ZoneColorGroupBox.Name = "ZoneColorGroupBox";
             this.ZoneColorGroupBox.Padding = new System.Windows.Forms.Padding(8);
-            this.ZoneColorGroupBox.Size = new System.Drawing.Size(714, 78);
+            this.ZoneColorGroupBox.Size = new System.Drawing.Size(714, 74);
             this.ZoneColorGroupBox.TabIndex = 12;
             this.ZoneColorGroupBox.TabStop = false;
             this.ZoneColorGroupBox.Text = "Zone Colors";
@@ -136,19 +139,19 @@ namespace DerekWare.Iris
             this.ZoneColorBand.Location = new System.Drawing.Point(8, 27);
             this.ZoneColorBand.Margin = new System.Windows.Forms.Padding(8);
             this.ZoneColorBand.Name = "ZoneColorBand";
-            this.ZoneColorBand.Size = new System.Drawing.Size(698, 43);
+            this.ZoneColorBand.Size = new System.Drawing.Size(698, 39);
             this.ZoneColorBand.TabIndex = 0;
-            this.ZoneColorBand.ColorsChanged += new System.EventHandler<ColorsChangedEventArgs>(this.ZoneColorBand_ColorsChanged);
+            this.ZoneColorBand.ColorsChanged += new System.EventHandler<DerekWare.Iris.ColorsChangedEventArgs>(this.ZoneColorBand_ColorsChanged);
             // 
             // EffectGroupBox
             // 
             this.EffectGroupBox.Controls.Add(this.EffectLayoutPanel);
             this.EffectGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EffectGroupBox.Location = new System.Drawing.Point(8, 549);
+            this.EffectGroupBox.Location = new System.Drawing.Point(8, 537);
             this.EffectGroupBox.Margin = new System.Windows.Forms.Padding(8);
             this.EffectGroupBox.Name = "EffectGroupBox";
             this.EffectGroupBox.Padding = new System.Windows.Forms.Padding(8);
-            this.EffectGroupBox.Size = new System.Drawing.Size(714, 174);
+            this.EffectGroupBox.Size = new System.Drawing.Size(714, 166);
             this.EffectGroupBox.TabIndex = 11;
             this.EffectGroupBox.TabStop = false;
             this.EffectGroupBox.Text = "Effects";
@@ -168,18 +171,18 @@ namespace DerekWare.Iris
             this.EffectLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.EffectLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.EffectLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.EffectLayoutPanel.Size = new System.Drawing.Size(698, 139);
+            this.EffectLayoutPanel.Size = new System.Drawing.Size(698, 131);
             this.EffectLayoutPanel.TabIndex = 0;
             // 
             // ThemeGroupBox
             // 
             this.ThemeGroupBox.Controls.Add(this.ThemeLayoutPanel);
             this.ThemeGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ThemeGroupBox.Location = new System.Drawing.Point(8, 361);
+            this.ThemeGroupBox.Location = new System.Drawing.Point(8, 357);
             this.ThemeGroupBox.Margin = new System.Windows.Forms.Padding(8);
             this.ThemeGroupBox.Name = "ThemeGroupBox";
             this.ThemeGroupBox.Padding = new System.Windows.Forms.Padding(8);
-            this.ThemeGroupBox.Size = new System.Drawing.Size(714, 172);
+            this.ThemeGroupBox.Size = new System.Drawing.Size(714, 164);
             this.ThemeGroupBox.TabIndex = 10;
             this.ThemeGroupBox.TabStop = false;
             this.ThemeGroupBox.Text = "Themes";
@@ -199,7 +202,7 @@ namespace DerekWare.Iris
             this.ThemeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.ThemeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.ThemeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.ThemeLayoutPanel.Size = new System.Drawing.Size(698, 137);
+            this.ThemeLayoutPanel.Size = new System.Drawing.Size(698, 129);
             this.ThemeLayoutPanel.TabIndex = 0;
             // 
             // SolidColorGroupBox
@@ -217,15 +220,18 @@ namespace DerekWare.Iris
             // 
             // SolidColorPanel
             // 
+            this.SolidColorPanel.Color = null;
             this.SolidColorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SolidColorPanel.Location = new System.Drawing.Point(8, 27);
             this.SolidColorPanel.Name = "SolidColorPanel";
             this.SolidColorPanel.Size = new System.Drawing.Size(698, 129);
             this.SolidColorPanel.TabIndex = 0;
-            this.SolidColorPanel.ColorChanged += new System.EventHandler<ColorChangedEventArgs>(this.SolidColorPanel_ColorChanged);
+            this.SolidColorPanel.ColorChanged += new System.EventHandler<DerekWare.Iris.ColorChangedEventArgs>(this.SolidColorPanel_ColorChanged);
             // 
             // PowerGroupBox
             // 
+            this.PowerGroupBox.AutoSize = true;
+            this.PowerGroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.PowerGroupBox.Controls.Add(this.PowerComboBox);
             this.PowerGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PowerGroupBox.Location = new System.Drawing.Point(8, 8);
@@ -252,16 +258,28 @@ namespace DerekWare.Iris
             this.PowerComboBox.TabIndex = 3;
             this.PowerComboBox.SelectedIndexChanged += new System.EventHandler(this.PowerComboBox_SelectedIndexChanged);
             // 
-            // ActionPanel
+            // DescriptionLabel
+            // 
+            this.DescriptionLabel.AutoSize = true;
+            this.BaseLayoutPanel.SetColumnSpan(this.DescriptionLabel, 2);
+            this.DescriptionLabel.Location = new System.Drawing.Point(3, 0);
+            this.DescriptionLabel.Name = "DescriptionLabel";
+            this.DescriptionLabel.Size = new System.Drawing.Size(0, 20);
+            this.DescriptionLabel.TabIndex = 0;
+            this.DescriptionLabel.Visible = false;
+            // 
+            // DeviceActionPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.BaseLayoutPanel);
-            this.Name = "ActionPanel";
+            this.Name = "DeviceActionPanel";
             this.Size = new System.Drawing.Size(1472, 737);
             this.BaseLayoutPanel.ResumeLayout(false);
+            this.BaseLayoutPanel.PerformLayout();
             this.PropertiesGroupBox.ResumeLayout(false);
             this.StateLayoutPanel.ResumeLayout(false);
+            this.StateLayoutPanel.PerformLayout();
             this.ZoneColorGroupBox.ResumeLayout(false);
             this.EffectGroupBox.ResumeLayout(false);
             this.ThemeGroupBox.ResumeLayout(false);
@@ -287,5 +305,6 @@ namespace DerekWare.Iris
         private System.Windows.Forms.GroupBox ZoneColorGroupBox;
         private ColorBand ZoneColorBand;
         private SolidColorPanel SolidColorPanel;
+        private System.Windows.Forms.Label DescriptionLabel;
     }
 }

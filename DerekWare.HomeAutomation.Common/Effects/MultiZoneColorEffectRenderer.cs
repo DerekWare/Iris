@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Threading;
-using Newtonsoft.Json;
 using DoWorkEventArgs = DerekWare.Threading.DoWorkEventArgs;
 
 namespace DerekWare.HomeAutomation.Common.Effects

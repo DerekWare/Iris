@@ -5,7 +5,6 @@ using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
-using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -33,8 +32,8 @@ namespace DerekWare.HomeAutomation.Common
     // State changes based on user interaction
     public interface IDeviceState
     {
-        IReadOnlyCollection<IEffect> Effects { get; }
         Color Color { get; set; }
+        Effect Effect { get; set; }
         IReadOnlyCollection<Color> MultiZoneColors { get; set; }
         PowerState Power { get; set; }
 
@@ -48,8 +47,12 @@ namespace DerekWare.HomeAutomation.Common
     // Optional base class for devices
     public abstract class Device : IDevice, IEquatable<Device>
     {
+        [Browsable(false)]
         public abstract IClient Client { get; }
+
+        [Browsable(false)]
         public abstract IReadOnlyCollection<IDeviceGroup> Groups { get; }
+
         public abstract bool IsColor { get; }
         public abstract bool IsMultiZone { get; }
         public abstract bool IsValid { get; }
@@ -71,16 +74,24 @@ namespace DerekWare.HomeAutomation.Common
         protected PowerState _Power;
         protected DeviceStateRefreshTask _RefreshTask;
 
-        public event EventHandler<DeviceEventArgs> PropertiesChanged;
-        public event EventHandler<DeviceEventArgs> StateChanged;
-
-        [Browsable(false)]
-        public IReadOnlyCollection<IEffect> Effects => EffectFactory.Instance.GetRunningEffects(this).ToList();
+        public virtual event EventHandler<DeviceEventArgs> PropertiesChanged;
+        public virtual event EventHandler<DeviceEventArgs> StateChanged;
 
         public virtual string Family => Client.Family;
 
         [Browsable(false)]
         public virtual Color Color { get => _Color; set => SetColor(value, TimeSpan.Zero); }
+
+        [Browsable(false)]
+        public virtual Effect Effect
+        {
+            get => EffectFactory.Instance.GetRunningEffects(this).FirstOrDefault();
+            set
+            {
+                EffectFactory.Instance.Stop(this);
+                value?.Start(this);
+            }
+        }
 
         [Browsable(false)]
         public virtual IReadOnlyCollection<Color> MultiZoneColors { get => _MultiZoneColors; set => SetMultiZoneColors(value, TimeSpan.Zero); }
@@ -93,24 +104,14 @@ namespace DerekWare.HomeAutomation.Common
             return $"{Name} ({Family})";
         }
 
-        protected void OnPropertiesChanged()
+        protected virtual void OnPropertiesChanged()
         {
-            OnPropertiesChanged(new DeviceEventArgs { Device = this });
+            PropertiesChanged?.Invoke(this, new DeviceEventArgs { Device = this });
         }
 
-        protected virtual void OnPropertiesChanged(DeviceEventArgs e)
+        protected virtual void OnStateChanged()
         {
-            PropertiesChanged?.Invoke(this, e);
-        }
-
-        protected void OnStateChanged()
-        {
-            OnStateChanged(new DeviceEventArgs { Device = this });
-        }
-
-        protected virtual void OnStateChanged(DeviceEventArgs e)
-        {
-            StateChanged?.Invoke(this, e);
+            StateChanged?.Invoke(this, new DeviceEventArgs { Device = this });
         }
 
         protected virtual void StartRefreshTask()
@@ -125,7 +126,7 @@ namespace DerekWare.HomeAutomation.Common
 
         #region Equality
 
-        public bool Equals(Device other)
+        public virtual bool Equals(Device other)
         {
             if(ReferenceEquals(null, other))
             {
@@ -140,7 +141,7 @@ namespace DerekWare.HomeAutomation.Common
             return Equals(Uuid, other.Uuid);
         }
 
-        public bool Equals(IDevice other)
+        public virtual bool Equals(IDevice other)
         {
             if(ReferenceEquals(null, other))
             {
@@ -196,6 +197,11 @@ namespace DerekWare.HomeAutomation.Common
 
         public virtual void SetColor(Color color, TimeSpan transitionDuration)
         {
+            if(Equals(color, _Color))
+            {
+                return;
+            }
+
             _Color = color.Clone();
             _MultiZoneColors = _Color.Repeat(ZoneCount).ToList();
             OnStateChanged();
@@ -203,20 +209,33 @@ namespace DerekWare.HomeAutomation.Common
 
         public virtual void SetMultiZoneColors(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
         {
-            _MultiZoneColors = colors.Take(Math.Min(ZoneCount, colors.Count)).Select(i => i.Clone()).ToList();
-            _Color = _MultiZoneColors.First();
+            colors = colors.Take(Math.Min(ZoneCount, colors.Count)).ToList();
+
+            if(colors.SafeEmpty().SequenceEqual(_MultiZoneColors))
+            {
+                return;
+            }
+
+            _MultiZoneColors = colors.Select(i => i.Clone()).ToList();
+            _Color = _MultiZoneColors.Average();
             OnStateChanged();
         }
 
         public virtual void SetPower(PowerState power)
         {
+            if(Equals(power, _Power))
+            {
+                return;
+            }
+
             _Power = power;
-            OnStateChanged();
 
             if(PowerState.Off == _Power)
             {
-                EffectFactory.Instance.StopEffect(this);
+                Effect = null;
             }
+
+            OnStateChanged();
         }
 
         #endregion

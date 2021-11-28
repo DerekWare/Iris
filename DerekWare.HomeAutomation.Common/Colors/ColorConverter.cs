@@ -22,6 +22,11 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
+            if(value is Color)
+            {
+                return value;
+            }
+
             var sourceType = value?.GetType();
 
             if(typeof(System.Drawing.Color) == sourceType)
@@ -31,12 +36,9 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
             if(typeof(string) == sourceType)
             {
-                var field = typeof(Colors).GetField(value.ToString(), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Static);
-
-                if(field is not null)
-                {
-                    return field.GetValue(null);
-                }
+                var valueString = value.ToString();
+                var field = typeof(Colors).GetField(valueString, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Static);
+                return field is not null ? field.GetValue(null) : Color.Parse(valueString);
             }
 
             throw new NotSupportedException();
@@ -49,6 +51,11 @@ namespace DerekWare.HomeAutomation.Common.Colors
                 throw new NotSupportedException();
             }
 
+            if(destinationType == typeof(Color))
+            {
+                return value;
+            }
+
             if(typeof(System.Drawing.Color) == destinationType)
             {
                 return color.ToRgb();
@@ -58,11 +65,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
             {
                 var field = typeof(Colors).GetFields(BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Static)
                                           .FirstOrDefault(field => field.GetValue(null).Equals(color));
-
-                if(field is not null)
-                {
-                    return field.Name;
-                }
+                return field is not null ? field.Name : color.ToString();
             }
 
             throw new NotSupportedException();

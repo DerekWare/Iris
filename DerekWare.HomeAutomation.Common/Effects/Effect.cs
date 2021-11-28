@@ -1,27 +1,20 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    public interface IEffect : IEffectProperties, ICloneable, IDisposable
-    {
-        public void Start(IDevice device);
-        public void Stop(bool wait = true);
-    }
-
     public interface IEffectProperties : IReadOnlyEffectProperties
     {
     }
 
-    public interface IReadOnlyEffectProperties : IDescription, IFamily, IName, IEquatable<IReadOnlyEffectProperties>
+    public interface IReadOnlyEffectProperties : IName, IDescription, IFamily, ICloneable
     {
         public IDevice Device { get; }
-        public bool IsFirmware { get; }
-        public bool IsMultiZone { get; }
     }
 
-    public abstract class Effect : IEffect
+    public abstract class Effect : IEffectProperties, ISerializable
     {
         [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false)]
         public abstract bool IsFirmware { get; }
@@ -35,6 +28,12 @@ namespace DerekWare.HomeAutomation.Common.Effects
         #region ICloneable
 
         public abstract object Clone();
+
+        #endregion
+
+        #region ISerializable
+
+        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 
         #endregion
 
@@ -53,9 +52,42 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Browsable(false)]
         public IDevice Device { get; private set; }
 
+        public virtual void Dispose()
+        {
+            Stop();
+        }
+
+        internal void Start(IDevice device)
+        {
+            // We shouldn't already be running, but just in case
+            Stop();
+
+            // Save the device
+            Device = device ?? throw new ArgumentNullException(nameof(device));
+
+            // Register with the factory
+            EffectFactory.Instance.OnEffectStarted(this);
+
+            // Start doing the things
+            StartEffect();
+        }
+
+        // Stop the effect for all devices
+        internal void Stop()
+        {
+            // Stop doing the things
+            StopEffect(true);
+
+            // Unregister with the factory
+            EffectFactory.Instance.OnEffectStopped(this);
+
+            // Release the device
+            Device = null;
+        }
+
         #region Equality
 
-        public bool Equals(IReadOnlyEffectProperties other)
+        public bool Equals(Effect other)
         {
             if(ReferenceEquals(null, other))
             {
@@ -87,7 +119,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 return false;
             }
 
-            return Equals((IReadOnlyEffectProperties)obj);
+            return Equals((Effect)obj);
         }
 
         public override int GetHashCode()
@@ -103,52 +135,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public static bool operator !=(Effect left, Effect right)
         {
             return !Equals(left, right);
-        }
-
-        #endregion
-
-        #region IDisposable
-
-        public virtual void Dispose()
-        {
-            Stop();
-        }
-
-        #endregion
-
-        #region IEffect
-
-        public virtual void Start(IDevice device)
-        {
-            // Save the device
-            Device = device;
-
-            // Stop all other effects on the given devices
-            EffectFactory.Instance.StopEffect(Device);
-
-            // Register with the factory
-            EffectFactory.Instance.OnEffectStarted(this);
-
-            // Notify the devices
-            // TODO DeviceList.ForEach(i => i.OnActiveEffectChanged(this));
-
-            // Start doing the things
-            StartEffect();
-        }
-
-        // Stop the effect for all devices
-        public virtual void Stop(bool wait = true)
-        {
-            // Notify the devices
-            // TODO DeviceList.ForEach(i => i.OnActiveEffectChanged(null));
-
-            // Unregister with the factory
-            EffectFactory.Instance.OnEffectStopped(this);
-
-            // Stop doing the things
-            StopEffect(wait);
-
-            Device = null;
         }
 
         #endregion

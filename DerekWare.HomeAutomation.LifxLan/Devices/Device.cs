@@ -12,7 +12,7 @@ using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 {
     // TODO property accessors aren't thread safe
-    public class Device : Common.Device
+    public sealed class Device : Common.Device
     {
         internal SynchronizedHashSet<DeviceGroup> InternalGroups = new();
 
@@ -29,13 +29,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         {
             Controller = new DeviceController(ipAddress);
 
-            RefreshState();
+            StartRefreshTask();
         }
 
-        [Browsable(false)]
         public override IClient Client => Lan.Client.Instance;
 
-        [Browsable(false)]
         public override IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups;
 
         public string IpAddress => Controller.IpAddress;
@@ -46,7 +44,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public override bool IsMultiZone => _Product?.features.multizone ?? false;
 
-        [Browsable(false)]
         public override bool IsValid => !_Name.IsNullOrEmpty();
 
         public override string Name => _Name.IsNullOrEmpty() ? IpAddress : _Name;
@@ -65,116 +62,9 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         [Browsable(false)]
         public WaveformSettings Waveform { get => _Waveform; set => SetWaveform(value); }
 
-        public async Task RefreshPropertiesAsync()
-        {
-            await Controller.GetVersion(response =>
-            {
-                var vendor = Products.GetVendor((int)response.VendorId);
-
-                if(!Equals(vendor, _Vendor))
-                {
-                    _Vendor = vendor;
-                    OnPropertiesChanged();
-                }
-
-                var product = _Vendor.GetProduct((int)response.ProductId);
-
-                if(!Equals(product, _Product))
-                {
-                    _Product = product;
-                    OnPropertiesChanged();
-                }
-            });
-
-            await Controller.GetGroup(response =>
-            {
-                Lan.Client.Instance.CreateGroup(response, out var group);
-                InternalGroups.Add(group);
-                group.InternalDevices.Add(this);
-            });
-
-            await Controller.GetLocation(response =>
-            {
-                Lan.Client.Instance.CreateGroup(response, out var group);
-                InternalGroups.Add(group);
-                group.InternalDevices.Add(this);
-            });
-
-            await Controller.GetLabel(response =>
-            {
-                var name = response.Label;
-
-                if(!Equals(name, _Name))
-                {
-                    _Name = name;
-                    OnPropertiesChanged();
-                }
-            });
-        }
-
         public override void RefreshState()
         {
             RefreshStateAsync();
-        }
-
-        public async Task RefreshStateAsync()
-        {
-            await RefreshPropertiesAsync();
-
-            await Controller.GetPower(response =>
-            {
-                if(response.Power != _Power)
-                {
-                    _Power = response.Power;
-                    OnStateChanged();
-                }
-            });
-
-            await Controller.GetColor(response =>
-            {
-                if(response.Color != _Color)
-                {
-                    _Color = response.Color;
-                    OnStateChanged();
-                }
-            });
-
-            if(IsExtendedMultiZone)
-            {
-                await Controller.GetExtendedColorZones(response =>
-                {
-                    if(_ZoneCount != response.ZoneCount)
-                    {
-                        _ZoneCount = response.ZoneCount;
-                        OnPropertiesChanged();
-                    }
-
-                    if(!_MultiZoneColors.SequenceEqual(response.Colors))
-                    {
-                        _MultiZoneColors = response.Colors.ToList();
-                        OnStateChanged();
-                    }
-                });
-            }
-            else if(IsMultiZone)
-            {
-                await Controller.GetColorZones(response =>
-                {
-                    if(_ZoneCount != response.ZoneCount)
-                    {
-                        _ZoneCount = response.ZoneCount;
-                        OnPropertiesChanged();
-                    }
-
-                    if(!_MultiZoneColors.SequenceEqual(response.Colors))
-                    {
-                        _MultiZoneColors = response.Colors.ToList();
-                        OnStateChanged();
-                    }
-                });
-            }
-
-            StartRefreshTask();
         }
 
         public override void SetColor(Color color, TimeSpan transitionDuration)
@@ -237,16 +127,113 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             OnStateChanged();
         }
 
-        protected override void OnPropertiesChanged(DeviceEventArgs e)
+        protected override void OnPropertiesChanged()
         {
-            base.OnPropertiesChanged(e);
+            base.OnPropertiesChanged();
             Lan.Client.Instance.OnPropertiesChanged(this);
         }
 
-        protected override void OnStateChanged(DeviceEventArgs e)
+        protected override void OnStateChanged()
         {
-            base.OnStateChanged(e);
+            base.OnStateChanged();
             Lan.Client.Instance.OnStateChanged(this);
+        }
+
+        async Task RefreshPropertiesAsync()
+        {
+            await Controller.GetVersion(response =>
+            {
+                var vendor = Products.GetVendor((int)response.VendorId);
+
+                if(!Equals(vendor, _Vendor))
+                {
+                    _Vendor = vendor;
+                    OnPropertiesChanged();
+                }
+
+                var product = _Vendor.GetProduct((int)response.ProductId);
+
+                if(!Equals(product, _Product))
+                {
+                    _Product = product;
+                    OnPropertiesChanged();
+                }
+            });
+
+            await Controller.GetGroup(response =>
+            {
+                Lan.Client.Instance.CreateGroup(response, out var group);
+                InternalGroups.Add(group);
+                group.InternalDevices.Add(this);
+            });
+
+            await Controller.GetLocation(response =>
+            {
+                Lan.Client.Instance.CreateGroup(response, out var group);
+                InternalGroups.Add(group);
+                group.InternalDevices.Add(this);
+            });
+
+            await Controller.GetLabel(response =>
+            {
+                var name = response.Label;
+
+                if(!Equals(name, _Name))
+                {
+                    _Name = name;
+                    OnPropertiesChanged();
+                }
+            });
+        }
+
+        async Task RefreshStateAsync()
+        {
+            await RefreshPropertiesAsync();
+
+            await Controller.GetPower(response =>
+            {
+                base.SetPower(response.Power);
+            });
+
+            await Controller.GetColor(response =>
+            {
+                base.SetColor(response.Color, TimeSpan.Zero);
+            });
+
+            if(IsExtendedMultiZone)
+            {
+                await Controller.GetExtendedColorZones(response =>
+                {
+                    if(_ZoneCount != response.ZoneCount)
+                    {
+                        _ZoneCount = response.ZoneCount;
+                        OnPropertiesChanged();
+                    }
+
+                    if(!_MultiZoneColors.SequenceEqual(response.Colors))
+                    {
+                        base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
+                    }
+                });
+            }
+            else if(IsMultiZone)
+            {
+                await Controller.GetColorZones(response =>
+                {
+                    if(_ZoneCount != response.ZoneCount)
+                    {
+                        _ZoneCount = response.ZoneCount;
+                        OnPropertiesChanged();
+                    }
+
+                    if(!_MultiZoneColors.SequenceEqual(response.Colors))
+                    {
+                        base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
+                    }
+                });
+            }
+
+            // TODO query firmware effect/waveform
         }
     }
 }

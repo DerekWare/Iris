@@ -117,26 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ActionPanelDescription" xml:space="preserve">
-    <value />
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="colorcpl_exe_5__16x16_32bpp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\colorcpl.exe[5] 16x16 32bpp.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="colorcpl_exe_5__24x24_32bpp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\colorcpl.exe[5] 24x24 32bpp.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="colorcpl_exe_5__256x256_32bpp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\colorcpl.exe[5] 256x256 32bpp.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="colorcpl_exe_5__32x32_32bpp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\colorcpl.exe[5] 32x32 32bpp.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="colorcpl_exe_5__48x48_32bpp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\colorcpl.exe[5] 48x48 32bpp.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ScenePanelDescription" xml:space="preserve">
+  <data name="label1.Text" xml:space="preserve">
     <value>Select the devices you want to be added to the scene by checking or unchecking the boxes to the left. When you check the device, its current state will be captured and saved to the scene. If you want to refresh the scene after making a change to the device, uncheck and recheck it.</value>
   </data>
 </root>

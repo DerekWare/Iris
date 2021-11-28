@@ -8,6 +8,25 @@ namespace DerekWare.Collections
     [DebuggerDisplay(nameof(Count) + " = {" + nameof(Count) + "}")]
     public class SynchronizedHashSet<T> : ObservableHashSet<T>
     {
+        public SynchronizedHashSet()
+        {
+        }
+
+        public SynchronizedHashSet(IEqualityComparer<T> comparer)
+            : base(comparer)
+        {
+        }
+
+        public SynchronizedHashSet(IEnumerable<T> items)
+            : base(items)
+        {
+        }
+
+        public SynchronizedHashSet(IEnumerable<T> items, IEqualityComparer<T> comparer)
+            : base(items, comparer)
+        {
+        }
+
         public override int Count
         {
             get

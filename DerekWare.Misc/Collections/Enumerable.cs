@@ -701,7 +701,7 @@ namespace DerekWare.Collections
 
         public static void RemoveWhere<T>(this IList @this, Func<T, bool> selector)
         {
-            @this.OfType<T>().Where(selector).ToList().ForEach(item => @this.Remove(item));
+            @this.SafeEmpty().OfType<T>().Where(selector).ToList().ForEach(item => @this.Remove(item));
         }
 
         public static int RemoveWhere<T>(this LinkedList<T> @this, Func<T, bool> selector)

@@ -31,7 +31,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
         {
             Debug.Trace(this, $"Received {endpoint.Address}: {message}");
 
-            var responseKey = new ResponseKey(message);
+            var responseKey = new ResponseKey(endpoint.Address.ToString(), message.Source, message.Sequence, message.MessageType);
 
             lock(PendingResponses.SyncRoot)
             {
@@ -39,13 +39,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
                 if(!PendingResponses.TryGetValue(responseKey, out var responseValue))
                 {
                     Debug.Warning(this, $"Unexpected message: {responseKey}");
-                    return;
-                }
-
-                // Validate the message type
-                if(responseValue.Response.MessageType != message.MessageType)
-                {
-                    Debug.Warning(this, $"Unexpected response message type: {message.MessageType}");
                     return;
                 }
 
@@ -63,6 +56,10 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
 
                 // Call the handler
                 responseValue.Handler(responseValue.Response);
+
+                // Purge any old messages
+                // TODO task completion with exception
+                PendingResponses.RemoveWhere(i => (DateTime.Now - i.Value.CreationTime) >= ResponseTimeout);
             }
         }
 
@@ -99,7 +96,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
             // Create the response key/value pair. We use a lambda response handler
             // to maintain the templated response type.
             var response = new TResponse();
-            var responseKey = new ResponseKey(request);
+            var responseKey = new ResponseKey(ipAddress, request.Source, request.Sequence, response.MessageType);
             var taskCompletionSource = new TaskCompletionSource<TResponse>();
             var responseValue = new ResponseValue(response,
                                                   r =>
@@ -114,7 +111,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
                                                   });
 
             // Add the response to our pending list
-            PendingResponses.Add(responseKey, responseValue);
+            PendingResponses[responseKey] = responseValue;
 
             // Send the request
             Client.Instance.SendMessage(ipAddress, request.SerializeBinary());
@@ -124,18 +121,22 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
 
         class ResponseKey : IEquatable<ResponseKey>
         {
+            public readonly string IpAddress;
+            public readonly ushort ResponseType;
             public readonly byte Sequence;
             public readonly uint Source;
 
-            public ResponseKey(Message msg)
+            public ResponseKey(string ipAddress, uint source, byte sequence, ushort responseType)
             {
-                Sequence = msg.Sequence;
-                Source = msg.Source;
+                IpAddress = ipAddress;
+                Sequence = sequence;
+                Source = source;
+                ResponseType = responseType;
             }
 
             public override string ToString()
             {
-                return $"{{ Sequence:{Sequence}, Source:{Source} }}";
+                return $"{{ IpAddress:{IpAddress}, MessageType:{ResponseType}, Sequence:{Sequence}, Source:{Source} }}";
             }
 
             #region Equality

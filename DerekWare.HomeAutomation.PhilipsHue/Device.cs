@@ -9,7 +9,7 @@ using Q42.HueApi;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
 {
-    public class Device : Common.Device
+    public sealed class Device : Common.Device
     {
         internal Light HueDevice;
 
@@ -17,7 +17,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         {
             HueDevice = hueDevice;
 
-            RefreshState();
+            StartRefreshTask();
         }
 
         [Browsable(false)]
@@ -45,7 +45,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public string SoftwareVersion => HueDevice.SoftwareVersion;
 
-        public string SwConfigId => HueDevice.SwConfigId;
+        public string SoftwareConfigId => HueDevice.SwConfigId;
 
         public string Type => HueDevice.Type;
 
@@ -61,8 +61,6 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
             base.SetColor(Colors.FromState(HueDevice.State), TimeSpan.Zero);
             base.SetPower(HueDevice.State.On ? PowerState.On : PowerState.Off);
-
-            StartRefreshTask();
         }
 
         public override void SetColor(Color color, TimeSpan transitionDuration)
@@ -77,7 +75,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             switch(effect)
             {
                 case null:
-                    new LightCommand { Effect = Effect.None }.SendCommandAsync(new[] { HueDevice.Id });
+                    new LightCommand { Effect = Q42.HueApi.Effect.None }.SendCommandAsync(new[] { HueDevice.Id });
                     break;
                 case string effectName:
                     new LightCommand { Effect = (Effect)Enum.Parse(typeof(Effect), effectName, true) }.SendCommandAsync(new[] { HueDevice.Id });
@@ -99,15 +97,15 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             new LightCommand { On = Power == PowerState.On }.SendCommandAsync(new[] { HueDevice.Id });
         }
 
-        protected override void OnPropertiesChanged(DeviceEventArgs e)
+        protected override void OnPropertiesChanged()
         {
-            base.OnPropertiesChanged(e);
+            base.OnPropertiesChanged();
             PhilipsHue.Client.Instance.OnPropertiesChanged(this);
         }
 
-        protected override void OnStateChanged(DeviceEventArgs e)
+        protected override void OnStateChanged()
         {
-            base.OnStateChanged(e);
+            base.OnStateChanged();
             PhilipsHue.Client.Instance.OnStateChanged(this);
         }
     }

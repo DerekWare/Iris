@@ -8,17 +8,7 @@ using DerekWare.Diagnostics;
 
 namespace DerekWare.HomeAutomation.Common.Themes
 {
-    public interface IThemeFactory : IFactory<ITheme>
-    {
-        IReadOnlyCollection<UserTheme> UserThemes { get; }
-
-        UserTheme AddUserTheme(string name);
-        void LoadUserThemes(string storage);
-        bool RemoveUserTheme(string name);
-        string SaveUserThemes();
-    }
-
-    public class ThemeFactory : Factory<ITheme>, IThemeFactory
+    public class ThemeFactory : Factory<Theme, IReadOnlyThemeProperties>
     {
         public static readonly ThemeFactory Instance = new();
 
@@ -29,8 +19,6 @@ namespace DerekWare.HomeAutomation.Common.Themes
         }
 
         public IReadOnlyCollection<UserTheme> UserThemes => Items.Values.OfType<UserTheme>().ToList();
-
-        #region IThemeFactory
 
         public UserTheme AddUserTheme(string name)
         {
@@ -80,7 +68,5 @@ namespace DerekWare.HomeAutomation.Common.Themes
             Serializer.Serialize(writer, Items.Values.OfType<UserTheme>().ToList());
             return writer.ToString();
         }
-
-        #endregion
     }
 }

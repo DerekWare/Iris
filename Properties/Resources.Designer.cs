@@ -61,6 +61,15 @@ namespace DerekWare.Iris.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string ActionPanelDescription {
+            get {
+                return ResourceManager.GetString("ActionPanelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon colorcpl_exe_5__16x16_32bpp {
@@ -107,6 +116,15 @@ namespace DerekWare.Iris.Properties {
             get {
                 object obj = ResourceManager.GetObject("colorcpl_exe_5__48x48_32bpp", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the devices you want to be added to the scene by checking or unchecking the boxes to the left. When you check the device, its current state will be captured and saved to the scene. If you want to refresh the scene after making a change to the device, uncheck and recheck it..
+        /// </summary>
+        internal static string ScenePanelDescription {
+            get {
+                return ResourceManager.GetString("ScenePanelDescription", resourceCulture);
             }
         }
     }
