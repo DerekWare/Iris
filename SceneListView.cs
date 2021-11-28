@@ -79,11 +79,7 @@ namespace DerekWare.Iris
 
                 SubItems.Add(SceneItem.Power.ToString());
                 SubItems.Add(SceneItem.Colors?.Count.ToString());
-
-                if(SceneItem.Effect is not null && SceneItem.Effect.TryGetValue("Name", out var effectName))
-                {
-                    SubItems.Add(effectName.ToString());
-                }
+                SubItems.Add(SceneItem.Effect?.Name);
             }
 
             public SceneItem SceneItem { get; }

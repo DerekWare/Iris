@@ -26,7 +26,7 @@ namespace DerekWare.Iris
             SceneFactory.Instance.CollectionChanged += OnSceneFactoryCollectionChanged;
         }
 
-        public Scene SelectedScene => SelectedNode is SceneNode sceneNode ? sceneNode.Scene : null;
+        public Scene SelectedScene => (SelectedNode as SceneNode)?.Scene;
 
         public void CreateScene(string name = "My Scene")
         {
@@ -53,6 +53,23 @@ namespace DerekWare.Iris
             SceneFactory.Instance.Remove(sceneNode.Scene);
         }
 
+        protected override void OnAfterCheck(TreeViewEventArgs e)
+        {
+            if(SelectedNode is SceneNode sceneNode && e.Node is DeviceNode deviceNode)
+            {
+                if(e.Node.Checked)
+                {
+                    sceneNode.Scene.Add(deviceNode.Device);
+                }
+                else
+                {
+                    sceneNode.Scene.Remove(deviceNode.Device);
+                }
+            }
+
+            base.OnAfterCheck(e);
+        }
+
         protected override void OnAfterLabelEdit(NodeLabelEditEventArgs e)
         {
             if(!e.CancelEdit && !e.Label.IsNullOrEmpty() && e.Node is SceneNode sceneNode)
@@ -65,7 +82,8 @@ namespace DerekWare.Iris
 
         protected override void OnAfterSelect(TreeViewEventArgs e)
         {
-            // TODO
+            CheckBoxes = e.Node is SceneNode;
+            SetCheckState(Nodes);
             base.OnAfterSelect(e);
         }
 
@@ -79,6 +97,17 @@ namespace DerekWare.Iris
         {
             e.CancelEdit = e.Node is not SceneNode;
             base.OnBeforeLabelEdit(e);
+        }
+
+        protected void SetCheckState(TreeNode node)
+        {
+            node.Checked = node is DeviceNode deviceNode && (SelectedScene?.Contains(deviceNode.Device) ?? false);
+            SetCheckState(node.Nodes);
+        }
+
+        protected void SetCheckState(TreeNodeCollection nodes)
+        {
+            nodes.ForEach<TreeNode>(SetCheckState);
         }
 
         #region Event Handlers

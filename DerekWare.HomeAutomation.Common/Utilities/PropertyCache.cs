@@ -11,6 +11,8 @@ namespace DerekWare.HomeAutomation.Common
     // and store them in the PropertyBag for serializing. A typical pattern for using this
     // is to call WriteToObject, then display a PropertyGrid dialog to let the user change
     // any properties, then call ReadFromObject to save those changes as the new defaults.
+    // PropertyCache and PropertyBag don't implement ISerializable because it's not necessary
+    // and doesn't even work with dictionaries in Newtonsoft JSON.
     [Serializable, JsonObject]
     public class PropertyCache : ObservableDictionary<string, PropertyBag>, ISerializablePropertyStore<string, PropertyBag>
     {
