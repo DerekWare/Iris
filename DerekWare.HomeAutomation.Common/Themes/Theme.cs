@@ -33,6 +33,12 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
         #endregion
 
+        #region ISerializable
+
+        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
+
+        #endregion
+
         protected Theme()
         {
             Name = this.GetName();
@@ -109,8 +115,6 @@ namespace DerekWare.HomeAutomation.Common.Themes
         {
             return Name != null ? Name.GetHashCode() : 0;
         }
-
-        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 
         public static bool operator ==(Theme left, Theme right)
         {

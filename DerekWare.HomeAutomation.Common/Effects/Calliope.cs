@@ -39,6 +39,11 @@ namespace DerekWare.HomeAutomation.Common.Effects
             return MemberwiseClone();
         }
 
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
+        }
+
         protected override bool UpdateColors(RenderState renderState, ref Color[] colors)
         {
             if(!renderState.CycleCountChanged)
@@ -49,14 +54,5 @@ namespace DerekWare.HomeAutomation.Common.Effects
             colors = Theme.GetPalette(Device).ToArray();
             return true;
         }
-
-        #region ISerializable
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            this.Serialize(info, context);
-        }
-
-        #endregion
     }
 }

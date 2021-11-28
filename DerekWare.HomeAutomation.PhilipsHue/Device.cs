@@ -43,9 +43,9 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public override string Product => HueDevice.ProductId;
 
-        public string SoftwareVersion => HueDevice.SoftwareVersion;
-
         public string SoftwareConfigId => HueDevice.SwConfigId;
+
+        public string SoftwareVersion => HueDevice.SoftwareVersion;
 
         public string Type => HueDevice.Type;
 
