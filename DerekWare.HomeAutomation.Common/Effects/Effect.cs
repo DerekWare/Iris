@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -14,7 +13,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public IDevice Device { get; }
     }
 
-    public abstract class Effect : IEffectProperties, ISerializable
+    public abstract class Effect : IEffectProperties
     {
         [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false)]
         public abstract bool IsFirmware { get; }
@@ -28,12 +27,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
         #region ICloneable
 
         public abstract object Clone();
-
-        #endregion
-
-        #region ISerializable
-
-        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 
         #endregion
 

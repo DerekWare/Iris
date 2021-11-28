@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
 using Newtonsoft.Json;
 
@@ -17,7 +16,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
         public new string Name { get; set; }
     }
 
-    public abstract class Theme : IThemeProperties, ISerializable
+    public abstract class Theme : IThemeProperties
     {
         [Description("True if the theme chooses its own colors."), Browsable(false)]
         public abstract bool IsDynamic { get; }
@@ -30,12 +29,6 @@ namespace DerekWare.HomeAutomation.Common.Themes
         #region ICloneable
 
         public abstract object Clone();
-
-        #endregion
-
-        #region ISerializable
-
-        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 
         #endregion
 

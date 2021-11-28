@@ -1,24 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Serialization;
 using DerekWare.HomeAutomation.Common.Colors;
-using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Themes
 {
-    [Browsable(false), Description("The user theme is created via a theme editor and saved in the application settings."), Serializable, JsonObject]
+    [Browsable(false), Description("The user theme is created via a theme editor and saved in the application settings.")]
     public class UserTheme : Theme
     {
-        public UserTheme()
-        {
-        }
-
-        public UserTheme(SerializationInfo info, StreamingContext context)
-        {
-            this.Deserialize(info, context);
-        }
-
         [Browsable(false)]
         public override bool IsDynamic => false;
 
@@ -32,11 +20,6 @@ namespace DerekWare.HomeAutomation.Common.Themes
         public override object Clone()
         {
             return MemberwiseClone();
-        }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            this.Serialize(info, context);
         }
 
         public override IReadOnlyCollection<Color> GetPalette(IDevice targetDevice)

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Themes;
-using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Scenes
 {
@@ -25,14 +23,8 @@ namespace DerekWare.HomeAutomation.Common.Scenes
     ///     A Scene is a collection of colors, themes and effects applied to any number
     ///     of devices that can be persisted in the settings.
     /// </summary>
-    [Serializable, JsonObject]
-    public class Scene : ISceneProperties, IEquatable<Scene>, ISerializable
+    public class Scene : ISceneProperties, IEquatable<Scene>
     {
-        public Scene(SerializationInfo info, StreamingContext context)
-        {
-            this.Deserialize(info, context);
-        }
-
         public Scene()
         {
         }
@@ -113,15 +105,6 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         public static bool operator !=(Scene left, Scene right)
         {
             return !Equals(left, right);
-        }
-
-        #endregion
-
-        #region ISerializable
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            this.Serialize(info, context);
         }
 
         #endregion

@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
+﻿using System.ComponentModel;
 using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -17,11 +15,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public override object Clone()
         {
             return MemberwiseClone();
-        }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            throw new NotImplementedException();
         }
 
         protected override void StartEffect()
