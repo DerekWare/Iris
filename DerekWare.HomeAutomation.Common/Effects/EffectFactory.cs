@@ -18,24 +18,40 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         public IReadOnlyCollection<Effect> GetRunningEffects(IDevice device)
         {
-            // Find the intersection of the which devices have running effects and
-            // the given device/device group. This is a little interesting because
-            // an effect may be running on a device group, which includes child
-            // devices and the given device may or may not be a device group.
-            var running = new HashSet<Effect>();
-            var a = device.GetDevices().Append(device).ToDistinctList();
+            var effects = new ObservableHashSet<Effect>();
 
-            foreach(var effect in RunningEffects)
+            lock(_RunningEffects.SyncRoot)
             {
-                var b = effect.Device.GetDevices();
+                // Because an effect can run on either a group or an individual device,
+                // this gets a little complicated. First, find any effects running on
+                // the object given.
+                effects.AddRange(_RunningEffects.Where(effect => effect.Device.Equals(device)));
 
-                if(a.Intersect(b).Any())
+                // Add any effects that may be running on the device's groups
+                foreach(var i in device.Groups)
                 {
-                    running.Add(effect);
+                    effects.AddRange(_RunningEffects.Where(effect => effect.Device.Equals(i)));
+                }
+
+                if(device is IDeviceGroup group)
+                {
+                    // Add any effects that may be running on this group's children
+                    foreach(var i in group.Devices)
+                    {
+                        effects.AddRange(_RunningEffects.Where(effect => effect.Device.Equals(i)));
+                    }
+
+                    // Find any effects that may be running on OTHER groups with which
+                    // this group may have common members. Ugh.
+                    foreach(var i in group.Devices)
+                    foreach(var j in i.Groups)
+                    {
+                        effects.AddRange(_RunningEffects.Where(effect => effect.Device.Equals(j)));
+                    }
                 }
             }
 
-            return running;
+            return effects;
         }
 
         public void Stop(IDevice device)

@@ -12,27 +12,25 @@ namespace DerekWare.HomeAutomation.Common
     public static class Reflection
     {
         /// <summary>
-        ///     Perform a deep copy of the object via reflection. All public, writable properties and
+        ///     Performs a deep copy of the object via reflection. All public, writable properties and
         ///     fields are copied, regardless of attributes. This can be implemented by a base type
         ///     as the reflection uses GetType, not typeof(T).
         /// </summary>
         /// <typeparam name="T">The type of object being copied.</typeparam>
-        /// <param name="src">The object instance to copy.</param>
+        /// <param name="this">The object instance to copy.</param>
         /// <returns>A deep copy of the object.</returns>
-        public static T Clone<T>(this T src)
+        public static T Clone<T>(this T @this)
             where T : class
         {
-            if(ReferenceEquals(src, null))
+            if(ReferenceEquals(@this, null))
             {
                 return null;
             }
 
-            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(src,
-                                                                                src.GetType(),
-                                                                                new JsonSerializerSettings
-                                                                                {
-                                                                                    ObjectCreationHandling = ObjectCreationHandling.Replace
-                                                                                }));
+            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, ObjectCreationHandling = ObjectCreationHandling.Replace };
+            var type = @this.GetType();
+
+            return (T)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(@this, type, settings), type);
         }
 
         public static string GetDescription(this Type type)
