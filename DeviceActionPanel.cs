@@ -134,7 +134,7 @@ namespace DerekWare.Iris
             foreach(var button in EffectLayoutPanel.Controls.OfType<Button>())
             {
                 var effect = (Effect)button.Tag;
-                var isActive = Device.Effect == effect;
+                var isActive = Device.Effect?.Name.Equals(effect.Name) ?? false;
 
                 if(isActive)
                 {
@@ -233,7 +233,7 @@ namespace DerekWare.Iris
             // Apply the theme
             InUpdate = true;
             Device.Effect = null;
-            theme.Apply(Device);
+            Device.Theme = theme;
             InUpdate = false;
         }
 

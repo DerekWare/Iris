@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using DerekWare.HomeAutomation.Common.Colors;
@@ -27,7 +28,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             return Reflection.Clone(this);
         }
 
-        protected override bool UpdateColors(RenderState renderState, ref Color[] colors)
+        protected override bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration)
         {
             if(!renderState.CycleCountChanged)
             {

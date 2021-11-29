@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DerekWare.HomeAutomation.Common.Colors;
@@ -9,7 +10,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 {
     public abstract class MultiZoneColorEffectRenderer : EffectRenderer
     {
-        protected abstract bool UpdateColors(RenderState renderState, ref Color[] colors);
+        protected abstract bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration);
 
         // The target colors to set
         Color[] Colors;
@@ -32,18 +33,20 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void Update(RenderState state)
         {
-            if(!UpdateColors(state, ref Colors))
+            var transitionDuration = RefreshRate;
+            
+            if(!UpdateColors(state, ref Colors, ref transitionDuration))
             {
                 return;
             }
 
             if(Colors.Length > 1)
             {
-                Device.SetMultiZoneColors(Colors, RefreshRate);
+                Device.SetMultiZoneColors(Colors, transitionDuration);
             }
             else
             {
-                Device.SetColor(Colors[0], RefreshRate);
+                Device.SetColor(Colors[0], transitionDuration);
             }
         }
     }

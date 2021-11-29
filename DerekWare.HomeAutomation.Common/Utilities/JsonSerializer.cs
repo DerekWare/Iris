@@ -32,7 +32,6 @@ namespace DerekWare.HomeAutomation.Common
     {
         static readonly Newtonsoft.Json.JsonSerializer Serializer = new()
         {
-            DefaultValueHandling = DefaultValueHandling.Ignore,
             NullValueHandling = NullValueHandling.Ignore,
             ContractResolver = new WritablePropertiesOnlyResolver(),
             TypeNameHandling = TypeNameHandling.All,

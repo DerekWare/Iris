@@ -86,7 +86,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             Extensions.Dispose(ref AudioRecorder);
         }
 
-        protected override bool UpdateColors(RenderState renderState, ref Color[] colors)
+        protected override bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration)
         {
             if(AudioRecorder.CurrentDuration.TotalSeconds < (AudioRecorder.MaxDuration.TotalSeconds / 2))
             {
@@ -137,6 +137,8 @@ namespace DerekWare.HomeAutomation.Common.Effects
             {
                 colors.SetWrappingValue(offset++, color);
             }
+
+            transitionDuration = TimeSpan.Zero;
 
             return true;
         }

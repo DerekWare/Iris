@@ -39,7 +39,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             return Reflection.Clone(this);
         }
 
-        protected override bool UpdateColors(RenderState renderState, ref Color[] colors)
+        protected override bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration)
         {
             // At the start of a cycle, pick a random zone and color, then expand out
             // a random number of zones.

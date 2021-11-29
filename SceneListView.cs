@@ -21,6 +21,7 @@ namespace DerekWare.Iris
             Columns.Add(null, "Device", 200);
             Columns.Add(null, "Power", 200);
             Columns.Add(null, "Colors", 200);
+            Columns.Add(null, "Theme", 200);
             Columns.Add(null, "Effect", 200);
         }
 
@@ -78,7 +79,8 @@ namespace DerekWare.Iris
                 Text = SceneItem.Name;
 
                 SubItems.Add(SceneItem.Power.ToString());
-                SubItems.Add(SceneItem.Colors?.Count.ToString());
+                SubItems.Add(SceneItem.MultiZoneColors?.Count.ToString());
+                SubItems.Add(SceneItem.Theme?.Name);
                 SubItems.Add(SceneItem.Effect?.Name);
             }
 

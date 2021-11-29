@@ -8,7 +8,7 @@ using DerekWare.HomeAutomation.Common.Effects;
 
 namespace DerekWare.HomeAutomation.Common
 {
-    public interface IDeviceGroup : IDevice, IEquatable<IDeviceGroup>
+    public interface IDeviceGroup : IDevice
     {
         int DeviceCount { get; }
         IReadOnlyCollection<IDevice> Devices { get; }
@@ -19,7 +19,7 @@ namespace DerekWare.HomeAutomation.Common
     // the group. Lights are split into collections of multizone and single zone, with all
     // single zone lights treated as a single multizone light, providing a better experience
     // with multizone themes and effects.
-    public abstract class DeviceGroup : Device, IDeviceGroup, IEquatable<DeviceGroup>
+    public abstract class DeviceGroup : Device, IDeviceGroup
     {
         public abstract IReadOnlyCollection<IDevice> Devices { get; }
 
@@ -113,36 +113,6 @@ namespace DerekWare.HomeAutomation.Common
             }
 
             return Uuid.Equals(other.Uuid);
-        }
-
-        public override bool Equals(IDevice other)
-        {
-            return Equals(other as DeviceGroup);
-        }
-
-        public virtual bool Equals(IDeviceGroup other)
-        {
-            return Equals(other as DeviceGroup);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as DeviceGroup);
-        }
-
-        public override int GetHashCode()
-        {
-            return Uuid != null ? Uuid.GetHashCode() : 0;
-        }
-
-        public static bool operator ==(DeviceGroup left, DeviceGroup right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(DeviceGroup left, DeviceGroup right)
-        {
-            return !Equals(left, right);
         }
 
         #endregion

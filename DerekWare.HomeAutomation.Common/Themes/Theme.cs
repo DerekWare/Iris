@@ -49,7 +49,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
         [Browsable(false)]
         public virtual string Name { get; set; }
 
-        public void Apply(IDevice device)
+        internal void Apply(IDevice device)
         {
             // Retrieve the color palette
             var palette = GetPalette(device);
@@ -66,59 +66,5 @@ namespace DerekWare.HomeAutomation.Common.Themes
                 device.Color = palette.First();
             }
         }
-
-        #region Equality
-
-        public bool Equals(Theme other)
-        {
-            if(ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if(ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return Equals(Name, other.Name);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if(ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if(ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if(obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((Theme)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Name != null ? Name.GetHashCode() : 0;
-        }
-
-        public static bool operator ==(Theme left, Theme right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(Theme left, Theme right)
-        {
-            return !Equals(left, right);
-        }
-
-        #endregion
     }
 }

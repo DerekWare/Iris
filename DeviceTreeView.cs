@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using DerekWare.Collections;
@@ -25,13 +26,32 @@ namespace DerekWare.Iris
             state.Add(new DeviceFilterNode("Effect Active") { Predicate = device => device.Effect is not null });
             state.Add(new DeviceFilterNode("Power Off") { Predicate = device => device.Power == PowerState.Off });
             state.Add(new DeviceFilterNode("Power On") { Predicate = device => device.Power == PowerState.On });
+        }
 
+        protected new bool DesignMode => base.DesignMode || (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
             HueClient.Instance.DeviceDiscovered += OnDeviceChanged;
             HueClient.Instance.PropertiesChanged += OnDeviceChanged;
             HueClient.Instance.StateChanged += OnDeviceChanged;
             LifxClient.Instance.DeviceDiscovered += OnDeviceChanged;
             LifxClient.Instance.PropertiesChanged += OnDeviceChanged;
             LifxClient.Instance.StateChanged += OnDeviceChanged;
+
+            base.OnHandleCreated(e);
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            HueClient.Instance.DeviceDiscovered -= OnDeviceChanged;
+            HueClient.Instance.PropertiesChanged -= OnDeviceChanged;
+            HueClient.Instance.StateChanged -= OnDeviceChanged;
+            LifxClient.Instance.DeviceDiscovered -= OnDeviceChanged;
+            LifxClient.Instance.PropertiesChanged -= OnDeviceChanged;
+            LifxClient.Instance.StateChanged -= OnDeviceChanged;
+
+            base.OnHandleDestroyed(e);
         }
 
         #region Event Handlers

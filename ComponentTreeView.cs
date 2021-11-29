@@ -10,7 +10,7 @@ namespace DerekWare.Iris
     // Extends DeviceTreeView to include scenes
     class ComponentTreeView : DeviceTreeView
     {
-        public readonly SceneCategoryNode Scenes = new();
+        public readonly SceneCategoryNode ScenesNode = new();
 
         public ComponentTreeView()
         {
@@ -21,9 +21,8 @@ namespace DerekWare.Iris
 
             LabelEdit = true;
 
-            TreeNode.Add(Nodes, Scenes);
-            SceneFactory.Instance.ForEach(i => SceneNode.Add(Scenes.Nodes, i));
-            SceneFactory.Instance.CollectionChanged += OnSceneFactoryCollectionChanged;
+            TreeNode.Add(Nodes, ScenesNode);
+            SceneFactory.Instance.ForEach(i => SceneNode.Add(ScenesNode.Nodes, i));
         }
 
         public Scene SelectedScene => (SelectedNode as SceneNode)?.Scene;
@@ -34,8 +33,8 @@ namespace DerekWare.Iris
             // TODO create a unique name
             var scene = SceneFactory.Instance.CreateInstance(name);
 
-            // Find the treenode and select it
-            SelectedNode = SceneNode.Find(Scenes.Nodes, scene);
+            // Find the node and select it
+            SelectedNode = SceneNode.Find(ScenesNode.Nodes, scene);
 
             // Start the rename
             SelectedNode.BeginEdit();
@@ -49,8 +48,19 @@ namespace DerekWare.Iris
             }
 
             SelectedNode.EndEdit(true);
-            SelectedNode = Scenes;
+            SelectedNode = ScenesNode;
             SceneFactory.Instance.Remove(sceneNode.Scene);
+        }
+
+        public bool RenameScene()
+        {
+            if(!LabelEdit || SelectedNode is not SceneNode sceneNode)
+            {
+                return false;
+            }
+
+            sceneNode.BeginEdit();
+            return true;
         }
 
         protected override void OnAfterCheck(TreeViewEventArgs e)
@@ -99,6 +109,30 @@ namespace DerekWare.Iris
             base.OnBeforeLabelEdit(e);
         }
 
+        protected override void OnDoubleClick(EventArgs e)
+        {
+            if(SelectedNode is not SceneNode sceneNode)
+            {
+                return;
+            }
+
+            sceneNode.Scene.Apply();
+
+            base.OnDoubleClick(e);
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            SceneFactory.Instance.CollectionChanged += OnSceneFactoryCollectionChanged;
+            base.OnHandleCreated(e);
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            SceneFactory.Instance.CollectionChanged -= OnSceneFactoryCollectionChanged;
+            base.OnHandleDestroyed(e);
+        }
+
         protected void SetCheckState(TreeNode node)
         {
             node.Checked = node is DeviceNode deviceNode && (SelectedScene?.Contains(deviceNode.Device) ?? false);
@@ -120,8 +154,8 @@ namespace DerekWare.Iris
                 return;
             }
 
-            e.OldItems.SafeEmpty().OfType<Scene>().ForEach(i => SceneNode.Remove(Scenes.Nodes, i));
-            e.NewItems.SafeEmpty().OfType<Scene>().ForEach(i => SceneNode.Add(Scenes.Nodes, i));
+            e.OldItems.SafeEmpty().OfType<Scene>().ForEach(i => SceneNode.Remove(ScenesNode.Nodes, i));
+            e.NewItems.SafeEmpty().OfType<Scene>().ForEach(i => SceneNode.Add(ScenesNode.Nodes, i));
         }
 
         #endregion

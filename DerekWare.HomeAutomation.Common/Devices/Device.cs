@@ -5,6 +5,7 @@ using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
+using DerekWare.HomeAutomation.Common.Themes;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -12,14 +13,13 @@ namespace DerekWare.HomeAutomation.Common
     {
         event EventHandler<DeviceEventArgs> PropertiesChanged;
         event EventHandler<DeviceEventArgs> StateChanged;
-
-        IReadOnlyCollection<IDeviceGroup> Groups { get; }
     }
 
     // Properties generally don't change at runtime except when first connecting to the device
     public interface IDeviceProperties : IName, IFamily
     {
         IClient Client { get; }
+        IReadOnlyCollection<IDeviceGroup> Groups { get; }
         bool IsColor { get; }
         bool IsMultiZone { get; }
         bool IsValid { get; }
@@ -36,6 +36,7 @@ namespace DerekWare.HomeAutomation.Common
         Effect Effect { get; set; }
         IReadOnlyCollection<Color> MultiZoneColors { get; set; }
         PowerState Power { get; set; }
+        Theme Theme { get; set; }
 
         void RefreshState();
         void SetColor(Color color, TimeSpan transitionDuration);
@@ -90,6 +91,7 @@ namespace DerekWare.HomeAutomation.Common
             {
                 EffectFactory.Instance.Stop(this);
                 value?.Start(this);
+                OnStateChanged();
             }
         }
 
@@ -98,6 +100,17 @@ namespace DerekWare.HomeAutomation.Common
 
         [Browsable(false)]
         public virtual PowerState Power { get => _Power; set => SetPower(value); }
+
+        [Browsable(false)]
+        public virtual Theme Theme
+        {
+            get => null; // TODO
+            set
+            {
+                value?.Apply(this);
+                OnStateChanged();
+            }
+        }
 
         public override string ToString()
         {
@@ -126,7 +139,7 @@ namespace DerekWare.HomeAutomation.Common
 
         #region Equality
 
-        public virtual bool Equals(Device other)
+        public bool Equals(IDevice other)
         {
             if(ReferenceEquals(null, other))
             {
@@ -138,47 +151,30 @@ namespace DerekWare.HomeAutomation.Common
                 return true;
             }
 
-            return Equals(Uuid, other.Uuid);
-        }
-
-        public virtual bool Equals(IDevice other)
-        {
-            if(ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
             if(other.GetType() != GetType())
             {
                 return false;
             }
 
-            return Equals((Device)other);
+            return (Family == other.Family) && (Uuid == other.Uuid);
         }
 
-        public override bool Equals(object obj)
+        public bool Equals(Device other)
         {
-            if(ReferenceEquals(null, obj))
-            {
-                return false;
-            }
+            return Equals(other as IDevice);
+        }
 
-            if(ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if(obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((Device)obj);
+        public override bool Equals(object other)
+        {
+            return Equals(other as IDevice);
         }
 
         public override int GetHashCode()
         {
-            return Uuid != null ? Uuid.GetHashCode() : 0;
+            unchecked
+            {
+                return ((Family != null ? Family.GetHashCode() : 0) * 397) ^ (Uuid != null ? Uuid.GetHashCode() : 0);
+            }
         }
 
         public static bool operator ==(Device left, Device right)

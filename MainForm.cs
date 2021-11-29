@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Forms;
 using AutoUpdaterDotNET;
 using DerekWare.Collections;
-using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.HomeAutomation.Common.Themes;
@@ -33,21 +32,7 @@ namespace DerekWare.Iris
             AutoUpdater.ShowRemindLaterButton = false;
             AutoUpdater.ShowSkipButton = false;
 
-            // Load cached LIFX devices
-            Settings.Default.LifxDevices ??= new StringCollection();
-            Settings.Default.LifxDevices.OfType<string>().ForEach(LifxClient.Instance.Connect);
-
-            // Connect to the Hue bridge
-            if(!Settings.Default.HueBridgeAddress.IsNullOrEmpty() && !Settings.Default.HueApiKey.IsNullOrEmpty())
-            {
-                HueClient.Instance.Connect(Settings.Default.HueBridgeAddress, Settings.Default.HueApiKey);
-            }
-
-            // Deserialize cached effect, them and scene settings
-            EffectFactory.Instance.Deserialize(Settings.Default.Effects);
-            ThemeFactory.Instance.Deserialize(Settings.Default.Themes);
-            SceneFactory.Instance.Deserialize(Settings.Default.Scenes);
-
+            LoadSettings();
             CheckForUpdates();
             base.OnLoad(e);
         }
@@ -67,6 +52,24 @@ namespace DerekWare.Iris
             AutoUpdater.Start("http://www.derekware.com/software/iris/AutoUpdater.xml");
         }
 
+        void LoadSettings()
+        {
+            // Load cached LIFX devices
+            Settings.Default.LifxDevices ??= new StringCollection();
+            Settings.Default.LifxDevices.OfType<string>().ForEach(LifxClient.Instance.Connect);
+
+            // Connect to the Hue bridge
+            if(!Settings.Default.HueBridgeAddress.IsNullOrEmpty() && !Settings.Default.HueApiKey.IsNullOrEmpty())
+            {
+                HueClient.Instance.Connect(Settings.Default.HueBridgeAddress, Settings.Default.HueApiKey);
+            }
+
+            // Deserialize cached effect, them and scene settings
+            EffectFactory.Instance.Deserialize(Settings.Default.Effects);
+            ThemeFactory.Instance.Deserialize(Settings.Default.Themes);
+            SceneFactory.Instance.Deserialize(Settings.Default.Scenes);
+        }
+
         void MinimizeToTray()
         {
             WindowState = FormWindowState.Minimized;
@@ -80,6 +83,21 @@ namespace DerekWare.Iris
             Visible = true;
             WindowState = RestoreWindowState;
             Activate();
+        }
+
+        void SaveSettings()
+        {
+            // Update the device list, pruning any addresses that were unreachable
+            Settings.Default.LifxDevices = new StringCollection();
+            Settings.Default.LifxDevices.AddRange(LifxClient.Instance.Devices.Where(i => i.IsValid)
+                                                            .Select(i => i.Uuid)
+                                                            .ToArray()); // HACK using internal knowledge that Uuid == IpAddress
+
+            // Cache other settings
+            Settings.Default.Effects = EffectFactory.Instance.Serialize();
+            Settings.Default.Themes = ThemeFactory.Instance.Serialize();
+            Settings.Default.Scenes = SceneFactory.Instance.Serialize();
+            Settings.Default.Save();
         }
 
         #region Event Handlers
@@ -173,17 +191,7 @@ namespace DerekWare.Iris
             {
             }
 
-            // Update the device list, pruning any addresses that were unreachable
-            Settings.Default.LifxDevices = new StringCollection();
-            Settings.Default.LifxDevices.AddRange(LifxClient.Instance.Devices.Where(i => i.IsValid)
-                                                            .Select(i => i.Uuid)
-                                                            .ToArray()); // HACK using internal knowledge that Uuid == IpAddress
-
-            // Cache other settings
-            Settings.Default.Effects = EffectFactory.Instance.Serialize();
-            Settings.Default.Themes = ThemeFactory.Instance.Serialize();
-            Settings.Default.Scenes = SceneFactory.Instance.Serialize();
-            Settings.Default.Save();
+            SaveSettings();
         }
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -211,6 +219,16 @@ namespace DerekWare.Iris
         void RemoveSceneToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ComponentTreeView.RemoveSelectedScene();
+        }
+
+        void RenameSceneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ComponentTreeView.RenameScene();
+        }
+
+        void SaveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveSettings();
         }
 
         void ShowWindowMenuItem_Click(object sender, EventArgs e)

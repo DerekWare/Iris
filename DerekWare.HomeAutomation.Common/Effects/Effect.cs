@@ -42,7 +42,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Browsable(false)]
         public string Name => this.GetName();
 
-        [Browsable(false)]
+        [Browsable(false), JsonIgnore]
         public IDevice Device { get; private set; }
 
         public virtual void Dispose()
@@ -77,59 +77,5 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // Release the device
             Device = null;
         }
-
-        #region Equality
-
-        public bool Equals(Effect other)
-        {
-            if(ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if(ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return Equals(Name, other.Name);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if(ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if(ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if(obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((Effect)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Name != null ? Name.GetHashCode() : 0;
-        }
-
-        public static bool operator ==(Effect left, Effect right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(Effect left, Effect right)
-        {
-            return !Equals(left, right);
-        }
-
-        #endregion
     }
 }

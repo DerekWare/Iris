@@ -66,7 +66,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             Extensions.Dispose(ref AudioRecorder);
         }
 
-        protected override bool UpdateColors(RenderState renderState, ref Color[] colors)
+        protected override bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration)
         {
             colors = BackgroundColor.Repeat(ZoneCount).ToArray();
 
@@ -83,6 +83,8 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 var peak = bandSamples.Max();
                 colors[i] = new Color(peak, 1, 1, 1);
             }
+
+            transitionDuration = TimeSpan.Zero;
 
             return true;
         }

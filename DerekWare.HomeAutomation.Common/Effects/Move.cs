@@ -40,7 +40,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             return Reflection.Clone(this);
         }
 
-        protected override bool UpdateColors(RenderState renderState, ref Color[] colors)
+        protected override bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration)
         {
             // Decide the direction of movement based on the effect behavior
             switch(Behavior)
