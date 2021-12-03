@@ -56,6 +56,7 @@ namespace DerekWare.Iris
             this.ApplySceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UpdateSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewReadmeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RootLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
@@ -105,7 +106,6 @@ namespace DerekWare.Iris
             // 
             // MenuStrip
             // 
-            this.MenuStrip.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.MenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileToolStirpMenuItem,
@@ -200,7 +200,7 @@ namespace DerekWare.Iris
             this.UpdateSceneToolStripMenuItem});
             this.SceneContextMenuStrip.Name = "SceneContextMenuStrip";
             this.SceneContextMenuStrip.OwnerItem = this.ScenesToolStripMenuItem;
-            this.SceneContextMenuStrip.Size = new System.Drawing.Size(326, 203);
+            this.SceneContextMenuStrip.Size = new System.Drawing.Size(326, 170);
             // 
             // CreateSceneToolStripMenuItem
             // 
@@ -251,11 +251,19 @@ namespace DerekWare.Iris
             // HelpToolStripMenuItem
             // 
             this.HelpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ViewReadmeToolStripMenuItem,
             this.UpdateMenuItem,
             this.AboutMenuItem});
             this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
             this.HelpToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
             this.HelpToolStripMenuItem.Text = "&Help";
+            // 
+            // ViewReadmeToolStripMenuItem
+            // 
+            this.ViewReadmeToolStripMenuItem.Name = "ViewReadmeToolStripMenuItem";
+            this.ViewReadmeToolStripMenuItem.Size = new System.Drawing.Size(272, 34);
+            this.ViewReadmeToolStripMenuItem.Text = "View &ReadMe...";
+            this.ViewReadmeToolStripMenuItem.Click += new System.EventHandler(this.ViewReadmeToolStripMenuItem_Click);
             // 
             // UpdateMenuItem
             // 
@@ -353,6 +361,7 @@ namespace DerekWare.Iris
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem ApplySceneToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem UpdateSceneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ViewReadmeToolStripMenuItem;
     }
 }
 

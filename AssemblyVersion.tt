@@ -5,5 +5,5 @@ using System.Reflection;
 [assembly: AssemblyFileVersion("1.0.<#= this.Minor #>.<#= this.Patch #>")]
 <#+
     int Minor = (int)(DateTime.Now - new DateTime(2021,11,18)).TotalDays;
-    int Patch = (int)(DateTime.Now - new DateTime(2021,11,18)).Minutes;
+    int Patch = (((int)(DateTime.Now - new DateTime(2021,11,18)).Hours) * 60) + (DateTime.Now - new DateTime(2021,11,18)).Minutes;
 #>

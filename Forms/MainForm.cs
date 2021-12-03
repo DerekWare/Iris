@@ -268,6 +268,11 @@ namespace DerekWare.Iris
             ScenePanel?.SnapshotActiveScene();
         }
 
+        void ViewReadmeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("readme.txt");
+        }
+
         #endregion
     }
 }
