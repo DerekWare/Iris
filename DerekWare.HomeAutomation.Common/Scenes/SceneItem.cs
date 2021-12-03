@@ -150,9 +150,9 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             Family = Device.Family;
             Uuid = Device.Uuid;
             Power = Device.Power;
-            Theme = (Theme)Device.Theme?.Clone();
-            MultiZoneColors = Device.MultiZoneColors?.ToList();
             Color = Device.Color?.Clone();
+            MultiZoneColors = Device.MultiZoneColors?.ToList();
+            Theme = (Theme)Device.Theme?.Clone();
             Effect = (Effect)Device.Effect?.Clone();
 
             return true;

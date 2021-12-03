@@ -8,15 +8,14 @@ namespace DerekWare.Iris
     {
         public SceneTabPage(SceneItem sceneItem)
         {
+            // TODO update name when the device is found
             SceneItem = sceneItem;
-            Text = SceneItem.Device?.Name ?? SceneItem.Uuid;
-            ActionPanel = new DeviceActionPanel(SceneItem) { Dock = DockStyle.Fill, Description = Resources.ScenePanelDescription };
-            Controls.Add(ActionPanel);
-
-            // TODO register for client and device discovery?
+            Text = SceneItem.Name;
+            Panel = new SceneItemPanel(SceneItem) { Dock = DockStyle.Fill, Description = Resources.ScenePanelDescription };
+            Controls.Add(Panel);
         }
 
-        public DeviceActionPanel ActionPanel { get; }
+        public SceneItemPanel Panel { get; }
 
         public SceneItem SceneItem { get; }
     }

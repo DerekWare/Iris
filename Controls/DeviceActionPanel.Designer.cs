@@ -107,7 +107,7 @@ namespace DerekWare.Iris
             this.SolidColorPanel.Padding = new System.Windows.Forms.Padding(8);
             this.SolidColorPanel.Size = new System.Drawing.Size(956, 179);
             this.SolidColorPanel.TabIndex = 1;
-            this.SolidColorPanel.ColorChanged += new System.EventHandler<DerekWare.Iris.ColorChangedEventArgs>(this.SolidColorPanel_ColorChanged);
+            this.SolidColorPanel.ColorChanged += new System.EventHandler<DerekWare.Iris.ColorChangedEventArgs>(this.OnSolidColorChanged);
             // 
             // MultiZoneColorPanel
             // 
@@ -120,7 +120,7 @@ namespace DerekWare.Iris
             this.MultiZoneColorPanel.Padding = new System.Windows.Forms.Padding(8);
             this.MultiZoneColorPanel.Size = new System.Drawing.Size(956, 179);
             this.MultiZoneColorPanel.TabIndex = 2;
-            this.MultiZoneColorPanel.ColorsChanged += new System.EventHandler<DerekWare.Iris.ColorsChangedEventArgs>(this.MultiZoneColorPanel_ColorsChanged);
+            this.MultiZoneColorPanel.ColorsChanged += new System.EventHandler<DerekWare.Iris.ColorsChangedEventArgs>(this.OnMultiZoneColorsChanged);
             // 
             // PowerStatePanel
             // 
@@ -133,7 +133,7 @@ namespace DerekWare.Iris
             this.PowerStatePanel.Padding = new System.Windows.Forms.Padding(8);
             this.PowerStatePanel.Size = new System.Drawing.Size(956, 101);
             this.PowerStatePanel.TabIndex = 3;
-            this.PowerStatePanel.PowerStateChanged += new System.EventHandler<DerekWare.Iris.PowerStateChangedEventArgs>(this.PowerStatePanel_PowerStateChanged);
+            this.PowerStatePanel.PowerStateChanged += new System.EventHandler<DerekWare.Iris.PowerStateChangedEventArgs>(this.OnPowerStateChanged);
             // 
             // ThemeButtonPanel
             // 
@@ -146,7 +146,7 @@ namespace DerekWare.Iris
             this.ThemeButtonPanel.Padding = new System.Windows.Forms.Padding(8);
             this.ThemeButtonPanel.Size = new System.Drawing.Size(956, 370);
             this.ThemeButtonPanel.TabIndex = 4;
-            this.ThemeButtonPanel.SelectedThemeChanged += new System.EventHandler<DerekWare.Iris.SelectedThemeChangedEventArgs>(this.ThemePanel_SelectedThemeChanged);
+            this.ThemeButtonPanel.SelectedThemeChanged += new System.EventHandler<DerekWare.Iris.SelectedThemeChangedEventArgs>(this.OnSelectedThemeChanged);
             // 
             // EffectButtonPanel
             // 
@@ -159,7 +159,7 @@ namespace DerekWare.Iris
             this.EffectButtonPanel.Padding = new System.Windows.Forms.Padding(8);
             this.EffectButtonPanel.Size = new System.Drawing.Size(956, 370);
             this.EffectButtonPanel.TabIndex = 5;
-            this.EffectButtonPanel.SelectedEffectChanged += new System.EventHandler<DerekWare.Iris.SelectedEffectChangedEventArgs>(this.EffectPanel_SelectedEffectChanged);
+            this.EffectButtonPanel.SelectedEffectChanged += new System.EventHandler<DerekWare.Iris.SelectedEffectChangedEventArgs>(this.OnSelectedEffectChanged);
             // 
             // DescriptionLabel
             // 
@@ -191,14 +191,14 @@ namespace DerekWare.Iris
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel BaseLayoutPanel;
-        private System.Windows.Forms.TableLayoutPanel StateLayoutPanel;
-        private System.Windows.Forms.Label DescriptionLabel;
-        private SolidColorPanel SolidColorPanel;
-        private System.Windows.Forms.PropertyGrid PropertyGrid;
-        private MultiZoneColorPanel MultiZoneColorPanel;
-        private PowerStatePanel PowerStatePanel;
-        private ThemeButtonPanel ThemeButtonPanel;
-        private EffectButtonPanel EffectButtonPanel;
+        protected System.Windows.Forms.TableLayoutPanel BaseLayoutPanel;
+        protected System.Windows.Forms.TableLayoutPanel StateLayoutPanel;
+        protected System.Windows.Forms.Label DescriptionLabel;
+        protected SolidColorPanel SolidColorPanel;
+        protected System.Windows.Forms.PropertyGrid PropertyGrid;
+        protected MultiZoneColorPanel MultiZoneColorPanel;
+        protected PowerStatePanel PowerStatePanel;
+        protected ThemeButtonPanel ThemeButtonPanel;
+        protected EffectButtonPanel EffectButtonPanel;
     }
 }

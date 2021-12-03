@@ -1,116 +1,129 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using DerekWare.Collections;
+using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.HomeAutomation.Common.Themes;
 
 namespace DerekWare.Iris
 {
-    public partial class SceneItemPanel : UserControl
+    public class SceneItemPanel : DeviceActionPanel
     {
-        SceneItem _SceneItem;
-        bool InUpdate;
-
-        public SceneItemPanel()
+        public SceneItemPanel(SceneItem sceneItem)
         {
-            InitializeComponent();
+            SceneItem = sceneItem;
         }
 
-        public SceneItem SceneItem
+        public IClient Client => SceneItem.Client;
+
+        public override IDevice Device => SceneItem.Device;
+
+        public SceneItem SceneItem { get; }
+
+        protected override void OnHandleCreated(EventArgs e)
         {
-            get => _SceneItem;
-            set
+            if(Client is not null)
             {
-                _SceneItem = value;
-                UpdateState();
+                Client.PropertiesChanged += OnDevicePropertiesChanged;
             }
+
+            base.OnHandleCreated(e);
         }
 
-        void UpdateState()
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            if(Client is not null)
+            {
+                Client.PropertiesChanged -= OnDevicePropertiesChanged;
+            }
+
+            base.OnHandleDestroyed(e);
+        }
+
+
+        
+        protected override bool OnSelectedEffectChanged(string name, out Effect effect)
+        {
+            if(!base.OnSelectedEffectChanged(name, out effect))
+            {
+                return false;
+            }
+
+            SceneItem.Effect = effect;
+            UpdateState();
+            return true;
+        }
+
+        protected override bool OnSelectedThemeChanged(string name, out Theme theme)
+        {
+            if(!base.OnSelectedThemeChanged(name, out theme))
+            {
+                return false;
+            }
+
+            SceneItem.Theme = theme;
+            SceneItem.Color = null;
+            SceneItem.MultiZoneColors = null;
+            UpdateState();
+            return true;
+        }
+
+        protected override void UpdateState()
         {
             InUpdate = true;
 
-            TabPage.Text = SceneItem.Name;
-            PowerStatePanel.Power = SceneItem.Power;
-            SolidColorPanel.Color = SceneItem.Color;
-            MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors;
-            ThemePanel.DeviceFamily = SceneItem.Family;
-            ThemePanel.SelectedTheme = SceneItem.Theme;
-            EffectPanel.DeviceFamily = SceneItem.Family;
-            EffectPanel.SelectedEffect = SceneItem.Effect;
+            // If we can't find a valid device, disable everything
+            var enable = Device is not null;
+            PowerStatePanel.Enabled = enable;
+            SolidColorPanel.Enabled = enable;
+            MultiZoneColorPanel.Enabled = enable;
+            ThemeButtonPanel.Enabled = enable;
+            ThemeButtonPanel.Enabled = enable;
+            EffectButtonPanel.Enabled = enable;
+            EffectButtonPanel.Enabled = enable;
+
+            // TODO losing the color zone count
+            if(enable)
+            {
+                PowerStatePanel.Power = SceneItem.Power;
+                SolidColorPanel.Color = SceneItem.Color ?? Device.Color;
+                MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors.IsNullOrEmpty() ? Device.MultiZoneColors : SceneItem.MultiZoneColors;
+                ThemeButtonPanel.DeviceFamily = SceneItem.Family;
+                ThemeButtonPanel.SelectedTheme = SceneItem.Theme;
+                EffectButtonPanel.DeviceFamily = SceneItem.Family;
+                EffectButtonPanel.SelectedEffect = SceneItem.Effect;
+            }
 
             InUpdate = false;
         }
 
         #region Event Handlers
 
-        void EffectPanel_SelectedEffectChanged(object sender, SelectedEffectChangedEventArgs e)
+        protected override void OnMultiZoneColorsChanged(object sender, ColorsChangedEventArgs e)
         {
-            if(InUpdate)
-            {
-                return;
-            }
-
-            var effect = EffectFactory.Instance.CreateInstance(e.Property.Name);
-
-            if(DialogResult.OK == PropertyEditor.Show(this, effect))
-            {
-                EffectFactory.Instance.Add(effect);
-                SceneItem.Effect = effect;
-            }
-        }
-
-        void MultiZoneColorPanel_ColorsChanged(object sender, ColorsChangedEventArgs e)
-        {
-            if(InUpdate)
-            {
-                return;
-            }
-
-            InUpdate = true;
-            SceneItem.Effect = null;
             SceneItem.MultiZoneColors = e.Property;
-            InUpdate = false;
+            SceneItem.Color = null;
+            SceneItem.Theme = null;
+            base.OnMultiZoneColorsChanged(sender, e);
         }
 
-        void PowerStatePanel_PowerStateChanged(object sender, PowerStateChangedEventArgs e)
+        protected override void OnPowerStateChanged(object sender, PowerStateChangedEventArgs e)
         {
-            if(InUpdate)
-            {
-                return;
-            }
-
-            InUpdate = true;
             SceneItem.Power = e.Property;
-            InUpdate = false;
+            base.OnPowerStateChanged(sender, e);
         }
 
-        void SolidColorPanel_ColorChanged(object sender, ColorChangedEventArgs e)
+        protected override void OnSolidColorChanged(object sender, ColorChangedEventArgs e)
         {
-            if(InUpdate)
-            {
-                return;
-            }
-
-            InUpdate = true;
-            SceneItem.Effect = null;
             SceneItem.Color = e.Property;
-            InUpdate = false;
+            SceneItem.MultiZoneColors = null;
+            SceneItem.Theme = null;
+            base.OnSolidColorChanged(sender, e);
         }
 
-        void ThemePanel_SelectedThemeChanged(object sender, SelectedThemeChangedEventArgs e)
+        void OnDevicePropertiesChanged(object sender, DeviceEventArgs e)
         {
-            if(InUpdate)
-            {
-                return;
-            }
-
-            var theme = ThemeFactory.Instance.CreateInstance(e.Property.Name);
-
-            if(DialogResult.OK == PropertyEditor.Show(this, theme))
-            {
-                ThemeFactory.Instance.Add(theme);
-                SceneItem.Theme = theme;
-            }
+            UpdateState();
         }
 
         #endregion

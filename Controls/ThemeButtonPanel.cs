@@ -57,6 +57,12 @@ namespace DerekWare.Iris
             var button = new Button { Text = theme.Name, Tag = theme, Dock = DockStyle.Fill };
             button.Click += OnClick;
             TableLayoutPanel.Controls.Add(button);
+
+            if(!theme.Description.IsNullOrEmpty())
+            {
+                new ToolTip().SetToolTip(button, theme.Description);
+            }
+
             return button;
         }
 

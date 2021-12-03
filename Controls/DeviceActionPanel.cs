@@ -2,35 +2,31 @@
 using System.Windows.Forms;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
+using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
-using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.HomeAutomation.Common.Themes;
+using PowerState = DerekWare.HomeAutomation.Common.PowerState;
 
 namespace DerekWare.Iris
 {
     public partial class DeviceActionPanel : UserControl
     {
+        protected bool InUpdate;
+
         readonly IDevice _Device;
 
-        bool InUpdate;
-
         public DeviceActionPanel(IDevice device)
+            : this()
         {
             _Device = device;
-
-            InitializeComponent();
         }
 
-        public DeviceActionPanel(SceneItem sceneItem)
+        protected DeviceActionPanel()
         {
-            SceneItem = sceneItem;
-
             InitializeComponent();
         }
 
-        public IDevice Device => SceneItem?.Device ?? _Device;
-
-        public SceneItem SceneItem { get; }
+        public virtual IDevice Device => _Device;
 
         public string Description
         {
@@ -54,10 +50,10 @@ namespace DerekWare.Iris
 
         protected void AttachDevice()
         {
-            if(Device is not null)
+            if(_Device is not null)
             {
-                Device.StateChanged += OnDeviceStateChanged;
-                Device.PropertiesChanged += OnDevicePropertiesChanged;
+                _Device.StateChanged += OnDeviceStateChanged;
+                _Device.PropertiesChanged += OnDevicePropertiesChanged;
             }
 
             UpdateProperties();
@@ -66,10 +62,10 @@ namespace DerekWare.Iris
 
         protected void DetachDevice()
         {
-            if(Device is not null)
+            if(_Device is not null)
             {
-                Device.StateChanged -= OnDeviceStateChanged;
-                Device.PropertiesChanged -= OnDevicePropertiesChanged;
+                _Device.StateChanged -= OnDeviceStateChanged;
+                _Device.PropertiesChanged -= OnDevicePropertiesChanged;
             }
         }
 
@@ -85,67 +81,60 @@ namespace DerekWare.Iris
             base.OnHandleDestroyed(e);
         }
 
-        void UpdateProperties()
+        protected virtual bool OnSelectedEffectChanged(string name, out Effect effect)
+        {
+            effect = EffectFactory.Instance.CreateInstance(name);
+
+            if(DialogResult.OK != PropertyEditor.Show(this, effect))
+            {
+                return false;
+            }
+
+            EffectFactory.Instance.Add(effect);
+            return true;
+        }
+
+        protected virtual bool OnSelectedThemeChanged(string name, out Theme theme)
+        {
+            theme = ThemeFactory.Instance.CreateInstance(name);
+
+            if(DialogResult.OK != PropertyEditor.Show(this, theme))
+            {
+                return false;
+            }
+
+            ThemeFactory.Instance.Add(theme);
+            return true;
+        }
+
+        protected virtual void UpdateProperties()
         {
             PropertyGrid.SelectedObject = Device;
         }
 
-        void UpdateState()
+        protected virtual void UpdateState()
         {
+            if(InUpdate)
+            {
+                return;
+            }
+            
             InUpdate = true;
 
-            if(SceneItem is not null)
-            {
-                PowerStatePanel.Power = SceneItem.Power;
-                SolidColorPanel.Color = SceneItem.Color;
-                MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors;
-                ThemeButtonPanel.DeviceFamily = SceneItem.Family;
-                ThemeButtonPanel.SelectedTheme = SceneItem.Theme;
-                EffectButtonPanel.DeviceFamily = SceneItem.Family;
-                EffectButtonPanel.SelectedEffect = SceneItem.Effect;
-            }
-            else
-            {
-                PowerStatePanel.Power = Device.Power;
-                SolidColorPanel.Color = Device.Color;
-                MultiZoneColorPanel.Colors = Device.MultiZoneColors;
-                ThemeButtonPanel.DeviceFamily = Device.Family;
-                ThemeButtonPanel.SelectedTheme = Device.Theme;
-                EffectButtonPanel.DeviceFamily = Device.Family;
-                EffectButtonPanel.SelectedEffect = Device.Effect;
-            }
+            PowerStatePanel.Power = Device?.Power ?? PowerState.Off;
+            SolidColorPanel.Color = Device?.Color ?? Colors.Black;
+            MultiZoneColorPanel.Colors = Device?.MultiZoneColors ?? new[] { Colors.Black };
+            ThemeButtonPanel.DeviceFamily = Device?.Family;
+            ThemeButtonPanel.SelectedTheme = Device?.Theme;
+            EffectButtonPanel.DeviceFamily = Device?.Family;
+            EffectButtonPanel.SelectedEffect = Device?.Effect;
 
             InUpdate = false;
         }
 
         #region Event Handlers
 
-        void EffectPanel_SelectedEffectChanged(object sender, SelectedEffectChangedEventArgs e)
-        {
-            if(InUpdate)
-            {
-                return;
-            }
-
-            var effect = EffectFactory.Instance.CreateInstance(e.Property.Name);
-
-            if(DialogResult.OK == PropertyEditor.Show(this, effect))
-            {
-                EffectFactory.Instance.Add(effect);
-
-                if(SceneItem is not null)
-                {
-                    SceneItem.Effect = effect;
-                }
-
-                if(Device is not null)
-                {
-                    Device.Effect = effect;
-                }
-            }
-        }
-
-        void MultiZoneColorPanel_ColorsChanged(object sender, ColorsChangedEventArgs e)
+        protected virtual void OnMultiZoneColorsChanged(object sender, ColorsChangedEventArgs e)
         {
             if(InUpdate)
             {
@@ -154,19 +143,100 @@ namespace DerekWare.Iris
 
             InUpdate = true;
 
-            if(SceneItem is not null)
-            {
-                SceneItem.Effect = null;
-                SceneItem.MultiZoneColors = e.Property;
-            }
-
             if(Device is not null)
             {
-                Device.Effect = null;
                 Device.MultiZoneColors = e.Property;
             }
 
             InUpdate = false;
+
+            UpdateState();
+        }
+
+        protected virtual void OnPowerStateChanged(object sender, PowerStateChangedEventArgs e)
+        {
+            if(InUpdate)
+            {
+                return;
+            }
+
+            InUpdate = true;
+
+            if(Device is not null)
+            {
+                Device.Power = e.Property;
+            }
+
+            InUpdate = false;
+
+            UpdateState();
+        }
+
+        protected virtual void OnSelectedEffectChanged(object sender, SelectedEffectChangedEventArgs e)
+        {
+            if(InUpdate)
+            {
+                return;
+            }
+
+            if(!OnSelectedEffectChanged(e.Property.Name, out var effect))
+            {
+                return;
+            }
+
+            InUpdate = true;
+            
+            if(Device is not null)
+            {
+                Device.Effect = effect;
+            }
+            
+            InUpdate = false;
+
+            UpdateState();
+        }
+
+        protected virtual void OnSelectedThemeChanged(object sender, SelectedThemeChangedEventArgs e)
+        {
+            if(InUpdate)
+            {
+                return;
+            }
+
+            if(!OnSelectedThemeChanged(e.Property.Name, out var theme))
+            {
+                return;
+            }
+
+            InUpdate = true;
+
+            if(Device is not null)
+            {
+                Device.Theme = theme;
+            }
+
+            InUpdate = false;
+
+            UpdateState();
+        }
+
+        protected virtual void OnSolidColorChanged(object sender, ColorChangedEventArgs e)
+        {
+            if(InUpdate)
+            {
+                return;
+            }
+
+            InUpdate = true;
+
+            if(Device is not null)
+            {
+                Device.Color = e.Property;
+            }
+
+            InUpdate = false;
+
+            UpdateState();
         }
 
         void OnDevicePropertiesChanged(object sender, DeviceEventArgs e)
@@ -189,77 +259,6 @@ namespace DerekWare.Iris
             }
 
             UpdateState();
-        }
-
-        void PowerStatePanel_PowerStateChanged(object sender, PowerStateChangedEventArgs e)
-        {
-            if(InUpdate)
-            {
-                return;
-            }
-
-            InUpdate = true;
-
-            if(SceneItem is not null)
-            {
-                SceneItem.Power = e.Property;
-            }
-
-            if(Device is not null)
-            {
-                Device.Power = e.Property;
-            }
-
-            InUpdate = false;
-        }
-
-        void SolidColorPanel_ColorChanged(object sender, ColorChangedEventArgs e)
-        {
-            if(InUpdate)
-            {
-                return;
-            }
-
-            InUpdate = true;
-
-            if(SceneItem is not null)
-            {
-                SceneItem.Effect = null;
-                SceneItem.Color = e.Property;
-            }
-
-            if(Device is not null)
-            {
-                Device.Effect = null;
-                Device.Color = e.Property;
-            }
-
-            InUpdate = false;
-        }
-
-        void ThemePanel_SelectedThemeChanged(object sender, SelectedThemeChangedEventArgs e)
-        {
-            if(InUpdate)
-            {
-                return;
-            }
-
-            var theme = ThemeFactory.Instance.CreateInstance(e.Property.Name);
-
-            if(DialogResult.OK == PropertyEditor.Show(this, theme))
-            {
-                ThemeFactory.Instance.Add(theme);
-
-                if(SceneItem is not null)
-                {
-                    SceneItem.Theme = theme;
-                }
-
-                if(Device is not null)
-                {
-                    Device.Theme = theme;
-                }
-            }
         }
 
         #endregion

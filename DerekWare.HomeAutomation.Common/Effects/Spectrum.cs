@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
-using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Description("Moves the current colors forward, backward or back and forth.")]
-    public class Move : MultiZoneColorEffectRenderer
+    [Description("Combines the Spectrum theme and the Move effect, but with more mathematically\n" +
+                 "correct color values during motion than the Move effect can provide. This is\n" +
+                 "particularly evident on groups or devices with fewer color zones, or 1.")]
+    public class Spectrum : MultiZoneColorEffectRenderer
     {
         public enum EffectBehavior
         {
@@ -27,13 +28,16 @@ namespace DerekWare.HomeAutomation.Common.Effects
         protected EffectDirection Direction;
         protected TimeSpan NextChange = TimeSpan.Zero;
 
-        public Move()
+        public Spectrum()
         {
-            Duration = TimeSpan.FromSeconds(30);
-            RefreshRate = TimeSpan.FromSeconds(1);
+            Duration = TimeSpan.FromSeconds(10);
+            RefreshRate = TimeSpan.FromSeconds(0.5);
         }
 
         public virtual EffectBehavior Behavior { get; set; }
+        public double Brightness { get; set; } = 1;
+        public double Kelvin { get; set; } = 1;
+        public double Saturation { get; set; } = 1;
 
         public override object Clone()
         {
@@ -56,23 +60,36 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 var cycleIncrement = renderState.CycleIncrement * (Direction == EffectDirection.Forward ? 1 : -1);
                 ColorOffset += cycleIncrement;
 
-                if((ColorOffset < 0) || (ColorOffset >= 1))
+                if(ColorOffset >= 1)
                 {
-                    ColorOffset -= (int)ColorOffset;
+                    ColorOffset -= Math.Floor(ColorOffset);
                 }
-                
+                else if(ColorOffset < 0)
+                {
+                    ColorOffset += Math.Floor(-ColorOffset) + 1;
+                }
+
                 cyclePosition = ColorOffset;
             }
-            else if(Direction == EffectDirection.Backward)
+            else if(Direction == EffectDirection.Forward)
             {
                 cyclePosition = 1.0 - cyclePosition;
             }
 
-            var colorOffset = (int)(cyclePosition * ZoneCount);
-
-            foreach(var i in Palette)
+            for(var i = 0; i < colors.Length; ++i)
             {
-                colors.SetWrappingValue(colorOffset++, i);
+                var hue = cyclePosition + ((double)i / ZoneCount);
+
+                if(hue >= 1)
+                {
+                    hue -= Math.Floor(hue);
+                }
+                else if(hue < 0)
+                {
+                    hue += Math.Floor(-hue) + 1;
+                }
+
+                colors[i] = new Color(hue, Saturation, Brightness, Kelvin);
             }
 
             return true;
@@ -113,14 +130,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 default:
                     throw new NotSupportedException();
             }
-        }
-
-        protected override TimeSpan ValidateRefreshRate()
-        {
-            var refreshRate = base.ValidateRefreshRate().TotalSeconds;
-            refreshRate = Math.Max(refreshRate, 1.0 / ZoneCount);
-            refreshRate = Math.Max(refreshRate, 1.0 / Duration.TotalSeconds);
-            return TimeSpan.FromSeconds(refreshRate);
         }
     }
 }

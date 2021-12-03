@@ -164,6 +164,9 @@
     <Compile Include="Controls\EffectDropDownPanel.Designer.cs">
       <DependentUpon>EffectDropDownPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SceneItemPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ScenePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -248,21 +251,6 @@
     <Compile Include="Forms\PropertyEditor.Designer.cs">
       <DependentUpon>PropertyEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SceneItemPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\SceneItemPanel.Designer.cs">
-      <DependentUpon>SceneItemPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SceneListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SceneListViewPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\SceneListViewPanel.Designer.cs">
-      <DependentUpon>SceneListViewPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Controls\SolidColorPanel.cs">
       <SubType>UserControl</SubType>
@@ -283,9 +271,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Controls\EffectButtonPanel.resx">
       <DependentUpon>EffectButtonPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\SceneListViewPanel.resx">
-      <DependentUpon>SceneListViewPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\EffectDropDownPanel.resx">
       <DependentUpon>EffectDropDownPanel.cs</DependentUpon>
@@ -337,9 +322,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Controls\SceneItemPanel.resx">
-      <DependentUpon>SceneItemPanel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\SolidColorPanel.resx">
       <DependentUpon>SolidColorPanel.cs</DependentUpon>
     </EmbeddedResource>
