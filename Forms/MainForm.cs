@@ -153,6 +153,7 @@ namespace DerekWare.Iris
                     break;
             }
 
+            RenameSceneToolStripMenuItem.Enabled = ScenePanel is not null;
             RemoveSceneToolStripMenuItem.Enabled = ScenePanel is not null;
             ApplySceneToolStripMenuItem.Enabled = ScenePanel is not null;
             UpdateSceneToolStripMenuItem.Enabled = ScenePanel is not null;
