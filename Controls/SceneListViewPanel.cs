@@ -1,15 +1,17 @@
 ﻿using System.Windows.Forms;
 using DerekWare.HomeAutomation.Common.Scenes;
+using DerekWare.Iris.Properties;
 
 namespace DerekWare.Iris
 {
-    public partial class ScenePanel : UserControl
+    public partial class SceneListViewPanel : UserControl
     {
-        public ScenePanel(Scene scene)
+        public SceneListViewPanel(Scene scene)
         {
             InitializeComponent();
 
             Scene = scene;
+            DescriptionLabel.Text = Resources.ScenePanelDescription;
         }
 
         public Scene Scene { get => SceneListView.Scene; set => SceneListView.Scene = value; }

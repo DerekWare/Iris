@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Cyotek.Windows.Forms;
+using DerekWare.Collections;
 using Color = DerekWare.HomeAutomation.Common.Colors.Color;
 
 namespace DerekWare.Iris
@@ -11,32 +14,33 @@ namespace DerekWare.Iris
     {
         static readonly ColorPickerDialog ColorPickerDialog = new();
 
-        Color[] _Colors = new Color[0];
+        Color[] _Colors = { new() };
 
         public event EventHandler<ColorsChangedEventArgs> ColorsChanged;
 
-        public Color[] Colors
+        public new bool DesignMode => Extensions.IsDesignMode();
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
+        public IReadOnlyCollection<Color> Colors
         {
             get => _Colors;
             set
             {
-                _Colors = value ?? new Color[1];
+                var colors = value.IsNullOrEmpty() ? new Color[] { new() } : value.Select(i => i is not null ? i.Clone() : new Color()).ToArray();
 
-                for(var i = 0; i < _Colors.Length; ++i)
+                if(colors.SequenceEqual(_Colors))
                 {
-                    if(_Colors[i] is null)
-                    {
-                        _Colors[i] = new Color();
-                    }
+                    return;
                 }
 
+                _Colors = colors;
                 Invalidate();
             }
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            var width = (float)Size.Width / Colors.Length;
+            var width = (float)Size.Width / _Colors.Length;
             var index = (int)(e.X / width);
 
             if(!SelectColor(out var hsv))
@@ -44,20 +48,20 @@ namespace DerekWare.Iris
                 return;
             }
 
-            Colors[index] = hsv;
+            _Colors[index] = hsv;
             Invalidate();
-            ColorsChanged?.Invoke(this, new ColorsChangedEventArgs { Colors = Colors });
+            ColorsChanged?.Invoke(this, new ColorsChangedEventArgs { Property = _Colors });
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
-            var width = (float)Size.Width / Colors.Length;
+            var width = (float)Size.Width / _Colors.Length;
             var height = (float)Size.Height;
             var x = 0.0f;
 
-            foreach(var color in Colors.Select(color => color?.ToRgb() ?? System.Drawing.Color.Black))
+            foreach(var color in _Colors.Select(color => color?.ToRgb() ?? System.Drawing.Color.Black))
             {
                 using(var brush = new SolidBrush(color))
                 {
@@ -66,6 +70,12 @@ namespace DerekWare.Iris
 
                 x += width;
             }
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            Invalidate();
+            base.OnResize(e);
         }
 
         protected bool SelectColor(out Color hsv)

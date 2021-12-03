@@ -195,11 +195,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                 base.SetPower(response.Power);
             });
 
-            await Controller.GetColor(response =>
-            {
-                base.SetColor(response.Color, TimeSpan.Zero);
-            });
-
             if(IsExtendedMultiZone)
             {
                 await Controller.GetExtendedColorZones(response =>
@@ -230,6 +225,13 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                     {
                         base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
                     }
+                });
+            }
+            else
+            {
+                await Controller.GetColor(response =>
+                {
+                    base.SetColor(response.Color, TimeSpan.Zero);
                 });
             }
 

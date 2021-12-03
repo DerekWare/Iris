@@ -16,6 +16,11 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         public IReadOnlyCollection<Effect> RunningEffects => _RunningEffects;
 
+        public bool Contains(object other)
+        {
+            return this.Any(i => i.Matches(other));
+        }
+
         public IReadOnlyCollection<Effect> GetRunningEffects(IDevice device)
         {
             var effects = new ObservableHashSet<Effect>();
@@ -67,7 +72,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         internal void OnEffectStarted(Effect effect)
         {
-            if(effect is NullEffect)
+            if(effect is None)
             {
                 return;
             }

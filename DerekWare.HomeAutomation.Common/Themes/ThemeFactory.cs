@@ -27,6 +27,11 @@ namespace DerekWare.HomeAutomation.Common.Themes
             return theme;
         }
 
+        public bool Contains(object other)
+        {
+            return this.Any(i => i.Matches(other));
+        }
+
         public void LoadUserThemes(string storage)
         {
             List<UserTheme> themes;

@@ -15,8 +15,10 @@ namespace DerekWare.Iris
 {
     public partial class MainForm : Form
     {
+        DeviceActionPanel DeviceActionPanel;
         bool IsExiting;
         FormWindowState RestoreWindowState = FormWindowState.Normal;
+        ScenePanel ScenePanel;
 
         public MainForm()
         {
@@ -26,7 +28,7 @@ namespace DerekWare.Iris
         protected override void OnLoad(EventArgs e)
         {
             AutoUpdater.ApplicationExitEvent += OnApplicationExitEvent;
-            AutoUpdater.InstalledVersion = Program.AutoUpdaterVersion;
+            AutoUpdater.InstalledVersion = Program.Version;
 
             // The reminder and skip both have a bug, so don't use them
             AutoUpdater.ShowRemindLaterButton = false;
@@ -135,23 +137,38 @@ namespace DerekWare.Iris
 
         void ComponentTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            RootLayoutPanel.Controls.OfType<DeviceActionPanel>().ToList().ForEach(i => i.Dispose());
-            RootLayoutPanel.Controls.OfType<ScenePanel>().ToList().ForEach(i => i.Dispose());
+            DerekWare.Extensions.Dispose(ref DeviceActionPanel);
+            DerekWare.Extensions.Dispose(ref ScenePanel);
 
-            if(e.Node is DeviceTreeView.DeviceNode deviceNode)
+            switch(e.Node)
             {
-                // deviceNode.Device.RefreshState();
-                RootLayoutPanel.Controls.Add(new DeviceActionPanel(deviceNode.Device) { Dock = DockStyle.Fill, Description = Resources.ActionPanelDescription },
-                                             1,
-                                             0);
-            }
-            else if(e.Node is ComponentTreeView.SceneNode sceneNode)
-            {
-                RootLayoutPanel.Controls.Add(new ScenePanel(sceneNode.Scene) { Dock = DockStyle.Fill }, 1, 0);
+                case DeviceTreeView.DeviceNode deviceNode:
+                    DeviceActionPanel = new DeviceActionPanel(deviceNode.Device) { Dock = DockStyle.Fill, Description = Resources.ActionPanelDescription };
+                    RootLayoutPanel.Controls.Add(DeviceActionPanel, 1, 0);
+                    break;
+
+                case ComponentTreeView.SceneNode sceneNode:
+                    ScenePanel = new ScenePanel(sceneNode.Scene) { Dock = DockStyle.Fill };
+                    RootLayoutPanel.Controls.Add(ScenePanel, 1, 0);
+                    break;
             }
 
-            RemoveSceneToolStripMenuItem.Enabled = e.Node is ComponentTreeView.SceneNode;
-            ApplySceneToolStripMenuItem.Enabled = e.Node is ComponentTreeView.SceneNode;
+            RemoveSceneToolStripMenuItem.Enabled = ScenePanel is not null;
+            ApplySceneToolStripMenuItem.Enabled = ScenePanel is not null;
+            UpdateSceneToolStripMenuItem.Enabled = ScenePanel is not null;
+        }
+
+        void ComponentTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if(e.Button == MouseButtons.Right)
+            {
+                ComponentTreeView.SelectedNode = (DeviceTreeView.TreeNode)e.Node;
+
+                if(e.Node is ComponentTreeView.SceneNode || (e.Node == ComponentTreeView.ScenesNode))
+                {
+                    SceneContextMenuStrip.Show(ComponentTreeView, e.Location);
+                }
+            }
         }
 
         void ConnectMenuItem_Click(object sender, EventArgs e)
@@ -231,6 +248,10 @@ namespace DerekWare.Iris
             SaveSettings();
         }
 
+        void ScenesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+        }
+
         void ShowWindowMenuItem_Click(object sender, EventArgs e)
         {
             RestoreFromTray();
@@ -239,6 +260,11 @@ namespace DerekWare.Iris
         void UpdateMenuItem_Click(object sender, EventArgs e)
         {
             CheckForUpdates();
+        }
+
+        void UpdateSceneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ScenePanel?.SnapshotActiveScene();
         }
 
         #endregion

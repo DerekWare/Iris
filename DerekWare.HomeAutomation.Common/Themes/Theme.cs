@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Themes
 {
-    public interface IReadOnlyThemeProperties : ICloneable, IName, IDescription, IFamily
+    public interface IReadOnlyThemeProperties : ICloneable, IName, IDescription, IFamily, IMatch
     {
     }
 
@@ -66,5 +67,25 @@ namespace DerekWare.HomeAutomation.Common.Themes
                 device.Color = palette.First();
             }
         }
+
+        #region IMatch
+
+        // Provides a loose match based on name and family
+        public bool Matches(object other)
+        {
+            if(other is not (IName name and IFamily family))
+            {
+                return false;
+            }
+
+            if(Name.IsNullOrEmpty() || name.Name.IsNullOrEmpty())
+            {
+                return false;
+            }
+
+            return Name.Equals(name.Name) && this.IsCompatible(family);
+        }
+
+        #endregion
     }
 }

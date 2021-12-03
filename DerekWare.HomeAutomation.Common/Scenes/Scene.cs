@@ -39,12 +39,12 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         public bool Contains(IDevice device)
         {
-            return Items.Any(i => i.IsDevice(device));
+            return Items.Any(i => i.Matches(device));
         }
 
         public bool Remove(IDevice device)
         {
-            return Items.RemoveWhere(i => i.IsDevice(device)) > 0;
+            return Items.RemoveWhere(i => i.Matches(device)) > 0;
         }
     }
 }

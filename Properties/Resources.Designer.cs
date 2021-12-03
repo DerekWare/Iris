@@ -120,7 +120,7 @@ namespace DerekWare.Iris.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select the devices you want to be added to the scene by checking or unchecking the boxes to the left. When you check the device, its current state will be captured and saved to the scene. If you want to refresh the scene after making a change to the device, uncheck and recheck it..
+        ///   Looks up a localized string similar to Select the devices you want to be added to the scene by checking or unchecking the boxes to the left. When you check the device, its current state will be captured and saved to the scene. You may then modify the scene properties below..
         /// </summary>
         internal static string ScenePanelDescription {
             get {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using DerekWare.Collections;
 using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -8,7 +9,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
     {
     }
 
-    public interface IReadOnlyEffectProperties : IName, IDescription, IFamily, ICloneable
+    public interface IReadOnlyEffectProperties : IName, IDescription, IFamily, ICloneable, IMatch
     {
         public IDevice Device { get; }
     }
@@ -77,5 +78,25 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // Release the device
             Device = null;
         }
+
+        #region IMatch
+
+        // Provides a loose match based on name and family
+        public bool Matches(object other)
+        {
+            if(other is not (IName name and IFamily family))
+            {
+                return false;
+            }
+
+            if(Name.IsNullOrEmpty() || name.Name.IsNullOrEmpty())
+            {
+                return false;
+            }
+
+            return Name.Equals(name.Name) && this.IsCompatible(family);
+        }
+
+        #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using DerekWare.Collections;
@@ -12,6 +13,7 @@ namespace DerekWare.Iris
         Color _Color;
         bool InUpdate;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), Browsable(true)]
         public event EventHandler<ColorChangedEventArgs> ColorChanged;
 
         public SolidColorPanel()
@@ -25,6 +27,7 @@ namespace DerekWare.Iris
             InUpdate = false;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
         public Color Color
         {
             get => _Color;
@@ -63,14 +66,21 @@ namespace DerekWare.Iris
                 return;
             }
 
-            Color = new Color(Color.Hue, Color.Saturation, decimal.ToDouble(BrightnessUpDown.Value), Color.Kelvin);
-            ColorChanged?.Invoke(this, new ColorChangedEventArgs { Color = _Color });
+            ColorChanged?.Invoke(this,
+                                 new ColorChangedEventArgs
+                                 {
+                                     Property = new Color(Color.Hue, Color.Saturation, decimal.ToDouble(BrightnessUpDown.Value), Color.Kelvin)
+                                 });
         }
 
         void ColorBand_ColorsChanged(object sender, ColorsChangedEventArgs e)
         {
-            Color = e.Colors[0];
-            ColorChanged?.Invoke(this, new ColorChangedEventArgs { Color = _Color });
+            if(InUpdate)
+            {
+                return;
+            }
+
+            ColorChanged?.Invoke(this, new ColorChangedEventArgs { Property = e.Property.First() });
         }
 
         void HueUpDown_ValueChanged(object sender, EventArgs e)
@@ -80,8 +90,11 @@ namespace DerekWare.Iris
                 return;
             }
 
-            Color = new Color(decimal.ToDouble(HueUpDown.Value), Color.Saturation, Color.Brightness, Color.Kelvin);
-            ColorChanged?.Invoke(this, new ColorChangedEventArgs { Color = _Color });
+            ColorChanged?.Invoke(this,
+                                 new ColorChangedEventArgs
+                                 {
+                                     Property = new Color(decimal.ToDouble(HueUpDown.Value), Color.Saturation, Color.Brightness, Color.Kelvin)
+                                 });
         }
 
         void KelvinUpDown_ValueChanged(object sender, EventArgs e)
@@ -91,8 +104,11 @@ namespace DerekWare.Iris
                 return;
             }
 
-            Color = new Color(Color.Hue, Color.Saturation, Color.Brightness, decimal.ToDouble(KelvinUpDown.Value));
-            ColorChanged?.Invoke(this, new ColorChangedEventArgs { Color = _Color });
+            ColorChanged?.Invoke(this,
+                                 new ColorChangedEventArgs
+                                 {
+                                     Property = new Color(Color.Hue, Color.Saturation, Color.Brightness, decimal.ToDouble(KelvinUpDown.Value))
+                                 });
         }
 
         void SaturationUpDown_ValueChanged(object sender, EventArgs e)
@@ -102,8 +118,11 @@ namespace DerekWare.Iris
                 return;
             }
 
-            Color = new Color(Color.Hue, decimal.ToDouble(SaturationUpDown.Value), Color.Brightness, Color.Kelvin);
-            ColorChanged?.Invoke(this, new ColorChangedEventArgs { Color = _Color });
+            ColorChanged?.Invoke(this,
+                                 new ColorChangedEventArgs
+                                 {
+                                     Property = new Color(Color.Hue, decimal.ToDouble(SaturationUpDown.Value), Color.Brightness, Color.Kelvin)
+                                 });
         }
 
         void StandardColorsComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -113,8 +132,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            Color = (Color)StandardColorsComboBox.SelectedItem;
-            ColorChanged?.Invoke(this, new ColorChangedEventArgs { Color = _Color });
+            ColorChanged?.Invoke(this, new ColorChangedEventArgs { Property = (Color)StandardColorsComboBox.SelectedItem });
         }
 
         #endregion

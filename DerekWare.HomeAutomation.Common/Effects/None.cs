@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel;
-using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Name("Stop"), Description("Stops all other effects.")]
-    public class NullEffect : Effect
+    [Description("Stops all other effects.")]
+    public class None : Effect
     {
         [Browsable(false)]
         public override bool IsFirmware => false;

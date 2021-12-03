@@ -12,6 +12,8 @@ namespace DerekWare.Iris
     {
         public readonly SceneCategoryNode ScenesNode = new();
 
+        bool InUpdate;
+
         public ComponentTreeView()
         {
             if(DesignMode)
@@ -26,6 +28,21 @@ namespace DerekWare.Iris
         }
 
         public Scene SelectedScene => (SelectedNode as SceneNode)?.Scene;
+
+        public new TreeNode SelectedNode { get => (TreeNode)base.SelectedNode; set => base.SelectedNode = value; }
+
+        protected new bool DesignMode => Extensions.IsDesignMode();
+
+        public bool Activate(TreeNode node)
+        {
+            if(node is SceneNode sceneNode)
+            {
+                sceneNode.Scene.Apply();
+                return true;
+            }
+
+            return false;
+        }
 
         public void CreateScene(string name = "My Scene")
         {
@@ -65,6 +82,11 @@ namespace DerekWare.Iris
 
         protected override void OnAfterCheck(TreeViewEventArgs e)
         {
+            if(InUpdate)
+            {
+                return;
+            }
+
             if(SelectedNode is SceneNode sceneNode && e.Node is DeviceNode deviceNode)
             {
                 if(e.Node.Checked)
@@ -109,18 +131,6 @@ namespace DerekWare.Iris
             base.OnBeforeLabelEdit(e);
         }
 
-        protected override void OnDoubleClick(EventArgs e)
-        {
-            if(SelectedNode is not SceneNode sceneNode)
-            {
-                return;
-            }
-
-            sceneNode.Scene.Apply();
-
-            base.OnDoubleClick(e);
-        }
-
         protected override void OnHandleCreated(EventArgs e)
         {
             SceneFactory.Instance.CollectionChanged += OnSceneFactoryCollectionChanged;
@@ -133,10 +143,32 @@ namespace DerekWare.Iris
             base.OnHandleDestroyed(e);
         }
 
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            switch(e.KeyCode)
+            {
+                case Keys.Enter:
+                    Activate(SelectedNode);
+                    return;
+            }
+
+            base.OnKeyDown(e);
+        }
+
+        protected override void OnNodeMouseDoubleClick(TreeNodeMouseClickEventArgs e)
+        {
+            Activate((TreeNode)e.Node);
+            base.OnNodeMouseDoubleClick(e);
+        }
+
         protected void SetCheckState(TreeNode node)
         {
+            InUpdate = true;
+
             node.Checked = node is DeviceNode deviceNode && (SelectedScene?.Contains(deviceNode.Device) ?? false);
             SetCheckState(node.Nodes);
+
+            InUpdate = false;
         }
 
         protected void SetCheckState(TreeNodeCollection nodes)

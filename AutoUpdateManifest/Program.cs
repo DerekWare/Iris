@@ -16,7 +16,7 @@ namespace AutoUpdateManifest
     {
         public bool mandatory = false;
         public string url = "http://www.derekware.com/software/iris/DerekWare%20Iris.zip";
-        public string version = DerekWare.Iris.Program.AutoUpdaterVersion.ToString();
+        public string version = DerekWare.Iris.Program.Version.ToString();
     }
 
     class Program

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using DerekWare.Collections;
@@ -12,11 +11,17 @@ using DerekWare.HomeAutomation.Common.Themes;
 namespace DerekWare.HomeAutomation.Common.Scenes
 {
     [Serializable]
-    public class SceneItem : ISerializable, IEquatable<SceneItem>
+    public class SceneItem : ISerializable, IEquatable<SceneItem>, IMatch
     {
+        IClient _Client;
+        IDevice _Device;
+
         public SceneItem(IDevice device)
         {
-            SnapshotDevice(device);
+            _Device = device;
+            _Client = device.Client;
+
+            Snapshot();
         }
 
         public SceneItem(SerializationInfo info, StreamingContext context)
@@ -24,90 +29,104 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             Family = (string)info.GetValue(nameof(Family), typeof(string));
             Uuid = (string)info.GetValue(nameof(Uuid), typeof(string));
 
-            try
-            {
-                Power = (PowerState)info.GetValue(nameof(Power), typeof(PowerState));
-            }
-            catch(SerializationException ex)
-            {
-                Debug.Warning(this, ex);
-            }
+            var e = info.GetEnumerator();
 
-            try
+            while(e.MoveNext())
             {
-                Theme = (Theme)info.GetValue(nameof(Theme), typeof(Theme));
-            }
-            catch(SerializationException ex)
-            {
-                Debug.Warning(this, ex);
-            }
+                switch(e.Current.Name)
+                {
+                    case nameof(Color):
+                        Color = (Color)info.GetValue(e.Current.Name, typeof(Color));
+                        break;
 
-            try
-            {
-                MultiZoneColors = (List<Color>)info.GetValue(nameof(MultiZoneColors), typeof(List<Color>));
-            }
-            catch(SerializationException ex)
-            {
-                Debug.Warning(this, ex);
-            }
+                    case nameof(Effect):
+                        Effect = (Effect)info.GetValue(e.Current.Name, typeof(Effect));
+                        break;
 
-            try
-            {
-                Color = (Color)info.GetValue(nameof(Color), typeof(Color));
-            }
-            catch(SerializationException ex)
-            {
-                Debug.Warning(this, ex);
-            }
+                    case nameof(MultiZoneColors):
+                        MultiZoneColors = (List<Color>)info.GetValue(e.Current.Name, typeof(List<Color>));
+                        break;
 
-            try
-            {
-                Effect = (Effect)info.GetValue(nameof(Effect), typeof(Effect));
-            }
-            catch(SerializationException ex)
-            {
-                Debug.Warning(this, ex);
-            }
+                    case nameof(Power):
+                        Power = (PowerState)info.GetValue(e.Current.Name, typeof(PowerState));
+                        break;
 
-            FindDevice();
+                    case nameof(Theme):
+                        Theme = (Theme)info.GetValue(e.Current.Name, typeof(Theme));
+                        break;
+                }
+            }
         }
 
         SceneItem()
         {
         }
 
+        public IClient Client
+        {
+            get
+            {
+                _Client ??= ClientFactory.Instance.CreateInstance(Family);
+
+                if(_Client is null)
+                {
+                    Debug.Warning(this, $"Unable to find client {Family}");
+                }
+
+                return _Client;
+            }
+        }
+
+        public IDevice Device
+        {
+            get
+            {
+                if(Client is null)
+                {
+                    return null;
+                }
+
+                _Device ??= Client.Devices.FirstOrDefault(i => i.Uuid == Uuid) ?? Client.Groups.FirstOrDefault(i => i.Uuid == Uuid);
+
+                if(_Device is null)
+                {
+                    Debug.Warning(this, $"Unable to find device {Uuid}");
+                }
+
+                return _Device;
+            }
+        }
+
         public string Name => Device?.Name;
 
-        public IClient Client { get; private set; }
+        public Color Color { get; set; }
 
-        public Color Color { get; private set; }
-
-        public IDevice Device { get; private set; }
-
-        public Effect Effect { get; private set; }
+        public Effect Effect { get; set; }
 
         public string Family { get; private set; }
 
-        public IReadOnlyCollection<Color> MultiZoneColors { get; private set; }
+        public IReadOnlyCollection<Color> MultiZoneColors { get; set; }
 
-        public PowerState Power { get; private set; }
+        public PowerState Power { get; set; }
 
-        public Theme Theme { get; private set; }
+        public Theme Theme { get; set; }
 
         public string Uuid { get; private set; }
 
-        public void Apply()
+        public bool Apply()
         {
             if(Device is null)
             {
-                FindDevice();
+                return false;
             }
 
-            // Apply values
             Device.Power = Power;
-            Device.Theme = Theme;
 
-            if(!MultiZoneColors.IsNullOrEmpty())
+            if(Theme is not null)
+            {
+                Device.Theme = Theme;
+            }
+            else if(!MultiZoneColors.IsNullOrEmpty())
             {
                 Device.MultiZoneColors = MultiZoneColors;
             }
@@ -117,42 +136,19 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             }
 
             Device.Effect = Effect;
+
+            return true;
         }
 
-        public bool IsDevice(IDevice device)
+        public void Snapshot()
         {
-            return Family.Equals(device.Family) && Uuid.Equals(device.Uuid);
-        }
-
-        public void SnapshotDevice(IDevice device)
-        {
-            Device = device;
-            Family = device.Family;
-            Uuid = device.Uuid;
-            Power = device.Power;
-            Theme = (Theme)device.Theme?.Clone();
-            MultiZoneColors = device.MultiZoneColors?.ToList();
-            Color = device.Color?.Clone();
-            Effect = (Effect)device.Effect?.Clone();
-        }
-
-        void FindDevice()
-        {
-            // Find the client by family
-            Client = ClientFactory.Instance.CreateInstance(Family);
-
-            if(Client is null)
-            {
-                throw new InvalidDataException($"Unable to find client {Family}");
-            }
-
-            // Find the Cache by uuid
-            Device = Client.Devices.FirstOrDefault(i => i.Uuid == Uuid);
-
-            if(Device is null)
-            {
-                throw new InvalidDataException($"Unable to find Cache {Uuid}");
-            }
+            Family = Device.Family;
+            Uuid = Device.Uuid;
+            Power = Device.Power;
+            Theme = (Theme)Device.Theme?.Clone();
+            MultiZoneColors = Device.MultiZoneColors?.ToList();
+            Color = Device.Color?.Clone();
+            Effect = (Effect)Device.Effect?.Clone();
         }
 
         #region Equality
@@ -208,6 +204,15 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         public static bool operator !=(SceneItem left, SceneItem right)
         {
             return !Equals(left, right);
+        }
+
+        #endregion
+
+        #region IMatch
+
+        public bool Matches(object obj)
+        {
+            return obj is IDevice device && Family.Equals(device.Family) && Uuid.Equals(device.Uuid);
         }
 
         #endregion

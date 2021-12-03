@@ -88,7 +88,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration)
         {
-            if(AudioRecorder.CurrentDuration.TotalSeconds < (AudioRecorder.MaxDuration.TotalSeconds / 2))
+            if(AudioRecorder.CurrentDuration < AudioRecorder.MaxDuration)
             {
                 colors = new[] { BackgroundColor };
                 return true;

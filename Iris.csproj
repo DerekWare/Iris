@@ -152,19 +152,55 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ComponentTreeView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="DeviceActionPanel.cs">
+    <Compile Include="Controls\EffectButtonPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DeviceActionPanel.Designer.cs">
+    <Compile Include="Controls\EffectButtonPanel.Designer.cs">
+      <DependentUpon>EffectButtonPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EffectDropDownPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\EffectDropDownPanel.Designer.cs">
+      <DependentUpon>EffectDropDownPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ScenePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ScenePanel.Designer.cs">
+      <DependentUpon>ScenePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SceneTabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ThemeDropDownPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ThemeDropDownPanel.Designer.cs">
+      <DependentUpon>ThemeDropDownPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ThemeButtonPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ThemeButtonPanel.Designer.cs">
+      <DependentUpon>ThemeButtonPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AutoMenuStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ComponentTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DeviceActionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\DeviceActionPanel.Designer.cs">
       <DependentUpon>DeviceActionPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="AssemblyVersion.cs">
@@ -172,83 +208,122 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyVersion.tt</DependentUpon>
     </Compile>
-    <Compile Include="ConnectBridgeDialog.cs">
+    <Compile Include="Forms\ConnectBridgeDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ConnectBridgeDialog.Designer.cs">
+    <Compile Include="Forms\ConnectBridgeDialog.Designer.cs">
       <DependentUpon>ConnectBridgeDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConnectDeviceDialog.cs">
+    <Compile Include="Forms\ConnectDeviceDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ConnectDeviceDialog.Designer.cs">
+    <Compile Include="Forms\ConnectDeviceDialog.Designer.cs">
       <DependentUpon>ConnectDeviceDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ColorsChangedEventArgs.cs" />
-    <Compile Include="ColorChangedEventArgs.cs" />
-    <Compile Include="DeviceTreeView.cs">
+    <Compile Include="Events.cs" />
+    <Compile Include="Controls\DeviceTreeView.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Controls\MultiZoneColorPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MultiZoneColorPanel.Designer.cs">
+      <DependentUpon>MultiZoneColorPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PowerStatePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PowerStatePanel.Designer.cs">
+      <DependentUpon>PowerStatePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="PropertyEditor.cs">
+    <Compile Include="Forms\PropertyEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PropertyEditor.Designer.cs">
+    <Compile Include="Forms\PropertyEditor.Designer.cs">
       <DependentUpon>PropertyEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="SceneListView.cs">
+    <Compile Include="Controls\SceneItemPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SceneItemPanel.Designer.cs">
+      <DependentUpon>SceneItemPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SceneListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ScenePanel.cs">
+    <Compile Include="Controls\SceneListViewPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ScenePanel.Designer.cs">
-      <DependentUpon>ScenePanel.cs</DependentUpon>
+    <Compile Include="Controls\SceneListViewPanel.Designer.cs">
+      <DependentUpon>SceneListViewPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="SolidColorPanel.cs">
+    <Compile Include="Controls\SolidColorPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SolidColorPanel.Designer.cs">
+    <Compile Include="Controls\SolidColorPanel.Designer.cs">
       <DependentUpon>SolidColorPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainForm.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ColorBand.cs">
+    <Compile Include="Controls\ColorBand.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AboutBox.resx">
-      <DependentUpon>AboutBox.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\EffectButtonPanel.resx">
+      <DependentUpon>EffectButtonPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DeviceActionPanel.resx">
-      <DependentUpon>DeviceActionPanel.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\SceneListViewPanel.resx">
+      <DependentUpon>SceneListViewPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ConnectBridgeDialog.resx">
-      <DependentUpon>ConnectBridgeDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\EffectDropDownPanel.resx">
+      <DependentUpon>EffectDropDownPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ConnectDeviceDialog.resx">
-      <DependentUpon>ConnectDeviceDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PropertyEditor.resx">
-      <DependentUpon>PropertyEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ScenePanel.resx">
+    <EmbeddedResource Include="Controls\ScenePanel.resx">
       <DependentUpon>ScenePanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SolidColorPanel.resx">
-      <DependentUpon>SolidColorPanel.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ThemeDropDownPanel.resx">
+      <DependentUpon>ThemeDropDownPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Controls\ThemeButtonPanel.resx">
+      <DependentUpon>ThemeButtonPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ColorBand.resx">
+      <DependentUpon>ColorBand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ConnectBridgeDialog.resx">
+      <DependentUpon>ConnectBridgeDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ConnectDeviceDialog.resx">
+      <DependentUpon>ConnectDeviceDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\DeviceActionPanel.resx">
+      <DependentUpon>DeviceActionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MultiZoneColorPanel.resx">
+      <DependentUpon>MultiZoneColorPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PowerStatePanel.resx">
+      <DependentUpon>PowerStatePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PropertyEditor.resx">
+      <DependentUpon>PropertyEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -262,6 +337,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Controls\SceneItemPanel.resx">
+      <DependentUpon>SceneItemPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SolidColorPanel.resx">
+      <DependentUpon>SolidColorPanel.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -326,6 +407,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>md "$(SolutionDir)Publish"

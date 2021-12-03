@@ -9,9 +9,9 @@ namespace DerekWare.Iris
         public AboutBox()
         {
             InitializeComponent();
-            Text = string.Format("About {0}", AssemblyTitle);
+            Text = $"About {AssemblyTitle}";
             labelProductName.Text = AssemblyProduct;
-            labelVersion.Text = string.Format("Version {0}", AssemblyVersion);
+            labelVersion.Text = $"Version {AssemblyVersion}";
             labelCopyright.Text = AssemblyCopyright;
             labelCompanyName.Text = AssemblyCompany;
             textBoxDescription.Text = AssemblyDescription;
@@ -22,12 +22,7 @@ namespace DerekWare.Iris
             get
             {
                 var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
-                if(attributes.Length == 0)
-                {
-                    return "";
-                }
-
-                return ((AssemblyCompanyAttribute)attributes[0]).Company;
+                return attributes.Length == 0 ? "" : ((AssemblyCompanyAttribute)attributes[0]).Company;
             }
         }
 
@@ -36,12 +31,7 @@ namespace DerekWare.Iris
             get
             {
                 var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-                if(attributes.Length == 0)
-                {
-                    return "";
-                }
-
-                return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
+                return attributes.Length == 0 ? "" : ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
             }
         }
 
@@ -50,12 +40,7 @@ namespace DerekWare.Iris
             get
             {
                 var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
-                if(attributes.Length == 0)
-                {
-                    return "";
-                }
-
-                return ((AssemblyDescriptionAttribute)attributes[0]).Description;
+                return attributes.Length == 0 ? "" : ((AssemblyDescriptionAttribute)attributes[0]).Description;
             }
         }
 
@@ -64,12 +49,7 @@ namespace DerekWare.Iris
             get
             {
                 var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-                if(attributes.Length == 0)
-                {
-                    return "";
-                }
-
-                return ((AssemblyProductAttribute)attributes[0]).Product;
+                return attributes.Length == 0 ? "" : ((AssemblyProductAttribute)attributes[0]).Product;
             }
         }
 
@@ -78,19 +58,16 @@ namespace DerekWare.Iris
             get
             {
                 var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-                if(attributes.Length > 0)
+                if(attributes.Length <= 0)
                 {
-                    var titleAttribute = (AssemblyTitleAttribute)attributes[0];
-                    if(titleAttribute.Title != "")
-                    {
-                        return titleAttribute.Title;
-                    }
+                    return Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
                 }
 
-                return Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+                var titleAttribute = (AssemblyTitleAttribute)attributes[0];
+                return titleAttribute.Title != "" ? titleAttribute.Title : Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
             }
         }
 
-        public string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public string AssemblyVersion => Program.Version.ToString();
     }
 }

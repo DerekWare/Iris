@@ -14,4 +14,10 @@
     {
         public string Name { get; }
     }
+
+    // IMatch is an alternative to IEquatable when loose comparisons are appropriate
+    public interface IMatch
+    {
+        public bool Matches(object other);
+    }
 }

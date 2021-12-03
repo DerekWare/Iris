@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using DerekWare.Collections;
@@ -28,7 +27,7 @@ namespace DerekWare.Iris
             state.Add(new DeviceFilterNode("Power On") { Predicate = device => device.Power == PowerState.On });
         }
 
-        protected new bool DesignMode => base.DesignMode || (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
+        protected new bool DesignMode => Extensions.IsDesignMode();
 
         protected override void OnHandleCreated(EventArgs e)
         {

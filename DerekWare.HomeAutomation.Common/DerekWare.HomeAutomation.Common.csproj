@@ -133,7 +133,7 @@
     <Compile Include="Interfaces.cs" />
     <Compile Include="Effects\Move.cs" />
     <Compile Include="Effects\MultiZoneColorEffectRenderer.cs" />
-    <Compile Include="Effects\NullEffect.cs" />
+    <Compile Include="Effects\None.cs" />
     <Compile Include="Effects\RandomSolidSingleColorEffect.cs" />
     <Compile Include="Effects\SingleColorEffectRenderer.cs" />
     <Compile Include="Events.cs" />
