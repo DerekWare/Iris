@@ -136,6 +136,9 @@
   <data name="colorcpl_exe_5__48x48_32bpp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\colorcpl.exe[5] 48x48 32bpp.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="EmptySceneDescription" xml:space="preserve">
+    <value>Select the devices you want to be added to the scene by checking or unchecking the boxes to the left. When you check the device, its current state will be captured and saved to the scene. You may then modify the scene properties in the control that will appear here</value>
+  </data>
   <data name="ScenePanelDescription" xml:space="preserve">
     <value>Select the devices you want to be added to the scene by checking or unchecking the boxes to the left. When you check the device, its current state will be captured and saved to the scene. You may then modify the scene properties below.</value>
   </data>

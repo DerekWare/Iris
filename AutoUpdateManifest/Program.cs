@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace AutoUpdateManifest
@@ -21,15 +22,18 @@ namespace AutoUpdateManifest
 
     class Program
     {
-        static readonly XmlSerializer Serializer = new XmlSerializer(typeof(AutoUpdaterManifest));
+        static readonly XmlSerializer Serializer = new(typeof(AutoUpdaterManifest));
 
         static void Main(string[] args)
         {
-            using(var writer = new StringWriter())
-            {
-                Serializer.Serialize(writer, new AutoUpdaterManifest());
-                Console.WriteLine(writer.ToString());
-            }
+            using var writer = new Utf8StringWriter();
+            Serializer.Serialize(writer, new AutoUpdaterManifest());
+            Console.WriteLine(writer.ToString());
         }
+    }
+
+    public class Utf8StringWriter : StringWriter
+    {
+        public override Encoding Encoding => Encoding.UTF8;
     }
 }

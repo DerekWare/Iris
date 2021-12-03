@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Scenes;
+using DerekWare.Iris.Properties;
 
 namespace DerekWare.Iris
 {
@@ -19,7 +20,9 @@ namespace DerekWare.Iris
             }
 
             Scene = scene;
-            TabControl.TabPages.AddRange(Scene.Items.Select(i => new SceneTabPage(i)).ToArray<TabPage>());
+            DescriptionLabel.Text = Resources.EmptySceneDescription;
+
+            UpdateState();
 
             Scene.Items.CollectionChanged += OnCollectionChanged;
         }
@@ -34,16 +37,28 @@ namespace DerekWare.Iris
             (TabControl.SelectedTab as SceneTabPage)?.SceneItem?.SnapshotDeviceState();
         }
 
+        void UpdateState()
+        {
+            if(Scene.Items.IsNullOrEmpty())
+            {
+                TabControl.Visible = false;
+                DescriptionLabel.Visible = true;
+                TabControl.TabPages.OfType<SceneTabPage>().ToList().ForEach(i => i.Dispose());
+            }
+            else
+            {
+                TabControl.TabPages.OfType<SceneTabPage>().Where(i => !Scene.Items.Contains(i.SceneItem)).ToList().ForEach(i => i.Dispose());
+                TabControl.TabPages.AddRange(Scene.Items.Select(i => new SceneTabPage(i)).ToArray<TabPage>());
+                TabControl.Visible = true;
+                DescriptionLabel.Visible = false;
+            }
+        }
+
         #region Event Handlers
 
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            foreach(SceneItem i in e.OldItems.SafeEmpty())
-            {
-                TabControl.TabPages.OfType<SceneTabPage>().Where(j => Equals(i, j.SceneItem)).ForEach(j => j.Dispose());
-            }
-
-            TabControl.TabPages.AddRange(e.NewItems.SafeEmpty().Cast<SceneItem>().Select(i => new SceneTabPage(i)).ToArray<TabPage>());
+            UpdateState();
         }
 
         #endregion

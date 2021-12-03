@@ -54,12 +54,12 @@ namespace DerekWare.Iris
             this.RemoveSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.ApplySceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.UpdateSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RootLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.ComponentTreeView = new DerekWare.Iris.ComponentTreeView();
-            this.UpdateSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyIconMenuStrip.SuspendLayout();
             this.MenuStrip.SuspendLayout();
             this.SceneContextMenuStrip.SuspendLayout();
@@ -200,12 +200,12 @@ namespace DerekWare.Iris
             this.UpdateSceneToolStripMenuItem});
             this.SceneContextMenuStrip.Name = "SceneContextMenuStrip";
             this.SceneContextMenuStrip.OwnerItem = this.ScenesToolStripMenuItem;
-            this.SceneContextMenuStrip.Size = new System.Drawing.Size(295, 203);
+            this.SceneContextMenuStrip.Size = new System.Drawing.Size(326, 203);
             // 
             // CreateSceneToolStripMenuItem
             // 
             this.CreateSceneToolStripMenuItem.Name = "CreateSceneToolStripMenuItem";
-            this.CreateSceneToolStripMenuItem.Size = new System.Drawing.Size(294, 32);
+            this.CreateSceneToolStripMenuItem.Size = new System.Drawing.Size(325, 32);
             this.CreateSceneToolStripMenuItem.Text = "&Create Scene";
             this.CreateSceneToolStripMenuItem.Click += new System.EventHandler(this.CreateSceneToolStripMenuItem_Click);
             // 
@@ -214,7 +214,7 @@ namespace DerekWare.Iris
             this.RenameSceneToolStripMenuItem.Enabled = false;
             this.RenameSceneToolStripMenuItem.Name = "RenameSceneToolStripMenuItem";
             this.RenameSceneToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.RenameSceneToolStripMenuItem.Size = new System.Drawing.Size(294, 32);
+            this.RenameSceneToolStripMenuItem.Size = new System.Drawing.Size(325, 32);
             this.RenameSceneToolStripMenuItem.Text = "Re&name Scene";
             this.RenameSceneToolStripMenuItem.Click += new System.EventHandler(this.RenameSceneToolStripMenuItem_Click);
             // 
@@ -222,22 +222,31 @@ namespace DerekWare.Iris
             // 
             this.RemoveSceneToolStripMenuItem.Enabled = false;
             this.RemoveSceneToolStripMenuItem.Name = "RemoveSceneToolStripMenuItem";
-            this.RemoveSceneToolStripMenuItem.Size = new System.Drawing.Size(294, 32);
+            this.RemoveSceneToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.RemoveSceneToolStripMenuItem.Size = new System.Drawing.Size(325, 32);
             this.RemoveSceneToolStripMenuItem.Text = "&Remove Scene";
             this.RemoveSceneToolStripMenuItem.Click += new System.EventHandler(this.RemoveSceneToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(291, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(322, 6);
             // 
             // ApplySceneToolStripMenuItem
             // 
             this.ApplySceneToolStripMenuItem.Enabled = false;
             this.ApplySceneToolStripMenuItem.Name = "ApplySceneToolStripMenuItem";
-            this.ApplySceneToolStripMenuItem.Size = new System.Drawing.Size(294, 32);
+            this.ApplySceneToolStripMenuItem.Size = new System.Drawing.Size(325, 32);
             this.ApplySceneToolStripMenuItem.Text = "&Apply Scene";
             this.ApplySceneToolStripMenuItem.Click += new System.EventHandler(this.ApplySceneToolStripMenuItem_Click);
+            // 
+            // UpdateSceneToolStripMenuItem
+            // 
+            this.UpdateSceneToolStripMenuItem.Name = "UpdateSceneToolStripMenuItem";
+            this.UpdateSceneToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.UpdateSceneToolStripMenuItem.Size = new System.Drawing.Size(325, 32);
+            this.UpdateSceneToolStripMenuItem.Text = "Update Scene from &Device";
+            this.UpdateSceneToolStripMenuItem.Click += new System.EventHandler(this.UpdateSceneToolStripMenuItem_Click);
             // 
             // HelpToolStripMenuItem
             // 
@@ -291,13 +300,6 @@ namespace DerekWare.Iris
             this.ComponentTreeView.TabIndex = 0;
             this.ComponentTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ComponentTreeView_AfterSelect);
             this.ComponentTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ComponentTreeView_NodeMouseClick);
-            // 
-            // UpdateSceneToolStripMenuItem
-            // 
-            this.UpdateSceneToolStripMenuItem.Name = "UpdateSceneToolStripMenuItem";
-            this.UpdateSceneToolStripMenuItem.Size = new System.Drawing.Size(294, 32);
-            this.UpdateSceneToolStripMenuItem.Text = "Update Scene from &Device";
-            this.UpdateSceneToolStripMenuItem.Click += new System.EventHandler(this.UpdateSceneToolStripMenuItem_Click);
             // 
             // MainForm
             // 
