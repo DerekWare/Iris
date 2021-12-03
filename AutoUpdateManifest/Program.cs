@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Text;
-using System.Xml.Serialization;
 
 namespace AutoUpdateManifest
 {
@@ -13,27 +10,17 @@ namespace AutoUpdateManifest
             <mandatory>false</mandatory>
         </item>
      */
-    public class AutoUpdaterManifest
-    {
-        public bool mandatory = false;
-        public string url = "http://www.derekware.com/software/iris/DerekWare%20Iris.zip";
-        public string version = DerekWare.Iris.Program.Version.ToString();
-    }
 
     class Program
     {
-        static readonly XmlSerializer Serializer = new(typeof(AutoUpdaterManifest));
-
         static void Main(string[] args)
         {
-            using var writer = new Utf8StringWriter();
-            Serializer.Serialize(writer, new AutoUpdaterManifest());
-            Console.WriteLine(writer.ToString());
+            Console.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            Console.WriteLine(@"<item>");
+            Console.WriteLine($"    <version>{DerekWare.Iris.Program.Version}</version>");
+            Console.WriteLine(@"    <url>http://www.derekware.com/software/iris/DerekWare%20Iris.zip</url>");
+            Console.WriteLine(@"    <mandatory>false</mandatory>");
+            Console.WriteLine(@"</item>");
         }
-    }
-
-    public class Utf8StringWriter : StringWriter
-    {
-        public override Encoding Encoding => Encoding.UTF8;
     }
 }
