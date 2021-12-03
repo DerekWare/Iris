@@ -21,7 +21,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             _Device = device;
             _Client = device.Client;
 
-            Snapshot();
+            SnapshotDeviceState();
         }
 
         public SceneItem(SerializationInfo info, StreamingContext context)
@@ -97,7 +97,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             }
         }
 
-        public string Name => Device?.Name;
+        public string Name => Device?.Name ?? Uuid;
 
         public Color Color { get; set; }
 
@@ -113,7 +113,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         public string Uuid { get; private set; }
 
-        public bool Apply()
+        public bool ApplyScene()
         {
             if(Device is null)
             {
@@ -140,8 +140,13 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             return true;
         }
 
-        public void Snapshot()
+        public bool SnapshotDeviceState()
         {
+            if(Device is null)
+            {
+                return false;
+            }
+
             Family = Device.Family;
             Uuid = Device.Uuid;
             Power = Device.Power;
@@ -149,6 +154,8 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             MultiZoneColors = Device.MultiZoneColors?.ToList();
             Color = Device.Color?.Clone();
             Effect = (Effect)Device.Effect?.Clone();
+
+            return true;
         }
 
         #region Equality

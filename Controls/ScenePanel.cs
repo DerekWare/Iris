@@ -31,7 +31,7 @@ namespace DerekWare.Iris
 
         public void SnapshotActiveScene()
         {
-            (TabControl.SelectedTab as SceneTabPage)?.SceneItem?.Snapshot();
+            (TabControl.SelectedTab as SceneTabPage)?.SceneItem?.SnapshotDeviceState();
         }
 
         #region Event Handlers

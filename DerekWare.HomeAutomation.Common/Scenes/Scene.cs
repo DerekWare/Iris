@@ -34,7 +34,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         public void Apply()
         {
-            Items.ForEach(i => i.Apply());
+            Items.ForEach(i => i.ApplyScene());
         }
 
         public bool Contains(IDevice device)

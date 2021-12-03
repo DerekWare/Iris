@@ -29,7 +29,7 @@ namespace DerekWare.Iris
         {
             InUpdate = true;
 
-            TabPage.Text = SceneItem.Device?.Name;
+            TabPage.Text = SceneItem.Name;
             PowerStatePanel.Power = SceneItem.Power;
             SolidColorPanel.Color = SceneItem.Color;
             MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors;
