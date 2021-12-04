@@ -146,7 +146,7 @@ namespace DerekWare.HomeAutomation.Common
 
                 for(var i = 0; i < c.Length; ++i)
                 {
-                    var j = (i * _colors.Count) / c.Length;
+                    var j = (i * colors.Length) / c.Length;
                     c[i] = colors[j];
                 }
 
@@ -158,7 +158,7 @@ namespace DerekWare.HomeAutomation.Common
 
                 for(var i = 0; i < c.Length; ++i)
                 {
-                    var j = (i * _colors.Count) / c.Length;
+                    var j = (i * colors.Length) / c.Length;
                     c[i] = colors[j];
                 }
 

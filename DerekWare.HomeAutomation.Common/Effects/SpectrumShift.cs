@@ -1,13 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
 using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
-    [Description("Combines the Spectrum theme and the Move effect, but with more mathematically\n" +
+    [Name("Spectrum Shift"),
+     Description("Combines the Spectrum theme and the Move effect, but with more mathematically\n" +
                  "correct color values during motion than the Move effect can provide. This is\n" +
-                 "particularly evident on groups or devices with fewer color zones, or 1.")]
-    public class Spectrum : MultiZoneColorEffectRenderer
+                 "particularly evident on groups or devices with fewer color zones, or 1 (where\n" +
+                 "the Move effect can't do anything).")]
+    public class SpectrumShift : MultiZoneColorEffectRenderer
     {
         public enum EffectBehavior
         {
@@ -28,7 +31,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         protected EffectDirection Direction;
         protected TimeSpan NextChange = TimeSpan.Zero;
 
-        public Spectrum()
+        public SpectrumShift()
         {
             Duration = TimeSpan.FromSeconds(10);
             RefreshRate = TimeSpan.FromSeconds(0.5);

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Threading;
-using DoWorkEventArgs = DerekWare.Threading.DoWorkEventArgs;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
@@ -15,7 +13,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
         // The target colors to set
         Color[] Colors;
 
-        [Browsable(false)]
         public override bool IsMultiZone => true;
 
         protected int ZoneCount => Device.ZoneCount;
@@ -34,7 +31,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         protected override void Update(RenderState state)
         {
             var transitionDuration = RefreshRate;
-            
+
             if(!UpdateColors(state, ref Colors, ref transitionDuration))
             {
                 return;

@@ -10,7 +10,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
     // Register a request to be sent and the delegate will be called when the response is received.
     // You may additionally wait on the returned response task, which will be signaled when the
     // response is received.
-    // TODO purge stale messages building up in PendingResponses.
     class Dispatcher
     {
         public delegate void ResponseHandler(Response response);
@@ -19,9 +18,9 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
             where TResponse : Response;
 
         public static readonly Dispatcher Instance = new();
+        public static readonly TimeSpan ResponseTimeout = TimeSpan.FromSeconds(10);
 
         readonly SynchronizedDictionary<ResponseKey, ResponseValue> PendingResponses = new();
-        readonly TimeSpan ResponseTimeout = TimeSpan.FromSeconds(2);
 
         Dispatcher()
         {
@@ -58,7 +57,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
                 responseValue.Handler(responseValue.Response);
 
                 // Purge any old messages
-                // TODO task completion with exception
+                // TODO task completion with exception?
                 PendingResponses.RemoveWhere(i => (DateTime.Now - i.Value.CreationTime) >= ResponseTimeout);
             }
         }
@@ -153,7 +152,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
                     return true;
                 }
 
-                return (Sequence == other.Sequence) && (Source == other.Source);
+                return (IpAddress == other.IpAddress) && (ResponseType == other.ResponseType) && (Sequence == other.Sequence) && (Source == other.Source);
             }
 
             public override bool Equals(object obj)
@@ -180,7 +179,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
             {
                 unchecked
                 {
-                    return (Sequence.GetHashCode() * 397) ^ (int)Source;
+                    var hashCode = IpAddress != null ? IpAddress.GetHashCode() : 0;
+                    hashCode = (hashCode * 397) ^ ResponseType.GetHashCode();
+                    hashCode = (hashCode * 397) ^ Sequence.GetHashCode();
+                    hashCode = (hashCode * 397) ^ (int)Source;
+                    return hashCode;
                 }
             }
 

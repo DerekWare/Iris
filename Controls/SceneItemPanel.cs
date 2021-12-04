@@ -1,5 +1,5 @@
 ﻿using System;
-using DerekWare.Collections;
+using System.Windows.Forms;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Scenes;
@@ -19,6 +19,60 @@ namespace DerekWare.Iris
         public override IDevice Device => SceneItem.Device;
 
         public SceneItem SceneItem { get; }
+
+        protected override bool CreateEffect(IReadOnlyEffectProperties properties, out Effect effect)
+        {
+            // If the effect is the same as what the scene item already uses, show
+            // its saved properties rather than the ones cached in the factory.
+            if(SceneItem.Effect?.Matches(properties) ?? false)
+            {
+                if(DialogResult.OK == PropertyEditor.Show(this, SceneItem.Effect))
+                {
+                    effect = SceneItem.Effect;
+                }
+                else
+                {
+                    effect = null;
+                    return false;
+                }
+            }
+            else if(!base.CreateEffect(properties, out effect))
+            {
+                return false;
+            }
+
+            SceneItem.Effect = effect;
+            UpdateState();
+            return true;
+        }
+
+        protected override bool CreateTheme(IReadOnlyThemeProperties properties, out Theme theme)
+        {
+            // If the theme is the same as what the scene item already uses, show
+            // its saved properties rather than the ones cached in the factory.
+            if(SceneItem.Theme?.Matches(properties) ?? false)
+            {
+                if(DialogResult.OK == PropertyEditor.Show(this, SceneItem.Theme))
+                {
+                    theme = SceneItem.Theme;
+                }
+                else
+                {
+                    theme = null;
+                    return false;
+                }
+            }
+            else if(!base.CreateTheme(properties, out theme))
+            {
+                return false;
+            }
+
+            SceneItem.Theme = theme;
+            SceneItem.Color = null;
+            SceneItem.MultiZoneColors = null;
+            UpdateState();
+            return true;
+        }
 
         protected override void OnHandleCreated(EventArgs e)
         {
@@ -40,34 +94,6 @@ namespace DerekWare.Iris
             base.OnHandleDestroyed(e);
         }
 
-
-        
-        protected override bool OnSelectedEffectChanged(string name, out Effect effect)
-        {
-            if(!base.OnSelectedEffectChanged(name, out effect))
-            {
-                return false;
-            }
-
-            SceneItem.Effect = effect;
-            UpdateState();
-            return true;
-        }
-
-        protected override bool OnSelectedThemeChanged(string name, out Theme theme)
-        {
-            if(!base.OnSelectedThemeChanged(name, out theme))
-            {
-                return false;
-            }
-
-            SceneItem.Theme = theme;
-            SceneItem.Color = null;
-            SceneItem.MultiZoneColors = null;
-            UpdateState();
-            return true;
-        }
-
         protected override void UpdateState()
         {
             InUpdate = true;
@@ -87,7 +113,7 @@ namespace DerekWare.Iris
             {
                 PowerStatePanel.Power = SceneItem.Power;
                 SolidColorPanel.Color = SceneItem.Color ?? Device.Color;
-                MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors.IsNullOrEmpty() ? Device.MultiZoneColors : SceneItem.MultiZoneColors;
+                MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors ?? Device.MultiZoneColors;
                 ThemeButtonPanel.DeviceFamily = SceneItem.Family;
                 ThemeButtonPanel.SelectedTheme = SceneItem.Theme;
                 EffectButtonPanel.DeviceFamily = SceneItem.Family;

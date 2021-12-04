@@ -60,6 +60,32 @@ namespace DerekWare.Iris
             UpdateState();
         }
 
+        protected virtual bool CreateEffect(IReadOnlyEffectProperties properties, out Effect effect)
+        {
+            effect = EffectFactory.Instance.CreateInstance(properties.Name);
+
+            if(DialogResult.OK != PropertyEditor.Show(this, effect))
+            {
+                return false;
+            }
+
+            EffectFactory.Instance.Add(effect);
+            return true;
+        }
+
+        protected virtual bool CreateTheme(IReadOnlyThemeProperties properties, out Theme theme)
+        {
+            theme = ThemeFactory.Instance.CreateInstance(properties.Name);
+
+            if(DialogResult.OK != PropertyEditor.Show(this, theme))
+            {
+                return false;
+            }
+
+            ThemeFactory.Instance.Add(theme);
+            return true;
+        }
+
         protected void DetachDevice()
         {
             if(_Device is not null)
@@ -81,32 +107,6 @@ namespace DerekWare.Iris
             base.OnHandleDestroyed(e);
         }
 
-        protected virtual bool OnSelectedEffectChanged(string name, out Effect effect)
-        {
-            effect = EffectFactory.Instance.CreateInstance(name);
-
-            if(DialogResult.OK != PropertyEditor.Show(this, effect))
-            {
-                return false;
-            }
-
-            EffectFactory.Instance.Add(effect);
-            return true;
-        }
-
-        protected virtual bool OnSelectedThemeChanged(string name, out Theme theme)
-        {
-            theme = ThemeFactory.Instance.CreateInstance(name);
-
-            if(DialogResult.OK != PropertyEditor.Show(this, theme))
-            {
-                return false;
-            }
-
-            ThemeFactory.Instance.Add(theme);
-            return true;
-        }
-
         protected virtual void UpdateProperties()
         {
             PropertyGrid.SelectedObject = Device;
@@ -118,7 +118,7 @@ namespace DerekWare.Iris
             {
                 return;
             }
-            
+
             InUpdate = true;
 
             PowerStatePanel.Power = Device?.Power ?? PowerState.Off;
@@ -179,18 +179,18 @@ namespace DerekWare.Iris
                 return;
             }
 
-            if(!OnSelectedEffectChanged(e.Property.Name, out var effect))
+            if(!CreateEffect(e.Property, out var effect))
             {
                 return;
             }
 
             InUpdate = true;
-            
+
             if(Device is not null)
             {
                 Device.Effect = effect;
             }
-            
+
             InUpdate = false;
 
             UpdateState();
@@ -203,7 +203,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            if(!OnSelectedThemeChanged(e.Property.Name, out var theme))
+            if(!CreateTheme(e.Property, out var theme))
             {
                 return;
             }

@@ -126,7 +126,7 @@
     <Compile Include="Effects\Bloom.cs" />
     <Compile Include="Devices\DeviceExtensions.cs" />
     <Compile Include="Effects\GraphicEQ.cs" />
-    <Compile Include="Effects\Spectrum.cs" />
+    <Compile Include="Effects\SpectrumShift.cs" />
     <Compile Include="Effects\VUMeter.cs" />
     <Compile Include="Scenes\SceneItem.cs" />
     <Compile Include="Utilities\JsonSerializer.cs" />

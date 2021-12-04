@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -32,26 +33,27 @@ namespace DerekWare.Iris
 
         protected new bool DesignMode => Extensions.IsDesignMode();
 
+        public SceneItem SceneItemFromTabPage(SceneTabPage page)
+        {
+            return page?.SceneItem;
+        }
+
         public void SnapshotActiveScene()
         {
             (TabControl.SelectedTab as SceneTabPage)?.SceneItem?.SnapshotDeviceState();
         }
 
+        public SceneTabPage TabPageFromSceneItem(SceneItem sceneItem)
+        {
+            return TabControl.TabPages.OfType<SceneTabPage>().WhereEquals(i => i.SceneItem, sceneItem).FirstOrDefault();
+        }
+
         void UpdateState()
         {
-            if(Scene.Items.IsNullOrEmpty())
-            {
-                TabControl.Visible = false;
-                DescriptionLabel.Visible = true;
-                TabControl.TabPages.OfType<SceneTabPage>().ToList().ForEach(i => i.Dispose());
-            }
-            else
-            {
-                TabControl.TabPages.OfType<SceneTabPage>().Where(i => !Scene.Items.Contains(i.SceneItem)).ToList().ForEach(i => i.Dispose());
-                TabControl.TabPages.AddRange(Scene.Items.Select(i => new SceneTabPage(i)).ToArray<TabPage>());
-                TabControl.Visible = true;
-                DescriptionLabel.Visible = false;
-            }
+            TabControl.TabPages.RemoveWhere<SceneTabPage>(i => !Scene.Items.Contains(SceneItemFromTabPage(i)));
+            TabControl.TabPages.AddRange(Scene.Items.WhereNull(TabPageFromSceneItem).Select(i => new SceneTabPage(i)).ToArray<TabPage>());
+            TabControl.Visible = !TabControl.TabPages.OfType<SceneTabPage>().IsNullOrEmpty();
+            DescriptionLabel.Visible = !TabControl.Visible;
         }
 
         #region Event Handlers
