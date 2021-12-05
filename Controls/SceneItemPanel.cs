@@ -4,6 +4,7 @@ using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.HomeAutomation.Common.Themes;
+using PowerState = DerekWare.HomeAutomation.Common.PowerState;
 
 namespace DerekWare.Iris
 {
@@ -67,9 +68,10 @@ namespace DerekWare.Iris
                 return false;
             }
 
-            SceneItem.Theme = theme;
             SceneItem.Color = null;
             SceneItem.MultiZoneColors = null;
+            SceneItem.Effect = null;
+            SceneItem.Theme = theme;
             UpdateState();
             return true;
         }
@@ -98,9 +100,18 @@ namespace DerekWare.Iris
         {
             InUpdate = true;
 
-            // If we can't find a valid device, disable everything
+            PowerStatePanel.Power = SceneItem.Power;
+            SolidColorPanel.Color = SceneItem.Color ?? Device.Color;
+            MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors ?? Device.MultiZoneColors;
+            ThemeButtonPanel.DeviceFamily = SceneItem.Family;
+            ThemeButtonPanel.SelectedTheme = SceneItem.Theme;
+            EffectButtonPanel.DeviceFamily = SceneItem.Family;
+            EffectButtonPanel.SelectedEffect = SceneItem.Effect;
+
             var enable = Device is not null;
             PowerStatePanel.Enabled = enable;
+
+            enable = enable && (SceneItem.Power == PowerState.On);
             SolidColorPanel.Enabled = enable;
             MultiZoneColorPanel.Enabled = enable;
             ThemeButtonPanel.Enabled = enable;
@@ -108,17 +119,7 @@ namespace DerekWare.Iris
             EffectButtonPanel.Enabled = enable;
             EffectButtonPanel.Enabled = enable;
 
-            // TODO losing the color zone count
-            if(enable)
-            {
-                PowerStatePanel.Power = SceneItem.Power;
-                SolidColorPanel.Color = SceneItem.Color ?? Device.Color;
-                MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors ?? Device.MultiZoneColors;
-                ThemeButtonPanel.DeviceFamily = SceneItem.Family;
-                ThemeButtonPanel.SelectedTheme = SceneItem.Theme;
-                EffectButtonPanel.DeviceFamily = SceneItem.Family;
-                EffectButtonPanel.SelectedEffect = SceneItem.Effect;
-            }
+            BrightnessPanel.Enabled = false; // TODO?
 
             InUpdate = false;
         }
@@ -127,23 +128,27 @@ namespace DerekWare.Iris
 
         protected override void OnMultiZoneColorsChanged(object sender, ColorsChangedEventArgs e)
         {
-            SceneItem.MultiZoneColors = e.Property;
             SceneItem.Color = null;
             SceneItem.Theme = null;
+            SceneItem.Effect = null;
+            SceneItem.MultiZoneColors = e.Property;
             base.OnMultiZoneColorsChanged(sender, e);
         }
 
         protected override void OnPowerStateChanged(object sender, PowerStateChangedEventArgs e)
         {
+            SceneItem.Theme = null;
+            SceneItem.Effect = null;
             SceneItem.Power = e.Property;
             base.OnPowerStateChanged(sender, e);
         }
 
         protected override void OnSolidColorChanged(object sender, ColorChangedEventArgs e)
         {
-            SceneItem.Color = e.Property;
             SceneItem.MultiZoneColors = null;
             SceneItem.Theme = null;
+            SceneItem.Effect = null;
+            SceneItem.Color = e.Property;
             base.OnSolidColorChanged(sender, e);
         }
 

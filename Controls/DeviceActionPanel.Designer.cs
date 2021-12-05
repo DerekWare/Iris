@@ -178,7 +178,7 @@ namespace DerekWare.Iris
             this.BrightnessPanel.Padding = new System.Windows.Forms.Padding(8);
             this.BrightnessPanel.Size = new System.Drawing.Size(480, 142);
             this.BrightnessPanel.TabIndex = 1;
-            this.BrightnessPanel.BrightnessChanged += new System.EventHandler<DerekWare.Iris.BrightnessChangedEventArgs>(this.BrightnessPanel_BrightnessChanged);
+            this.BrightnessPanel.BrightnessChanged += new System.EventHandler<DerekWare.Iris.BrightnessChangedEventArgs>(this.OnBrightnessChanged);
             // 
             // DescriptionLabel
             // 
@@ -219,6 +219,6 @@ namespace DerekWare.Iris
         protected PowerStatePanel PowerStatePanel;
         protected ThemeButtonPanel ThemeButtonPanel;
         protected EffectButtonPanel EffectButtonPanel;
-        private BrightnessPanel BrightnessPanel;
+        protected BrightnessPanel BrightnessPanel;
     }
 }

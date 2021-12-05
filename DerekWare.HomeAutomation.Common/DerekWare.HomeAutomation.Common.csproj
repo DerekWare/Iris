@@ -118,6 +118,7 @@
     <Compile Include="Audio\AudioProcessor.cs" />
     <Compile Include="Audio\AudioRecorder.cs" />
     <Compile Include="Clients\Client.cs" />
+    <Compile Include="Devices\DeferredDevice.cs" />
     <Compile Include="Devices\DeviceStateRefreshTask.cs" />
     <Compile Include="Effects\Brightness.cs" />
     <Compile Include="Effects\Calliope.cs" />

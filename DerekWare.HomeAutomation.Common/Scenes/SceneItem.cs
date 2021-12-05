@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using DerekWare.Collections;
-using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Themes;
@@ -11,24 +10,17 @@ using DerekWare.HomeAutomation.Common.Themes;
 namespace DerekWare.HomeAutomation.Common.Scenes
 {
     [Serializable]
-    public class SceneItem : ISerializable, IEquatable<SceneItem>, IMatch
+    public class SceneItem : DeferredDevice, IEquatable<SceneItem>
     {
-        IClient _Client;
-        IDevice _Device;
-
         public SceneItem(IDevice device)
+            : base(device)
         {
-            _Device = device;
-            _Client = device.Client;
-
             SnapshotDeviceState();
         }
 
         public SceneItem(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
-            Family = (string)info.GetValue(nameof(Family), typeof(string));
-            Uuid = (string)info.GetValue(nameof(Uuid), typeof(string));
-
             var e = info.GetEnumerator();
 
             while(e.MoveNext())
@@ -62,56 +54,15 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         {
         }
 
-        public IClient Client
-        {
-            get
-            {
-                _Client ??= ClientFactory.Instance.CreateInstance(Family);
-
-                if(_Client is null)
-                {
-                    Debug.Warning(this, $"Unable to find client {Family}");
-                }
-
-                return _Client;
-            }
-        }
-
-        public IDevice Device
-        {
-            get
-            {
-                if(Client is null)
-                {
-                    return null;
-                }
-
-                _Device ??= Client.Devices.FirstOrDefault(i => i.Uuid == Uuid) ?? Client.Groups.FirstOrDefault(i => i.Uuid == Uuid);
-
-                if(_Device is null)
-                {
-                    Debug.Warning(this, $"Unable to find device {Uuid}");
-                }
-
-                return _Device;
-            }
-        }
-
-        public string Name => Device?.Name ?? Uuid;
-
         public Color Color { get; set; }
 
         public Effect Effect { get; set; }
-
-        public string Family { get; private set; }
 
         public IReadOnlyCollection<Color> MultiZoneColors { get; set; }
 
         public PowerState Power { get; set; }
 
         public Theme Theme { get; set; }
-
-        public string Uuid { get; private set; }
 
         public bool ApplyScene()
         {
@@ -140,97 +91,11 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             return true;
         }
 
-        public bool SnapshotDeviceState()
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if(Device is null)
-            {
-                return false;
-            }
+            base.GetObjectData(info, context);
 
-            Family = Device.Family;
-            Uuid = Device.Uuid;
-            Power = Device.Power;
-            Color = Device.Color?.Clone();
-            MultiZoneColors = Device.MultiZoneColors?.ToList();
-            Theme = (Theme)Device.Theme?.Clone();
-            Effect = (Effect)Device.Effect?.Clone();
-
-            return true;
-        }
-
-        #region Equality
-
-        public bool Equals(SceneItem other)
-        {
-            if(ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if(ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return (Family == other.Family) && (Uuid == other.Uuid);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if(ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if(ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if(obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((SceneItem)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((Family != null ? Family.GetHashCode() : 0) * 397) ^ (Uuid != null ? Uuid.GetHashCode() : 0);
-            }
-        }
-
-        public static bool operator ==(SceneItem left, SceneItem right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(SceneItem left, SceneItem right)
-        {
-            return !Equals(left, right);
-        }
-
-        #endregion
-
-        #region IMatch
-
-        public bool Matches(object obj)
-        {
-            return obj is IDevice device && Family.Equals(device.Family) && Uuid.Equals(device.Uuid);
-        }
-
-        #endregion
-
-        #region ISerializable
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue(nameof(Family), Family, typeof(string));
-            info.AddValue(nameof(Uuid), Uuid, typeof(string));
-            info.AddValue(nameof(Power), Power, typeof(PowerState));
+            info.AddValue(nameof(Power), Power, Power.GetType());
 
             if(Power == PowerState.Off)
             {
@@ -247,13 +112,56 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             }
             else if(Color is not null)
             {
-                info.AddValue(nameof(Color), Color, typeof(Color));
+                info.AddValue(nameof(Color), Color, Color.GetType());
             }
 
             if(Effect is not null)
             {
                 info.AddValue(nameof(Effect), Effect, Effect.GetType());
             }
+        }
+
+        public bool SnapshotDeviceState()
+        {
+            if(Device is null)
+            {
+                return false;
+            }
+
+            Power = Device.Power;
+            Color = Device.Color?.Clone();
+            MultiZoneColors = Device.MultiZoneColors?.ToList();
+            Theme = (Theme)Device.Theme?.Clone();
+            Effect = (Effect)Device.Effect?.Clone();
+
+            return true;
+        }
+
+        #region Equality
+
+        public bool Equals(SceneItem other)
+        {
+            return base.Equals(other);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(SceneItem left, SceneItem right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(SceneItem left, SceneItem right)
+        {
+            return !Equals(left, right);
         }
 
         #endregion

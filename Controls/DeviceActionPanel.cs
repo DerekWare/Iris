@@ -135,6 +135,22 @@ namespace DerekWare.Iris
 
         #region Event Handlers
 
+        protected virtual void OnBrightnessChanged(object sender, BrightnessChangedEventArgs e)
+        {
+            InUpdate = true;
+
+            if(Device is not null)
+            {
+                Device.Effect = null;
+                Device.Power = PowerState.On;
+                Device.Brightness = e.Property;
+            }
+
+            InUpdate = false;
+
+            UpdateState();
+        }
+
         protected virtual void OnMultiZoneColorsChanged(object sender, ColorsChangedEventArgs e)
         {
             if(InUpdate)
@@ -248,22 +264,6 @@ namespace DerekWare.Iris
                 Device.Effect = null;
                 Device.Power = PowerState.On;
                 Device.Color = e.Property;
-            }
-
-            InUpdate = false;
-
-            UpdateState();
-        }
-
-        void BrightnessPanel_BrightnessChanged(object sender, BrightnessChangedEventArgs e)
-        {
-            InUpdate = true;
-
-            if(Device is not null)
-            {
-                Device.Effect = null;
-                Device.Power = PowerState.On;
-                Device.Brightness = e.Property;
             }
 
             InUpdate = false;

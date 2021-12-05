@@ -16,7 +16,7 @@ namespace DerekWare.HomeAutomation.Common
     }
 
     // Properties generally don't change at runtime except when first connecting to the device
-    public interface IDeviceProperties : IName, IFamily
+    public interface IDeviceProperties : IName, IFamily, IUuid
     {
         IClient Client { get; }
         IReadOnlyCollection<IDeviceGroup> Groups { get; }
@@ -24,7 +24,6 @@ namespace DerekWare.HomeAutomation.Common
         bool IsMultiZone { get; }
         bool IsValid { get; }
         string Product { get; }
-        string Uuid { get; }
         string Vendor { get; }
         int ZoneCount { get; }
     }
