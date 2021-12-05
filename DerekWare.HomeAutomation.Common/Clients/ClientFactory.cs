@@ -24,9 +24,8 @@ namespace DerekWare.HomeAutomation.Common
         ClientFactory()
         {
             Items.AddRange(from type in Reflection.GetVisibleTypes()
-                           where type.GetInterfaces().Contains(typeof(IClient))
-                           let instance = (IClient)type.GetField("Instance").GetValue(null)
-                           select instance);
+                           where type.GetInterface(nameof(IClient)) is not null
+                           select (IClient)type.GetField("Instance").GetValue(null));
         }
 
         public int Count => Items.Count;

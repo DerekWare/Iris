@@ -46,7 +46,7 @@ namespace DerekWare.Iris
             this.BrightnessGroupBox.Location = new System.Drawing.Point(8, 8);
             this.BrightnessGroupBox.Name = "BrightnessGroupBox";
             this.BrightnessGroupBox.Padding = new System.Windows.Forms.Padding(8);
-            this.BrightnessGroupBox.Size = new System.Drawing.Size(142, 126);
+            this.BrightnessGroupBox.Size = new System.Drawing.Size(187, 83);
             this.BrightnessGroupBox.TabIndex = 9;
             this.BrightnessGroupBox.TabStop = false;
             this.BrightnessGroupBox.Text = "Brightness";
@@ -64,19 +64,19 @@ namespace DerekWare.Iris
             this.TableLayoutPanel.Padding = new System.Windows.Forms.Padding(8);
             this.TableLayoutPanel.RowCount = 1;
             this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableLayoutPanel.Size = new System.Drawing.Size(126, 91);
+            this.TableLayoutPanel.Size = new System.Drawing.Size(171, 48);
             this.TableLayoutPanel.TabIndex = 2;
             // 
             // BrightnessTrackBar
             // 
-            this.BrightnessTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.BrightnessTrackBar.AutoSize = false;
+            this.BrightnessTrackBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BrightnessTrackBar.LargeChange = 10;
-            this.BrightnessTrackBar.Location = new System.Drawing.Point(11, 11);
+            this.BrightnessTrackBar.Location = new System.Drawing.Point(8, 8);
+            this.BrightnessTrackBar.Margin = new System.Windows.Forms.Padding(0);
             this.BrightnessTrackBar.Maximum = 100;
             this.BrightnessTrackBar.Name = "BrightnessTrackBar";
-            this.BrightnessTrackBar.Size = new System.Drawing.Size(104, 69);
+            this.BrightnessTrackBar.Size = new System.Drawing.Size(155, 32);
             this.BrightnessTrackBar.TabIndex = 0;
             this.BrightnessTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.BrightnessTrackBar.ValueChanged += new System.EventHandler(this.BrightnessTrackBar_ValueChanged);
@@ -90,11 +90,10 @@ namespace DerekWare.Iris
             this.Controls.Add(this.BrightnessGroupBox);
             this.Name = "BrightnessPanel";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(158, 142);
+            this.Size = new System.Drawing.Size(203, 99);
             this.BrightnessGroupBox.ResumeLayout(false);
             this.BrightnessGroupBox.PerformLayout();
             this.TableLayoutPanel.ResumeLayout(false);
-            this.TableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BrightnessTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Forms;
 using DerekWare.Collections;
+using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Scenes;
 
 namespace DerekWare.Iris
@@ -12,8 +14,6 @@ namespace DerekWare.Iris
     {
         public readonly SceneCategoryNode ScenesNode = new();
 
-        bool InUpdate;
-
         public ComponentTreeView()
         {
             if(DesignMode)
@@ -22,6 +22,8 @@ namespace DerekWare.Iris
             }
 
             LabelEdit = true;
+            ShowFamilyNodes = true;
+            ShowStateNode = true;
 
             TreeNode.Add(Nodes, ScenesNode);
             SceneFactory.Instance.ForEach(i => SceneNode.Add(ScenesNode.Nodes, i));
@@ -30,8 +32,6 @@ namespace DerekWare.Iris
         public Scene SelectedScene => (SelectedNode as SceneNode)?.Scene;
 
         public new TreeNode SelectedNode { get => (TreeNode)base.SelectedNode; set => base.SelectedNode = value; }
-
-        protected new bool DesignMode => Extensions.IsDesignMode();
 
         public bool Activate(TreeNode node)
         {
@@ -53,7 +53,14 @@ namespace DerekWare.Iris
             // Find the node and select it
             SelectedNode = SceneNode.Find(ScenesNode.Nodes, scene);
 
-            // Start the rename
+            // Show the device selection dialog
+            if(!SelectSceneDevices())
+            {
+                SceneFactory.Instance.Remove(scene);
+                return;
+            }
+
+            // Rename the scene
             SelectedNode.BeginEdit();
         }
 
@@ -80,26 +87,25 @@ namespace DerekWare.Iris
             return true;
         }
 
-        protected override void OnAfterCheck(TreeViewEventArgs e)
+        public bool SelectSceneDevices()
         {
-            if(InUpdate)
+            var scene = SelectedScene;
+
+            if(scene is null)
             {
-                return;
+                return false;
             }
 
-            if(SelectedNode is SceneNode sceneNode && e.Node is DeviceNode deviceNode)
+            IReadOnlyCollection<IDevice> devices = scene.Items.Select(i => i.Device).ToList();
+
+            if(!DeviceSelectionForm.Show(Parent, ref devices))
             {
-                if(e.Node.Checked)
-                {
-                    sceneNode.Scene.Add(deviceNode.Device);
-                }
-                else
-                {
-                    sceneNode.Scene.Remove(deviceNode.Device);
-                }
+                return false;
             }
 
-            base.OnAfterCheck(e);
+            scene.AddRange(devices);
+            scene.Items.RemoveWhere(i => !devices.Contains(i.Device));
+            return true;
         }
 
         protected override void OnAfterLabelEdit(NodeLabelEditEventArgs e)
@@ -112,19 +118,6 @@ namespace DerekWare.Iris
             base.OnAfterLabelEdit(e);
         }
 
-        protected override void OnAfterSelect(TreeViewEventArgs e)
-        {
-            CheckBoxes = e.Node is SceneNode;
-            SetCheckState(Nodes);
-            base.OnAfterSelect(e);
-        }
-
-        protected override void OnBeforeCheck(TreeViewCancelEventArgs e)
-        {
-            e.Cancel = e.Node is not DeviceNode;
-            base.OnBeforeCheck(e);
-        }
-
         protected override void OnBeforeLabelEdit(NodeLabelEditEventArgs e)
         {
             e.CancelEdit = e.Node is not SceneNode;
@@ -133,12 +126,22 @@ namespace DerekWare.Iris
 
         protected override void OnHandleCreated(EventArgs e)
         {
+            if(DesignMode)
+            {
+                return;
+            }
+
             SceneFactory.Instance.CollectionChanged += OnSceneFactoryCollectionChanged;
             base.OnHandleCreated(e);
         }
 
         protected override void OnHandleDestroyed(EventArgs e)
         {
+            if(DesignMode)
+            {
+                return;
+            }
+
             SceneFactory.Instance.CollectionChanged -= OnSceneFactoryCollectionChanged;
             base.OnHandleDestroyed(e);
         }
@@ -159,21 +162,6 @@ namespace DerekWare.Iris
         {
             Activate((TreeNode)e.Node);
             base.OnNodeMouseDoubleClick(e);
-        }
-
-        protected void SetCheckState(TreeNode node)
-        {
-            InUpdate = true;
-
-            node.Checked = node is DeviceNode deviceNode && (SelectedScene?.Contains(deviceNode.Device) ?? false);
-            SetCheckState(node.Nodes);
-
-            InUpdate = false;
-        }
-
-        protected void SetCheckState(TreeNodeCollection nodes)
-        {
-            nodes.ForEach<TreeNode>(SetCheckState);
         }
 
         #region Event Handlers

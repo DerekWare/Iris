@@ -60,7 +60,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 {
                     ColorOffset -= (int)ColorOffset;
                 }
-                
+
                 cyclePosition = ColorOffset;
             }
             else if(Direction == EffectDirection.Backward)

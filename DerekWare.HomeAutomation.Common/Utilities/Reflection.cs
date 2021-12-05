@@ -53,6 +53,33 @@ namespace DerekWare.HomeAutomation.Common
             return GetName(@this.GetType());
         }
 
+        public static IReadOnlyCollection<Assembly> GetReferencedAssemblies()
+        {
+            var remaining = new Queue<Assembly>();
+            var found = new Dictionary<string, Assembly>();
+
+            remaining.Enqueue(Assembly.GetEntryAssembly());
+
+            while(remaining.Count > 0)
+            {
+                var nextAssembly = remaining.Dequeue();
+
+                foreach(var reference in nextAssembly.GetReferencedAssemblies())
+                {
+                    if(found.ContainsKey(reference.FullName))
+                    {
+                        continue;
+                    }
+
+                    var assembly = Assembly.Load(reference);
+                    remaining.Enqueue(assembly);
+                    found.Add(reference.FullName, assembly);
+                }
+            }
+
+            return found.Values;
+        }
+
         public static IEnumerable<PropertyInfo> GetVisibleProperties(this Type type)
         {
             return type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(IsVisible);
@@ -60,7 +87,7 @@ namespace DerekWare.HomeAutomation.Common
 
         public static IEnumerable<Type> GetVisibleTypes()
         {
-            return AppDomain.CurrentDomain.GetAssemblies().SelectMany(GetVisibleTypes);
+            return GetReferencedAssemblies().SelectMany(GetVisibleTypes);
         }
 
         public static IEnumerable<Type> GetVisibleTypes(this Assembly assembly)

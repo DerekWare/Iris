@@ -152,6 +152,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\DeviceSelectionTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\DeviceSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DeviceSelectionForm.Designer.cs">
+      <DependentUpon>DeviceSelectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\EffectButtonPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -170,7 +182,7 @@
     <Compile Include="Controls\BrightnessPanel.Designer.cs">
       <DependentUpon>BrightnessPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SceneItemPanel.cs">
+    <Compile Include="Controls\SceneActionPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ScenePanel.cs">
@@ -272,6 +284,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\DeviceSelectionForm.resx">
+      <DependentUpon>DeviceSelectionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\EffectButtonPanel.resx">
       <DependentUpon>EffectButtonPanel.cs</DependentUpon>
     </EmbeddedResource>

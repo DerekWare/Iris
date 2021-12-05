@@ -45,7 +45,7 @@ namespace DerekWare.Iris
             this.PowerGroupBox.Location = new System.Drawing.Point(8, 8);
             this.PowerGroupBox.Name = "PowerGroupBox";
             this.PowerGroupBox.Padding = new System.Windows.Forms.Padding(8);
-            this.PowerGroupBox.Size = new System.Drawing.Size(277, 85);
+            this.PowerGroupBox.Size = new System.Drawing.Size(271, 79);
             this.PowerGroupBox.TabIndex = 9;
             this.PowerGroupBox.TabStop = false;
             this.PowerGroupBox.Text = "Power";
@@ -63,17 +63,17 @@ namespace DerekWare.Iris
             this.TableLayoutPanel.Padding = new System.Windows.Forms.Padding(8);
             this.TableLayoutPanel.RowCount = 1;
             this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableLayoutPanel.Size = new System.Drawing.Size(261, 50);
+            this.TableLayoutPanel.Size = new System.Drawing.Size(255, 44);
             this.TableLayoutPanel.TabIndex = 2;
             // 
             // PowerStateComboBox
             // 
-            this.PowerStateComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.TableLayoutPanel.SetColumnSpan(this.PowerStateComboBox, 4);
+            this.PowerStateComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PowerStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PowerStateComboBox.FormattingEnabled = true;
-            this.PowerStateComboBox.Location = new System.Drawing.Point(11, 11);
+            this.PowerStateComboBox.Location = new System.Drawing.Point(8, 8);
+            this.PowerStateComboBox.Margin = new System.Windows.Forms.Padding(0);
             this.PowerStateComboBox.Name = "PowerStateComboBox";
             this.PowerStateComboBox.Size = new System.Drawing.Size(239, 28);
             this.PowerStateComboBox.TabIndex = 0;
@@ -88,7 +88,7 @@ namespace DerekWare.Iris
             this.Controls.Add(this.PowerGroupBox);
             this.Name = "PowerStatePanel";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(293, 101);
+            this.Size = new System.Drawing.Size(287, 95);
             this.PowerGroupBox.ResumeLayout(false);
             this.PowerGroupBox.PerformLayout();
             this.TableLayoutPanel.ResumeLayout(false);

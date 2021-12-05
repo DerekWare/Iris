@@ -61,15 +61,6 @@ namespace DerekWare.Iris.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string ActionPanelDescription {
-            get {
-                return ResourceManager.GetString("ActionPanelDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon colorcpl_exe_5__16x16_32bpp {
@@ -120,20 +111,11 @@ namespace DerekWare.Iris.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select the devices you want to be added to the scene by checking or unchecking the boxes to the left. When you check the device, its current state will be captured and saved to the scene. You may then modify the scene properties in the control that will appear here.
+        ///   Looks up a localized string similar to Add devices to the scene by clicking Scenes, Select Devices. Once you&apos;ve added one more devices, you may set their state (power, colors, effect, etc.) and the scene will automatically be saved. To activate the scene on all selected devices, click Scenes, Apply Scene or double-click the scene name in the tree to the left..
         /// </summary>
         internal static string EmptySceneDescription {
             get {
                 return ResourceManager.GetString("EmptySceneDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Select the devices you want to be added to the scene by checking or unchecking the boxes to the left. When you check the device, its current state will be captured and saved to the scene. You may then modify the scene properties below..
-        /// </summary>
-        internal static string ScenePanelDescription {
-            get {
-                return ResourceManager.GetString("ScenePanelDescription", resourceCulture);
             }
         }
     }

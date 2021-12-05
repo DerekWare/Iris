@@ -93,7 +93,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 
         public MultiZoneEffectSettings Clone()
         {
-            return (MultiZoneEffectSettings)Common.Reflection.Clone(this);
+            return Common.Reflection.Clone(this);
         }
 
         #endregion

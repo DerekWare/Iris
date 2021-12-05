@@ -94,7 +94,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
         public ColorZone Clone()
         {
-            return (ColorZone)Reflection.Clone(this);
+            return Reflection.Clone(this);
         }
 
         #endregion

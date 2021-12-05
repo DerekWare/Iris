@@ -11,7 +11,7 @@ namespace DerekWare.Iris
             // TODO update name when the device is found
             SceneItem = sceneItem;
             Text = SceneItem.Name;
-            Panel = new SceneItemPanel(SceneItem) { Dock = DockStyle.Fill, Description = Resources.ScenePanelDescription };
+            Panel = new SceneItemPanel(SceneItem) { Dock = DockStyle.Fill };
             Controls.Add(Panel);
         }
 

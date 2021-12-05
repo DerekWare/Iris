@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using DerekWare.Collections;
-using DerekWare.Threading;
 using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects

@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
-using System.Runtime.Serialization;
 using DerekWare.Collections;
-using DerekWare.HomeAutomation.Common.Colors;
-using DerekWare.HomeAutomation.Common.Effects;
-using DerekWare.HomeAutomation.Common.Themes;
 
 namespace DerekWare.HomeAutomation.Common.Scenes
 {
@@ -16,9 +13,11 @@ namespace DerekWare.HomeAutomation.Common.Scenes
     {
         public Scene()
         {
+            Items.CollectionChanged += OnCollectionChanged;
         }
 
         public Scene(string name)
+            : this()
         {
             Name = name;
         }
@@ -30,6 +29,11 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         public bool Add(IDevice device)
         {
             return Items.Add(new SceneItem(device));
+        }
+
+        public int AddRange(IEnumerable<IDevice> devices)
+        {
+            return devices.ForEach(Add).Count();
         }
 
         public void Apply()
@@ -46,5 +50,27 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         {
             return Items.RemoveWhere(i => i.Matches(device)) > 0;
         }
+
+        public int RemoveRange(IEnumerable<IDevice> devices)
+        {
+            return devices.ForEach(Remove).Count();
+        }
+
+        #region Event Handlers
+
+        void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if((e.Action != NotifyCollectionChangedAction.Remove) && (e.Action != NotifyCollectionChangedAction.Reset))
+            {
+                return;
+            }
+
+            foreach(SceneItem item in e.OldItems)
+            {
+                item.Dispose();
+            }
+        }
+
+        #endregion
     }
 }

@@ -32,6 +32,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             {
                 _DeviceDiscovered += value;
                 InternalDevices.ForEach(i => value.BeginInvoke(this, new DeviceEventArgs { Device = i.Value }, null, null));
+                InternalGroups.ForEach(i => value.BeginInvoke(this, new DeviceEventArgs { Device = i }, null, null));
             }
             remove => _DeviceDiscovered -= value;
         }

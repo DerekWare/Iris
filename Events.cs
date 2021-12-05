@@ -7,6 +7,10 @@ using DerekWare.HomeAutomation.Common.Themes;
 
 namespace DerekWare.Iris
 {
+    public class BrightnessChangedEventArgs : PropertyChangedEventArgs<double>
+    {
+    }
+
     public class ColorChangedEventArgs : PropertyChangedEventArgs<Color>
     {
     }
@@ -16,10 +20,6 @@ namespace DerekWare.Iris
     }
 
     public class PowerStateChangedEventArgs : PropertyChangedEventArgs<PowerState>
-    {
-    }
-
-    public class BrightnessChangedEventArgs : PropertyChangedEventArgs<double>
     {
     }
 

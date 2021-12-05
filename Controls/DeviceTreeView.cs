@@ -1,16 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
-using LifxClient = DerekWare.HomeAutomation.Lifx.Lan.Client;
-using HueClient = DerekWare.HomeAutomation.PhilipsHue.Client;
 using PowerState = DerekWare.HomeAutomation.Common.PowerState;
 
 namespace DerekWare.Iris
 {
     class DeviceTreeView : TreeView
     {
+        readonly DeviceFilterNode EffectActiveNode = new("Effect Active") { Predicate = device => device.Effect is not null };
+        readonly DeviceFilterNode PowerOffNode = new("Power Off") { Predicate = device => device.Power == PowerState.Off };
+        readonly DeviceFilterNode PowerOnNode = new("Power On") { Predicate = device => device.Power == PowerState.On };
+        readonly DeviceFilterNode StateNode = new("State") { HideDevices = true };
+
+        bool _ShowFamilyNodes;
+        bool _ShowStateNode;
+
         public DeviceTreeView()
         {
             if(DesignMode)
@@ -21,41 +28,116 @@ namespace DerekWare.Iris
             TreeNode.Add(Nodes, new DevicesNode("All Devices"));
             TreeNode.Add(Nodes, new GroupsNode("All Groups"));
 
-            var state = TreeNode.Add(Nodes, new DeviceFilterNode("State") { HideDevices = true });
-            state.Add(new DeviceFilterNode("Effect Active") { Predicate = device => device.Effect is not null });
-            state.Add(new DeviceFilterNode("Power Off") { Predicate = device => device.Power == PowerState.Off });
-            state.Add(new DeviceFilterNode("Power On") { Predicate = device => device.Power == PowerState.On });
+            StateNode.Nodes.Add(EffectActiveNode);
+            StateNode.Nodes.Add(PowerOffNode);
+            StateNode.Nodes.Add(PowerOnNode);
         }
 
-        protected new bool DesignMode => Extensions.IsDesignMode();
+        public bool ShowFamilyNodes
+        {
+            get => _ShowFamilyNodes;
+            set
+            {
+                _ShowFamilyNodes = value;
+
+                if(DesignMode)
+                {
+                    return;
+                }
+
+                if(value)
+                {
+                    UpdateDeviceList();
+                }
+                else
+                {
+                    Nodes.RemoveWhere<DeviceFamilyNode>(i => true);
+                }
+            }
+        }
+
+        public bool ShowStateNode
+        {
+            get => _ShowStateNode;
+            set
+            {
+                _ShowStateNode = value;
+
+                if(DesignMode)
+                {
+                    return;
+                }
+
+                if(value)
+                {
+                    if(!Nodes.Contains(StateNode))
+                    {
+                        Nodes.Add(StateNode);
+                    }
+
+                    UpdateDeviceList();
+                }
+                else
+                {
+                    Nodes.Remove(StateNode);
+                }
+            }
+        }
+
+        protected virtual void AddDevice(IDevice device)
+        {
+            // Add device family nodes
+            if(ShowFamilyNodes && !device.Family.IsNullOrEmpty())
+            {
+                var familyNode = TreeNode.Find<DeviceFamilyNode>(Nodes, device.Family) ?? TreeNode.Add(Nodes, new DeviceFamilyNode(device.Family));
+            }
+
+            // Update all nodes that like this device
+            Nodes.OfType<DeviceFilterNode>().ForEach(i => i.Add(device));
+        }
 
         protected override void OnHandleCreated(EventArgs e)
         {
-            HueClient.Instance.DeviceDiscovered += OnDeviceChanged;
-            HueClient.Instance.PropertiesChanged += OnDeviceChanged;
-            HueClient.Instance.StateChanged += OnDeviceChanged;
-            LifxClient.Instance.DeviceDiscovered += OnDeviceChanged;
-            LifxClient.Instance.PropertiesChanged += OnDeviceChanged;
-            LifxClient.Instance.StateChanged += OnDeviceChanged;
+            if(DesignMode)
+            {
+                return;
+            }
+
+            foreach(var client in ClientFactory.Instance)
+            {
+                client.DeviceDiscovered += OnDeviceChanged;
+                client.PropertiesChanged += OnDeviceChanged;
+                client.StateChanged += OnDeviceChanged;
+            }
 
             base.OnHandleCreated(e);
         }
 
         protected override void OnHandleDestroyed(EventArgs e)
         {
-            HueClient.Instance.DeviceDiscovered -= OnDeviceChanged;
-            HueClient.Instance.PropertiesChanged -= OnDeviceChanged;
-            HueClient.Instance.StateChanged -= OnDeviceChanged;
-            LifxClient.Instance.DeviceDiscovered -= OnDeviceChanged;
-            LifxClient.Instance.PropertiesChanged -= OnDeviceChanged;
-            LifxClient.Instance.StateChanged -= OnDeviceChanged;
+            if(DesignMode)
+            {
+                return;
+            }
+
+            foreach(var client in ClientFactory.Instance)
+            {
+                client.DeviceDiscovered -= OnDeviceChanged;
+                client.PropertiesChanged -= OnDeviceChanged;
+                client.StateChanged -= OnDeviceChanged;
+            }
 
             base.OnHandleDestroyed(e);
         }
 
+        protected virtual void UpdateDeviceList()
+        {
+            ClientFactory.Instance.SelectMany(i => i.Devices.Append(i.Groups)).ForEach(AddDevice);
+        }
+
         #region Event Handlers
 
-        void OnDeviceChanged(object sender, DeviceEventArgs e)
+        protected virtual void OnDeviceChanged(object sender, DeviceEventArgs e)
         {
             if(InvokeRequired)
             {
@@ -63,14 +145,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            // Add device family nodes
-            if(!e.Device.Family.IsNullOrEmpty())
-            {
-                var familyNode = TreeNode.Find<DeviceFamilyNode>(Nodes, e.Device.Family) ?? TreeNode.Add(Nodes, new DeviceFamilyNode(e.Device.Family));
-            }
-
-            // Update all nodes that like this device
-            Nodes.OfType<DeviceFilterNode>().ForEach(i => i.Add(e.Device));
+            AddDevice(e.Device);
         }
 
         #endregion
@@ -182,6 +257,11 @@ namespace DerekWare.Iris
                 return Find<DeviceNode>(parent, i => i.Device.Equals(device));
             }
 
+            public static IEnumerable<IDevice> GetAllChildDevices(TreeNodeCollection parent)
+            {
+                return GetAllChildNodes(parent).OfType<DeviceNode>().Select(i => i.Device);
+            }
+
             public static void Remove(TreeNodeCollection parent, IDevice device)
             {
                 Remove<DeviceNode>(parent, i => i.Device.Equals(device));
@@ -205,63 +285,6 @@ namespace DerekWare.Iris
                 : base(text)
             {
                 Predicate = device => device is IDeviceGroup;
-            }
-        }
-
-        // Intelligently adds or updates nodes using the correct node type and automatically sorted
-        public class TreeNode : System.Windows.Forms.TreeNode
-        {
-            public TreeNode(string text)
-            {
-                Text = text;
-            }
-
-            public virtual T Add<T>(T child)
-                where T : TreeNode
-            {
-                return Add(Nodes, child);
-            }
-
-            public static T Add<T>(TreeNodeCollection parent, T child)
-                where T : TreeNode
-            {
-                parent.Insert(FindInsertionPoint(parent, child), child);
-                return child;
-            }
-
-            public static T Find<T>(TreeNodeCollection parent, string text)
-                where T : TreeNode
-            {
-                return Find<T>(parent, i => i.Text.Equals(text));
-            }
-
-            public static T Find<T>(TreeNodeCollection parent, Func<T, bool> wherePredicate)
-                where T : TreeNode
-            {
-                return parent.OfType<T>().FirstOrDefault(wherePredicate);
-            }
-
-            public static int FindInsertionPoint(TreeNodeCollection parent, TreeNode child)
-            {
-                var index = 0;
-
-                foreach(TreeNode i in parent)
-                {
-                    if(string.Compare(child.Text, i.Text, StringComparison.CurrentCulture) < 0)
-                    {
-                        break;
-                    }
-
-                    ++index;
-                }
-
-                return index;
-            }
-
-            public static void Remove<T>(TreeNodeCollection parent, Func<T, bool> wherePredicate)
-                where T : TreeNode
-            {
-                parent.OfType<T>().Where(wherePredicate).ToList().ForEach(parent.Remove);
             }
         }
     }

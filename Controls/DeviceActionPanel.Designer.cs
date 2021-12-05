@@ -105,7 +105,7 @@ namespace DerekWare.Iris
             this.SolidColorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.StateLayoutPanel.SetColumnSpan(this.SolidColorPanel, 2);
             this.SolidColorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SolidColorPanel.Location = new System.Drawing.Point(8, 156);
+            this.SolidColorPanel.Location = new System.Drawing.Point(8, 166);
             this.SolidColorPanel.Margin = new System.Windows.Forms.Padding(8);
             this.SolidColorPanel.Name = "SolidColorPanel";
             this.SolidColorPanel.Padding = new System.Windows.Forms.Padding(8);
@@ -119,7 +119,7 @@ namespace DerekWare.Iris
             this.MultiZoneColorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.StateLayoutPanel.SetColumnSpan(this.MultiZoneColorPanel, 2);
             this.MultiZoneColorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MultiZoneColorPanel.Location = new System.Drawing.Point(8, 351);
+            this.MultiZoneColorPanel.Location = new System.Drawing.Point(8, 361);
             this.MultiZoneColorPanel.Margin = new System.Windows.Forms.Padding(8);
             this.MultiZoneColorPanel.Name = "MultiZoneColorPanel";
             this.MultiZoneColorPanel.Padding = new System.Windows.Forms.Padding(8);
@@ -136,7 +136,7 @@ namespace DerekWare.Iris
             this.PowerStatePanel.Margin = new System.Windows.Forms.Padding(8);
             this.PowerStatePanel.Name = "PowerStatePanel";
             this.PowerStatePanel.Padding = new System.Windows.Forms.Padding(8);
-            this.PowerStatePanel.Size = new System.Drawing.Size(470, 132);
+            this.PowerStatePanel.Size = new System.Drawing.Size(470, 142);
             this.PowerStatePanel.TabIndex = 0;
             this.PowerStatePanel.PowerStateChanged += new System.EventHandler<DerekWare.Iris.PowerStateChangedEventArgs>(this.OnPowerStateChanged);
             // 
@@ -146,11 +146,11 @@ namespace DerekWare.Iris
             this.ThemeButtonPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.StateLayoutPanel.SetColumnSpan(this.ThemeButtonPanel, 2);
             this.ThemeButtonPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ThemeButtonPanel.Location = new System.Drawing.Point(8, 546);
+            this.ThemeButtonPanel.Location = new System.Drawing.Point(8, 556);
             this.ThemeButtonPanel.Margin = new System.Windows.Forms.Padding(8);
             this.ThemeButtonPanel.Name = "ThemeButtonPanel";
             this.ThemeButtonPanel.Padding = new System.Windows.Forms.Padding(8);
-            this.ThemeButtonPanel.Size = new System.Drawing.Size(956, 354);
+            this.ThemeButtonPanel.Size = new System.Drawing.Size(956, 349);
             this.ThemeButtonPanel.TabIndex = 4;
             this.ThemeButtonPanel.SelectedThemeChanged += new System.EventHandler<DerekWare.Iris.SelectedThemeChangedEventArgs>(this.OnSelectedThemeChanged);
             // 
@@ -160,11 +160,11 @@ namespace DerekWare.Iris
             this.EffectButtonPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.StateLayoutPanel.SetColumnSpan(this.EffectButtonPanel, 2);
             this.EffectButtonPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EffectButtonPanel.Location = new System.Drawing.Point(8, 916);
+            this.EffectButtonPanel.Location = new System.Drawing.Point(8, 921);
             this.EffectButtonPanel.Margin = new System.Windows.Forms.Padding(8);
             this.EffectButtonPanel.Name = "EffectButtonPanel";
             this.EffectButtonPanel.Padding = new System.Windows.Forms.Padding(8);
-            this.EffectButtonPanel.Size = new System.Drawing.Size(956, 355);
+            this.EffectButtonPanel.Size = new System.Drawing.Size(956, 350);
             this.EffectButtonPanel.TabIndex = 5;
             this.EffectButtonPanel.SelectedEffectChanged += new System.EventHandler<DerekWare.Iris.SelectedEffectChangedEventArgs>(this.OnSelectedEffectChanged);
             // 
@@ -173,10 +173,11 @@ namespace DerekWare.Iris
             this.BrightnessPanel.AutoSize = true;
             this.BrightnessPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BrightnessPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BrightnessPanel.Location = new System.Drawing.Point(489, 3);
+            this.BrightnessPanel.Location = new System.Drawing.Point(494, 8);
+            this.BrightnessPanel.Margin = new System.Windows.Forms.Padding(8);
             this.BrightnessPanel.Name = "BrightnessPanel";
             this.BrightnessPanel.Padding = new System.Windows.Forms.Padding(8);
-            this.BrightnessPanel.Size = new System.Drawing.Size(480, 142);
+            this.BrightnessPanel.Size = new System.Drawing.Size(470, 142);
             this.BrightnessPanel.TabIndex = 1;
             this.BrightnessPanel.BrightnessChanged += new System.EventHandler<DerekWare.Iris.BrightnessChangedEventArgs>(this.OnBrightnessChanged);
             // 

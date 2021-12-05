@@ -54,15 +54,6 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         #region IFactory<Scene,Scene>
 
-        public string Serialize()
-        {
-            return JsonSerializer.Serialize(Items.ToList());
-        }
-
-        #endregion
-
-        #region ISerializableFactory<Scene,Scene>
-
         public Scene CreateInstance(string name)
         {
             var scene = new Scene(name);
@@ -75,6 +66,10 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             return scene;
         }
 
+        #endregion
+
+        #region ISerializableFactory<Scene,Scene>
+
         public void Deserialize(string cache)
         {
             try
@@ -85,6 +80,11 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             {
                 Debug.Error(this, ex);
             }
+        }
+
+        public string Serialize()
+        {
+            return JsonSerializer.Serialize(Items.ToList());
         }
 
         #endregion

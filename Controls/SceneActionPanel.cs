@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using DerekWare.HomeAutomation.Common;
+using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.HomeAutomation.Common.Themes;
@@ -101,8 +102,8 @@ namespace DerekWare.Iris
             InUpdate = true;
 
             PowerStatePanel.Power = SceneItem.Power;
-            SolidColorPanel.Color = SceneItem.Color ?? Device.Color;
-            MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors ?? Device.MultiZoneColors;
+            SolidColorPanel.Color = SceneItem.Color ?? Device?.Color ?? Colors.Black;
+            MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors ?? Device?.MultiZoneColors ?? new[] { SolidColorPanel.Color };
             ThemeButtonPanel.DeviceFamily = SceneItem.Family;
             ThemeButtonPanel.SelectedTheme = SceneItem.Theme;
             EffectButtonPanel.DeviceFamily = SceneItem.Family;
@@ -112,6 +113,7 @@ namespace DerekWare.Iris
             PowerStatePanel.Enabled = enable;
 
             enable = enable && (SceneItem.Power == PowerState.On);
+            BrightnessPanel.Enabled = false; // TODO?
             SolidColorPanel.Enabled = enable;
             MultiZoneColorPanel.Enabled = enable;
             ThemeButtonPanel.Enabled = enable;
@@ -119,7 +121,6 @@ namespace DerekWare.Iris
             EffectButtonPanel.Enabled = enable;
             EffectButtonPanel.Enabled = enable;
 
-            BrightnessPanel.Enabled = false; // TODO?
 
             InUpdate = false;
         }
@@ -154,6 +155,12 @@ namespace DerekWare.Iris
 
         void OnDevicePropertiesChanged(object sender, DeviceEventArgs e)
         {
+            if(InvokeRequired)
+            {
+                BeginInvoke(new Action(() => OnDevicePropertiesChanged(sender, e)));
+                return;
+            }
+
             UpdateState();
         }
 

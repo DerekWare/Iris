@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using AutoUpdaterDotNET;
 using DerekWare.Collections;
+using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.HomeAutomation.Common.Themes;
@@ -51,7 +52,14 @@ namespace DerekWare.Iris
 
         void CheckForUpdates()
         {
-            AutoUpdater.Start("http://www.derekware.com/software/iris/AutoUpdater.xml");
+            try
+            {
+                AutoUpdater.Start("http://www.derekware.com/software/iris/AutoUpdater.xml");
+            }
+            catch(Exception ex)
+            {
+                Debug.Error(this, ex);
+            }
         }
 
         void LoadSettings()
@@ -143,7 +151,7 @@ namespace DerekWare.Iris
             switch(e.Node)
             {
                 case DeviceTreeView.DeviceNode deviceNode:
-                    DeviceActionPanel = new DeviceActionPanel(deviceNode.Device) { Dock = DockStyle.Fill, Description = Resources.ActionPanelDescription };
+                    DeviceActionPanel = new DeviceActionPanel(deviceNode.Device) { Dock = DockStyle.Fill };
                     RootLayoutPanel.Controls.Add(DeviceActionPanel, 1, 0);
                     break;
 
@@ -153,6 +161,7 @@ namespace DerekWare.Iris
                     break;
             }
 
+            SelectSceneDevicesToolStripMenuItem.Enabled = ScenePanel is not null;
             RenameSceneToolStripMenuItem.Enabled = ScenePanel is not null;
             RemoveSceneToolStripMenuItem.Enabled = ScenePanel is not null;
             ApplySceneToolStripMenuItem.Enabled = ScenePanel is not null;
@@ -251,6 +260,11 @@ namespace DerekWare.Iris
 
         void ScenesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
+        }
+
+        void SelectSceneDevicesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ComponentTreeView.SelectSceneDevices();
         }
 
         void ShowWindowMenuItem_Click(object sender, EventArgs e)
