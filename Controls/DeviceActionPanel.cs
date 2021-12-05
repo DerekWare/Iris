@@ -122,6 +122,7 @@ namespace DerekWare.Iris
             InUpdate = true;
 
             PowerStatePanel.Power = Device?.Power ?? PowerState.Off;
+            BrightnessPanel.Brightness = Device?.Brightness ?? 0;
             SolidColorPanel.Color = Device?.Color ?? Colors.Black;
             MultiZoneColorPanel.Colors = Device?.MultiZoneColors ?? new[] { Colors.Black };
             ThemeButtonPanel.DeviceFamily = Device?.Family;
@@ -145,6 +146,9 @@ namespace DerekWare.Iris
 
             if(Device is not null)
             {
+                Device.Theme = null;
+                Device.Effect = null;
+                Device.Power = PowerState.On;
                 Device.MultiZoneColors = e.Property;
             }
 
@@ -165,6 +169,11 @@ namespace DerekWare.Iris
             if(Device is not null)
             {
                 Device.Power = e.Property;
+
+                if(e.Property == PowerState.Off)
+                {
+                    Device.Effect = null;
+                }
             }
 
             InUpdate = false;
@@ -188,6 +197,8 @@ namespace DerekWare.Iris
 
             if(Device is not null)
             {
+                Device.Theme = null;
+                Device.Power = PowerState.On;
                 Device.Effect = effect;
             }
 
@@ -212,6 +223,8 @@ namespace DerekWare.Iris
 
             if(Device is not null)
             {
+                Device.Effect = null;
+                Device.Power = PowerState.On;
                 Device.Theme = theme;
             }
 
@@ -231,7 +244,26 @@ namespace DerekWare.Iris
 
             if(Device is not null)
             {
+                Device.Theme = null;
+                Device.Effect = null;
+                Device.Power = PowerState.On;
                 Device.Color = e.Property;
+            }
+
+            InUpdate = false;
+
+            UpdateState();
+        }
+
+        void BrightnessPanel_BrightnessChanged(object sender, BrightnessChangedEventArgs e)
+        {
+            InUpdate = true;
+
+            if(Device is not null)
+            {
+                Device.Effect = null;
+                Device.Power = PowerState.On;
+                Device.Brightness = e.Property;
             }
 
             InUpdate = false;

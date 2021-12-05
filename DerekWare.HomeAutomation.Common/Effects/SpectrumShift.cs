@@ -1,15 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
     [Name("Spectrum Shift"),
-     Description("Combines the Spectrum theme and the Move effect, but with more mathematically\n" +
-                 "correct color values during motion than the Move effect can provide. This is\n" +
-                 "particularly evident on groups or devices with fewer color zones, or 1 (where\n" +
-                 "the Move effect can't do anything).")]
+     Description(
+         "Combines the Spectrum theme and the Move effect, but with more mathematically correct color values during motion than the Move effect can provide. This is particularly evident on groups or devices with fewer color zones, or 1 (where the Move effect can't do anything).")]
     public class SpectrumShift : MultiZoneColorEffectRenderer
     {
         public enum EffectBehavior
@@ -38,9 +37,23 @@ namespace DerekWare.HomeAutomation.Common.Effects
         }
 
         public virtual EffectBehavior Behavior { get; set; }
+
+        [Range(0.0, 1.0)]
         public double Brightness { get; set; } = 1;
+
+        [Range(0.0, 1.0)]
         public double Kelvin { get; set; } = 1;
+
+        [Range(-1.0, 1.0), Description("Start the spectrum from a specific point in the spectrum.")]
+        public double Offset { get; set; }
+
+        [Range(0.0, 1.0)]
         public double Saturation { get; set; } = 1;
+
+        [Description(
+             "The window size is how much of the visible spectrum to show at once. A window size of 1 will show all of it. A window size of 0 will show a single color. A window size of 0.5 will show half of the spectrum at one time. The effect will continue to rotate through the entire spectrum regardless of the window size."),
+         Range(0.0, 1.0)]
+        public double Window { get; set; } = 1;
 
         public override object Clone()
         {
@@ -74,25 +87,27 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
                 cyclePosition = ColorOffset;
             }
-            else if(Direction == EffectDirection.Forward)
-            {
-                cyclePosition = 1.0 - cyclePosition;
-            }
 
             for(var i = 0; i < colors.Length; ++i)
             {
-                var hue = cyclePosition + ((double)i / ZoneCount);
+                var hue = cyclePosition + Offset + (((double)i / ZoneCount) * Window);
 
-                if(hue >= 1)
+                switch(hue)
                 {
-                    hue -= Math.Floor(hue);
-                }
-                else if(hue < 0)
-                {
-                    hue += Math.Floor(-hue) + 1;
+                    case >= 1:
+                        hue -= Math.Floor(hue);
+                        break;
+                    case < 0:
+                        hue += Math.Floor(-hue) + 1;
+                        break;
                 }
 
                 colors[i] = new Color(hue, Saturation, Brightness, Kelvin);
+            }
+
+            if((Behavior != EffectBehavior.Random) && (Direction == EffectDirection.Forward))
+            {
+                Array.Reverse(colors);
             }
 
             return true;

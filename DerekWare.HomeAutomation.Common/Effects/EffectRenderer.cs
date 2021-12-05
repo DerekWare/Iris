@@ -37,7 +37,19 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void StopEffect(bool wait)
         {
-            Thread?.Stop(wait);
+            if(Thread is null)
+            {
+                return;
+            }
+
+            if(Thread.IsCurrentThread)
+            {
+                Thread.CancellationPending = true;
+            }
+            else
+            {
+                Thread.Stop(wait);
+            }
         }
 
         protected virtual TimeSpan ValidateRefreshRate()
@@ -137,7 +149,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             public RenderState Clone()
             {
-                return (RenderState)Reflection.Clone(this);
+                return Reflection.Clone(this);
             }
 
             #endregion

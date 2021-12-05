@@ -19,6 +19,10 @@ namespace DerekWare.Iris
     {
     }
 
+    public class BrightnessChangedEventArgs : PropertyChangedEventArgs<double>
+    {
+    }
+
     public class PropertyChangedEventArgs<T> : EventArgs
     {
         public T Property { get; set; }

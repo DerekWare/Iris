@@ -32,6 +32,7 @@ namespace DerekWare.HomeAutomation.Common
     // State changes based on user interaction
     public interface IDeviceState
     {
+        double Brightness { get; set; }
         Color Color { get; set; }
         Effect Effect { get; set; }
         IReadOnlyCollection<Color> MultiZoneColors { get; set; }
@@ -79,6 +80,13 @@ namespace DerekWare.HomeAutomation.Common
         public virtual event EventHandler<DeviceEventArgs> StateChanged;
 
         public virtual string Family => Client.Family;
+
+        [Browsable(false)]
+        public double Brightness
+        {
+            get => Color.Brightness;
+            set => MultiZoneColors = MultiZoneColors.Select(color => new Color(color) { Brightness = value }).ToList();
+        }
 
         [Browsable(false)]
         public virtual Color Color { get => _Color; set => SetColor(value, TimeSpan.Zero); }

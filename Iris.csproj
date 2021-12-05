@@ -164,6 +164,12 @@
     <Compile Include="Controls\EffectDropDownPanel.Designer.cs">
       <DependentUpon>EffectDropDownPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\BrightnessPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BrightnessPanel.Designer.cs">
+      <DependentUpon>BrightnessPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SceneItemPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -193,9 +199,6 @@
     </Compile>
     <Compile Include="Forms\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\AutoMenuStrip.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\ComponentTreeView.cs">
       <SubType>Component</SubType>
@@ -274,6 +277,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\EffectDropDownPanel.resx">
       <DependentUpon>EffectDropDownPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\BrightnessPanel.resx">
+      <DependentUpon>BrightnessPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ScenePanel.resx">
       <DependentUpon>ScenePanel.cs</DependentUpon>

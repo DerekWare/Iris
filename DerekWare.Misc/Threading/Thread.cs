@@ -85,7 +85,7 @@ namespace DerekWare.Threading
         public virtual bool CancellationPending
         {
             get => CancelEvent.WaitOne(0);
-            protected set
+            set
             {
                 lock(SyncRoot)
                 {
