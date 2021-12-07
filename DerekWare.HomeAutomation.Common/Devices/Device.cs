@@ -232,12 +232,6 @@ namespace DerekWare.HomeAutomation.Common
             }
 
             _Power = power;
-
-            if(PowerState.Off == _Power)
-            {
-                Effect = null;
-            }
-
             OnStateChanged();
         }
 

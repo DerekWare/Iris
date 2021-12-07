@@ -56,7 +56,7 @@ namespace DerekWare.Iris
         {
             var button = new Button { Text = theme.Name, Tag = theme, Dock = DockStyle.Fill };
             button.Click += OnClick;
-            TableLayoutPanel.Controls.Add(button);
+            LayoutPanel.Controls.Add(button);
 
             if(!theme.Description.IsNullOrEmpty())
             {
@@ -68,7 +68,7 @@ namespace DerekWare.Iris
 
         void UpdateState()
         {
-            foreach(var button in TableLayoutPanel.Controls.OfType<Button>())
+            foreach(var button in LayoutPanel.Controls.OfType<Button>())
             {
                 var theme = (IReadOnlyThemeProperties)button.Tag;
                 button.Enabled = theme.IsCompatible(DeviceFamily);

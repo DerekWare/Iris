@@ -40,7 +40,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
             Device.GetDevices().ForEach<Device>(i => i.SetMultiZoneEffect(Settings));
         }
 
-        protected override void StopEffect(bool wait)
+        protected override void StopEffect()
         {
             Device.GetDevices().ForEach<Device>(i => i.SetMultiZoneEffect(new MultiZoneEffectSettings()));
         }

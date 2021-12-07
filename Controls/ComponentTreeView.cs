@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using DerekWare.Collections;
@@ -16,21 +17,23 @@ namespace DerekWare.Iris
 
         public ComponentTreeView()
         {
+            LabelEdit = true;
+            ShowFamilyNodes = true;
+            ShowStateNode = true;
+
             if(DesignMode)
             {
                 return;
             }
 
-            LabelEdit = true;
-            ShowFamilyNodes = true;
-            ShowStateNode = true;
-
             TreeNode.Add(Nodes, ScenesNode);
             SceneFactory.Instance.ForEach(i => SceneNode.Add(ScenesNode.Nodes, i));
         }
 
+        [Browsable(false)]
         public Scene SelectedScene => (SelectedNode as SceneNode)?.Scene;
 
+        [Browsable(false)]
         public new TreeNode SelectedNode { get => (TreeNode)base.SelectedNode; set => base.SelectedNode = value; }
 
         public bool Activate(TreeNode node)
@@ -38,6 +41,7 @@ namespace DerekWare.Iris
             if(node is SceneNode sceneNode)
             {
                 sceneNode.Scene.Apply();
+                MessageBox.Show($@"Scene ""{sceneNode.Scene.Name}"" successfully applied.", ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
 

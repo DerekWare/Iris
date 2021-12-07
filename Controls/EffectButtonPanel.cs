@@ -56,7 +56,7 @@ namespace DerekWare.Iris
         {
             var button = new Button { Text = effect.Name, Tag = effect, Dock = DockStyle.Fill };
             button.Click += OnClick;
-            TableLayoutPanel.Controls.Add(button);
+            LayoutPanel.Controls.Add(button);
 
             if(!effect.Description.IsNullOrEmpty())
             {
@@ -68,7 +68,7 @@ namespace DerekWare.Iris
 
         void UpdateState()
         {
-            foreach(var button in TableLayoutPanel.Controls.OfType<Button>())
+            foreach(var button in LayoutPanel.Controls.OfType<Button>())
             {
                 var effect = (IReadOnlyEffectProperties)button.Tag;
                 button.Enabled = effect.IsCompatible(DeviceFamily);

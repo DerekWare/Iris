@@ -21,7 +21,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             Stop();
         }
 
-        protected override void StopEffect(bool wait)
+        protected override void StopEffect()
         {
         }
     }

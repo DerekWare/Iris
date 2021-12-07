@@ -60,9 +60,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
             base.StartEffect();
         }
 
-        protected override void StopEffect(bool wait)
+        protected override void StopEffect()
         {
-            base.StopEffect(wait);
+            base.StopEffect();
             Extensions.Dispose(ref AudioRecorder);
         }
 

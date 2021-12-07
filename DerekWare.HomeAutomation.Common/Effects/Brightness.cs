@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -26,7 +27,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             if(renderState.CycleCount > 0)
             {
                 colors = colors.Select(color => new Color(color) { Brightness = EndingBrightness }).ToArray();
-                StopEffect(false);
+                Task.Run(Stop);
                 return true;
             }
 

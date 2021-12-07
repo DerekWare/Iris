@@ -185,11 +185,6 @@ namespace DerekWare.Iris
             if(Device is not null)
             {
                 Device.Power = e.Property;
-
-                if(e.Property == PowerState.Off)
-                {
-                    Device.Effect = null;
-                }
             }
 
             InUpdate = false;

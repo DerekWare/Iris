@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using DerekWare.Collections;
 using Newtonsoft.Json;
 
@@ -23,7 +25,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         public abstract bool IsMultiZone { get; }
 
         protected abstract void StartEffect();
-        protected abstract void StopEffect(bool wait);
+        protected abstract void StopEffect();
 
         #region ICloneable
 
@@ -31,8 +33,16 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         #endregion
 
+        readonly object DeviceStateLock = new();
+
+        IDevice _Device;
+        Task DeviceStateTask;
+
         [JsonIgnore]
         public string Description => this.GetDescription();
+
+        [Browsable(false), JsonIgnore]
+        public IDevice Device => _Device;
 
         [Browsable(false)]
         public virtual string Family => null;
@@ -42,9 +52,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         [Browsable(false)]
         public string Name => this.GetName();
-
-        [Browsable(false), JsonIgnore]
-        public IDevice Device { get; private set; }
 
         public virtual void Dispose()
         {
@@ -57,7 +64,12 @@ namespace DerekWare.HomeAutomation.Common.Effects
             Stop();
 
             // Save the device
-            Device = device ?? throw new ArgumentNullException(nameof(device));
+            _Device = device ?? throw new ArgumentNullException(nameof(device));
+
+            // Register for device state changes. If the device turns off, we can stop
+            // the effect. This will get called all the damned time when an effect is
+            // modifying the device, but I don't currently have a better way.
+            Device.StateChanged += OnDeviceStateChanged;
 
             // Register with the factory
             EffectFactory.Instance.OnEffectStarted(this);
@@ -70,13 +82,31 @@ namespace DerekWare.HomeAutomation.Common.Effects
         internal void Stop()
         {
             // Stop doing the things
-            StopEffect(true);
+            StopEffect();
 
             // Unregister with the factory
             EffectFactory.Instance.OnEffectStopped(this);
 
             // Release the device
-            Device = null;
+            var device = Interlocked.Exchange(ref _Device, null);
+
+            if(device is not null)
+            {
+                device.StateChanged -= OnDeviceStateChanged;
+            }
+        }
+
+        void OnDeviceStateChanged()
+        {
+            if(Device?.Power == PowerState.Off)
+            {
+                Stop();
+            }
+
+            lock(DeviceStateLock)
+            {
+                DeviceStateTask = null;
+            }
         }
 
         #region IMatch
@@ -95,6 +125,23 @@ namespace DerekWare.HomeAutomation.Common.Effects
             }
 
             return Name.Equals(name.Name) && this.IsCompatible(family);
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        void OnDeviceStateChanged(object sender, DeviceEventArgs e)
+        {
+            // Schedule a task to prevent any deadlocks or recursion that could be caused by this
+            // event handler being called in response to a change this effect made to the device.
+            lock(DeviceStateLock)
+            {
+                if(DeviceStateTask is null)
+                {
+                    DeviceStateTask = Task.Run(OnDeviceStateChanged);
+                }
+            }
         }
 
         #endregion

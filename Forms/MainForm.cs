@@ -165,7 +165,7 @@ namespace DerekWare.Iris
             RenameSceneToolStripMenuItem.Enabled = ScenePanel is not null;
             RemoveSceneToolStripMenuItem.Enabled = ScenePanel is not null;
             ApplySceneToolStripMenuItem.Enabled = ScenePanel is not null;
-            UpdateSceneToolStripMenuItem.Enabled = ScenePanel is not null;
+            // UpdateSceneToolStripMenuItem.Enabled = ScenePanel is not null;
         }
 
         void ComponentTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

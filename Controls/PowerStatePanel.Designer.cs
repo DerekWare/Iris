@@ -29,55 +29,55 @@ namespace DerekWare.Iris
         /// </summary>
         private void InitializeComponent()
         {
-            this.PowerGroupBox = new System.Windows.Forms.GroupBox();
-            this.TableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.PowerStateComboBox = new System.Windows.Forms.ComboBox();
-            this.PowerGroupBox.SuspendLayout();
-            this.TableLayoutPanel.SuspendLayout();
+            this.GroupBox = new CheckGroupBox();
+            this.LayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.ComboBox = new System.Windows.Forms.ComboBox();
+            this.GroupBox.SuspendLayout();
+            this.LayoutPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // PowerGroupBox
+            // GroupBox
             // 
-            this.PowerGroupBox.AutoSize = true;
-            this.PowerGroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.PowerGroupBox.Controls.Add(this.TableLayoutPanel);
-            this.PowerGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PowerGroupBox.Location = new System.Drawing.Point(8, 8);
-            this.PowerGroupBox.Name = "PowerGroupBox";
-            this.PowerGroupBox.Padding = new System.Windows.Forms.Padding(8);
-            this.PowerGroupBox.Size = new System.Drawing.Size(271, 79);
-            this.PowerGroupBox.TabIndex = 9;
-            this.PowerGroupBox.TabStop = false;
-            this.PowerGroupBox.Text = "Power";
+            this.GroupBox.AutoSize = true;
+            this.GroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.GroupBox.Controls.Add(this.LayoutPanel);
+            this.GroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GroupBox.Location = new System.Drawing.Point(8, 8);
+            this.GroupBox.Name = "GroupBox";
+            this.GroupBox.Padding = new System.Windows.Forms.Padding(8);
+            this.GroupBox.Size = new System.Drawing.Size(271, 79);
+            this.GroupBox.TabIndex = 9;
+            this.GroupBox.TabStop = false;
+            this.GroupBox.Text = "Power";
             // 
-            // TableLayoutPanel
+            // LayoutPanel
             // 
-            this.TableLayoutPanel.AutoSize = true;
-            this.TableLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.TableLayoutPanel.ColumnCount = 1;
-            this.TableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TableLayoutPanel.Controls.Add(this.PowerStateComboBox, 0, 0);
-            this.TableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TableLayoutPanel.Location = new System.Drawing.Point(8, 27);
-            this.TableLayoutPanel.Name = "TableLayoutPanel";
-            this.TableLayoutPanel.Padding = new System.Windows.Forms.Padding(8);
-            this.TableLayoutPanel.RowCount = 1;
-            this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableLayoutPanel.Size = new System.Drawing.Size(255, 44);
-            this.TableLayoutPanel.TabIndex = 2;
+            this.LayoutPanel.AutoSize = true;
+            this.LayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.LayoutPanel.ColumnCount = 1;
+            this.LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.LayoutPanel.Controls.Add(this.ComboBox, 0, 0);
+            this.LayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LayoutPanel.Location = new System.Drawing.Point(8, 27);
+            this.LayoutPanel.Name = "LayoutPanel";
+            this.LayoutPanel.Padding = new System.Windows.Forms.Padding(8);
+            this.LayoutPanel.RowCount = 1;
+            this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LayoutPanel.Size = new System.Drawing.Size(255, 44);
+            this.LayoutPanel.TabIndex = 2;
             // 
-            // PowerStateComboBox
+            // ComboBox
             // 
-            this.TableLayoutPanel.SetColumnSpan(this.PowerStateComboBox, 4);
-            this.PowerStateComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PowerStateComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.PowerStateComboBox.FormattingEnabled = true;
-            this.PowerStateComboBox.Location = new System.Drawing.Point(8, 8);
-            this.PowerStateComboBox.Margin = new System.Windows.Forms.Padding(0);
-            this.PowerStateComboBox.Name = "PowerStateComboBox";
-            this.PowerStateComboBox.Size = new System.Drawing.Size(239, 28);
-            this.PowerStateComboBox.TabIndex = 0;
-            this.PowerStateComboBox.SelectedIndexChanged += new System.EventHandler(this.PowerComboBox_SelectedIndexChanged);
+            this.LayoutPanel.SetColumnSpan(this.ComboBox, 4);
+            this.ComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox.FormattingEnabled = true;
+            this.ComboBox.Location = new System.Drawing.Point(8, 8);
+            this.ComboBox.Margin = new System.Windows.Forms.Padding(0);
+            this.ComboBox.Name = "ComboBox";
+            this.ComboBox.Size = new System.Drawing.Size(239, 28);
+            this.ComboBox.TabIndex = 0;
+            this.ComboBox.SelectedIndexChanged += new System.EventHandler(this.PowerComboBox_SelectedIndexChanged);
             // 
             // PowerStatePanel
             // 
@@ -85,13 +85,13 @@ namespace DerekWare.Iris
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Controls.Add(this.PowerGroupBox);
+            this.Controls.Add(this.GroupBox);
             this.Name = "PowerStatePanel";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(287, 95);
-            this.PowerGroupBox.ResumeLayout(false);
-            this.PowerGroupBox.PerformLayout();
-            this.TableLayoutPanel.ResumeLayout(false);
+            this.GroupBox.ResumeLayout(false);
+            this.GroupBox.PerformLayout();
+            this.LayoutPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -99,8 +99,8 @@ namespace DerekWare.Iris
 
         #endregion
 
-        private System.Windows.Forms.GroupBox PowerGroupBox;
-        private System.Windows.Forms.TableLayoutPanel TableLayoutPanel;
-        private System.Windows.Forms.ComboBox PowerStateComboBox;
+        internal CheckGroupBox GroupBox;
+        private System.Windows.Forms.TableLayoutPanel LayoutPanel;
+        private System.Windows.Forms.ComboBox ComboBox;
     }
 }

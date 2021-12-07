@@ -35,7 +35,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             Thread.Start();
         }
 
-        protected override void StopEffect(bool wait)
+        protected override void StopEffect()
         {
             if(Thread is null)
             {
@@ -48,7 +48,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             }
             else
             {
-                Thread.Stop(wait);
+                Thread.Stop(true);
             }
         }
 

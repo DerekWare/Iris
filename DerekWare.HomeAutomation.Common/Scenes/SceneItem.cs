@@ -82,7 +82,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             {
                 Device.MultiZoneColors = MultiZoneColors;
             }
-            else
+            else if(Color is not null)
             {
                 Device.Color = Color;
             }

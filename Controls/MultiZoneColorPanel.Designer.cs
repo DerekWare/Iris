@@ -29,49 +29,49 @@ namespace DerekWare.Iris
         /// </summary>
         private void InitializeComponent()
         {
-            this.ZoneColorGroupBox = new System.Windows.Forms.GroupBox();
-            this.TableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.GroupBox = new CheckGroupBox();
+            this.LayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.ColorBand = new DerekWare.Iris.ColorBand();
-            this.ZoneColorGroupBox.SuspendLayout();
-            this.TableLayoutPanel.SuspendLayout();
+            this.GroupBox.SuspendLayout();
+            this.LayoutPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // ZoneColorGroupBox
+            // GroupBox
             // 
-            this.ZoneColorGroupBox.AutoSize = true;
-            this.ZoneColorGroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ZoneColorGroupBox.Controls.Add(this.TableLayoutPanel);
-            this.ZoneColorGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ZoneColorGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.ZoneColorGroupBox.Margin = new System.Windows.Forms.Padding(0);
-            this.ZoneColorGroupBox.Name = "ZoneColorGroupBox";
-            this.ZoneColorGroupBox.Padding = new System.Windows.Forms.Padding(8);
-            this.ZoneColorGroupBox.Size = new System.Drawing.Size(144, 163);
-            this.ZoneColorGroupBox.TabIndex = 13;
-            this.ZoneColorGroupBox.TabStop = false;
-            this.ZoneColorGroupBox.Text = "Zone Colors";
+            this.GroupBox.AutoSize = true;
+            this.GroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.GroupBox.Controls.Add(this.LayoutPanel);
+            this.GroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GroupBox.Location = new System.Drawing.Point(0, 0);
+            this.GroupBox.Margin = new System.Windows.Forms.Padding(0);
+            this.GroupBox.Name = "GroupBox";
+            this.GroupBox.Padding = new System.Windows.Forms.Padding(8);
+            this.GroupBox.Size = new System.Drawing.Size(144, 163);
+            this.GroupBox.TabIndex = 13;
+            this.GroupBox.TabStop = false;
+            this.GroupBox.Text = "Zone Colors";
             // 
-            // TableLayoutPanel
+            // LayoutPanel
             // 
-            this.TableLayoutPanel.AutoSize = true;
-            this.TableLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.TableLayoutPanel.ColumnCount = 1;
-            this.TableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.TableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.TableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.TableLayoutPanel.Controls.Add(this.ColorBand, 0, 0);
-            this.TableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TableLayoutPanel.Location = new System.Drawing.Point(8, 27);
-            this.TableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.TableLayoutPanel.Name = "TableLayoutPanel";
-            this.TableLayoutPanel.RowCount = 1;
-            this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableLayoutPanel.Size = new System.Drawing.Size(128, 128);
-            this.TableLayoutPanel.TabIndex = 2;
+            this.LayoutPanel.AutoSize = true;
+            this.LayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.LayoutPanel.ColumnCount = 1;
+            this.LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.LayoutPanel.Controls.Add(this.ColorBand, 0, 0);
+            this.LayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LayoutPanel.Location = new System.Drawing.Point(8, 27);
+            this.LayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.LayoutPanel.Name = "LayoutPanel";
+            this.LayoutPanel.RowCount = 1;
+            this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LayoutPanel.Size = new System.Drawing.Size(128, 128);
+            this.LayoutPanel.TabIndex = 2;
             // 
             // ColorBand
             // 
@@ -88,12 +88,12 @@ namespace DerekWare.Iris
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Controls.Add(this.ZoneColorGroupBox);
+            this.Controls.Add(this.GroupBox);
             this.Name = "MultiZoneColorPanel";
             this.Size = new System.Drawing.Size(144, 163);
-            this.ZoneColorGroupBox.ResumeLayout(false);
-            this.ZoneColorGroupBox.PerformLayout();
-            this.TableLayoutPanel.ResumeLayout(false);
+            this.GroupBox.ResumeLayout(false);
+            this.GroupBox.PerformLayout();
+            this.LayoutPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -101,8 +101,8 @@ namespace DerekWare.Iris
 
         #endregion
 
-        private System.Windows.Forms.GroupBox ZoneColorGroupBox;
-        private System.Windows.Forms.TableLayoutPanel TableLayoutPanel;
-        private ColorBand ColorBand;
+        public CheckGroupBox GroupBox;
+        private System.Windows.Forms.TableLayoutPanel LayoutPanel;
+        public ColorBand ColorBand;
     }
 }

@@ -27,7 +27,7 @@ namespace DerekWare.Iris
 
             foreach(var value in Enum.GetValues<PowerState>())
             {
-                PowerStateComboBox.Items.Add(value);
+                ComboBox.Items.Add(value);
             }
 
             InUpdate = false;
@@ -41,7 +41,7 @@ namespace DerekWare.Iris
             {
                 _Power = value;
                 InUpdate = true;
-                PowerStateComboBox.SelectedItem = value;
+                ComboBox.SelectedItem = value;
                 InUpdate = false;
             }
         }
@@ -55,7 +55,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            PowerStateChanged?.Invoke(this, new PowerStateChangedEventArgs { Property = (PowerState)PowerStateComboBox.SelectedItem });
+            PowerStateChanged?.Invoke(this, new PowerStateChangedEventArgs { Property = (PowerState)ComboBox.SelectedItem });
         }
 
         #endregion

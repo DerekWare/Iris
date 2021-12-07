@@ -25,7 +25,7 @@ namespace DerekWare.Iris
             {
                 _Brightness = value;
                 InUpdate = true;
-                BrightnessTrackBar.Value = (int)(value * BrightnessTrackBar.Maximum);
+                TrackBar.Value = (int)(value * TrackBar.Maximum);
                 InUpdate = false;
             }
         }
@@ -39,7 +39,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            BrightnessChanged?.Invoke(this, new BrightnessChangedEventArgs { Property = (double)BrightnessTrackBar.Value / BrightnessTrackBar.Maximum });
+            BrightnessChanged?.Invoke(this, new BrightnessChangedEventArgs { Property = (double)TrackBar.Value / TrackBar.Maximum });
         }
 
         #endregion
