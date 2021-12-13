@@ -402,9 +402,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyVersion.cs</LastGenOutput>
     </Content>
-    <Content Include="readme.txt">
+    <None Include="readme.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -413,6 +413,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>md "$(SolutionDir)Publish"
+copy /y "$(SolutionDir)$(OutDir)readme.md" "$(SolutionDir)Publish"
 powershell Compress-Archive '$(SolutionDir)$(OutDir)*' -DestinationPath '$(SolutionDir)Publish\$(TargetName).zip' -force
 </PostBuildEvent>
   </PropertyGroup>

@@ -57,7 +57,7 @@ namespace DerekWare.Iris
             }
 
             UpdateProperties();
-            UpdateState();
+            UpdateUiFromDevice();
         }
 
         protected virtual bool CreateEffect(IReadOnlyEffectProperties properties, out Effect effect)
@@ -112,7 +112,7 @@ namespace DerekWare.Iris
             PropertyGrid.SelectedObject = Device;
         }
 
-        protected virtual void UpdateState()
+        protected virtual void UpdateUiFromDevice()
         {
             InUpdate = true;
 
@@ -143,7 +143,7 @@ namespace DerekWare.Iris
 
             InUpdate = false;
 
-            UpdateState();
+            UpdateUiFromDevice();
         }
 
         protected virtual void OnMultiZoneColorsChanged(object sender, ColorsChangedEventArgs e)
@@ -165,7 +165,7 @@ namespace DerekWare.Iris
 
             InUpdate = false;
 
-            UpdateState();
+            UpdateUiFromDevice();
         }
 
         protected virtual void OnPowerStateChanged(object sender, PowerStateChangedEventArgs e)
@@ -184,7 +184,7 @@ namespace DerekWare.Iris
 
             InUpdate = false;
 
-            UpdateState();
+            UpdateUiFromDevice();
         }
 
         protected virtual void OnSelectedEffectChanged(object sender, SelectedEffectChangedEventArgs e)
@@ -210,7 +210,7 @@ namespace DerekWare.Iris
 
             InUpdate = false;
 
-            UpdateState();
+            UpdateUiFromDevice();
         }
 
         protected virtual void OnSelectedThemeChanged(object sender, SelectedThemeChangedEventArgs e)
@@ -236,7 +236,7 @@ namespace DerekWare.Iris
 
             InUpdate = false;
 
-            UpdateState();
+            UpdateUiFromDevice();
         }
 
         protected virtual void OnSolidColorChanged(object sender, ColorChangedEventArgs e)
@@ -258,7 +258,7 @@ namespace DerekWare.Iris
 
             InUpdate = false;
 
-            UpdateState();
+            UpdateUiFromDevice();
         }
 
         void OnDevicePropertiesChanged(object sender, DeviceEventArgs e)
@@ -280,7 +280,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            UpdateState();
+            UpdateUiFromDevice();
         }
 
         #endregion

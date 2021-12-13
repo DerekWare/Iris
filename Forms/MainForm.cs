@@ -284,7 +284,7 @@ namespace DerekWare.Iris
 
         void ViewReadmeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("readme.txt");
+            System.Diagnostics.Process.Start("readme.md");
         }
 
         #endregion

@@ -86,7 +86,7 @@ namespace DerekWare.Iris
             base.OnHandleDestroyed(e);
         }
 
-        protected override void UpdateState()
+        protected override void UpdateUiFromDevice()
         {
         }
 
@@ -242,8 +242,8 @@ namespace DerekWare.Iris
 
             SceneItem.MultiZoneColors = e.Property;
             MultiZoneColorPanel.Colors = e.Property;
-            base.OnMultiZoneColorsChanged(sender, e);
             UpdateSceneFromUi();
+            base.OnMultiZoneColorsChanged(sender, e);
         }
 
         protected override void OnPowerStateChanged(object sender, PowerStateChangedEventArgs e)
@@ -255,22 +255,22 @@ namespace DerekWare.Iris
 
             SceneItem.Power = e.Property;
             PowerStatePanel.Power = e.Property;
-            base.OnPowerStateChanged(sender, e);
             UpdateSceneFromUi();
+            base.OnPowerStateChanged(sender, e);
         }
 
         protected override void OnSelectedEffectChanged(object sender, SelectedEffectChangedEventArgs e)
         {
             EffectButtonPanel.SelectedEffect = e.Property;
-            base.OnSelectedEffectChanged(sender, e);
             UpdateSceneFromUi();
+            base.OnSelectedEffectChanged(sender, e);
         }
 
         protected override void OnSelectedThemeChanged(object sender, SelectedThemeChangedEventArgs e)
         {
             ThemeButtonPanel.SelectedTheme = e.Property;
-            base.OnSelectedThemeChanged(sender, e);
             UpdateSceneFromUi();
+            base.OnSelectedThemeChanged(sender, e);
         }
 
         protected override void OnSolidColorChanged(object sender, ColorChangedEventArgs e)
@@ -282,8 +282,8 @@ namespace DerekWare.Iris
 
             SceneItem.Color = e.Property;
             SolidColorPanel.Color = e.Property;
-            base.OnSolidColorChanged(sender, e);
             UpdateSceneFromUi();
+            base.OnSolidColorChanged(sender, e);
         }
 
         void OnCheckedChanged(object sender, EventArgs e)
