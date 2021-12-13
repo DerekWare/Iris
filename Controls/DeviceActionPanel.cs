@@ -114,11 +114,6 @@ namespace DerekWare.Iris
 
         protected virtual void UpdateState()
         {
-            if(InUpdate)
-            {
-                return;
-            }
-
             InUpdate = true;
 
             PowerStatePanel.Power = Device?.Power ?? PowerState.Off;

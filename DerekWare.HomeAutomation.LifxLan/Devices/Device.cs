@@ -200,7 +200,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         async Task RefreshStateAsync()
         {
-            if(_Name.IsNullOrEmpty())
+            if(!IsValid)
             {
                 await RefreshPropertiesAsync();
             }
@@ -225,8 +225,31 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             {
                 await Controller.GetColorZones(response =>
                 {
-                    if(_ZoneCount != response.ZoneCount)
+                    if(!response.Colors.IsNullOrEmpty())
                     {
+                        if(_ZoneCount != response.ZoneCount)
+                        {
+                            _ZoneCount = response.ZoneCount;
+                            OnPropertiesChanged();
+                        }
+
+                        if(!_MultiZoneColors.SequenceEqual(response.Colors))
+                        {
+                            base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
+                        }
+                    }
+                });
+            }
+
+            await Controller.GetExtendedColorZones(response =>
+            {
+                // My LIFX Z strip with old firmware responds to this message, but with
+                // an empty color array.
+                if(!response.Colors.IsNullOrEmpty())
+                {
+                    if(!IsExtendedMultiZone || (_ZoneCount != response.ZoneCount))
+                    {
+                        IsExtendedMultiZone = true;
                         _ZoneCount = response.ZoneCount;
                         OnPropertiesChanged();
                     }
@@ -235,21 +258,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                     {
                         base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
                     }
-                });
-            }
-
-            await Controller.GetExtendedColorZones(response =>
-            {
-                if(!IsExtendedMultiZone || (_ZoneCount != response.ZoneCount))
-                {
-                    IsExtendedMultiZone = true;
-                    _ZoneCount = response.ZoneCount;
-                    OnPropertiesChanged();
-                }
-
-                if(!_MultiZoneColors.SequenceEqual(response.Colors))
-                {
-                    base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
                 }
             });
 

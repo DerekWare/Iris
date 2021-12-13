@@ -19,7 +19,7 @@ namespace DerekWare.Iris
             EffectButtonPanel.DeviceFamily = SceneItem.Family;
 
             EnableCheckBoxes(this);
-            UpdateState();
+            UpdateUiFromScene();
         }
 
         public IClient Client => SceneItem.Client;
@@ -87,6 +87,10 @@ namespace DerekWare.Iris
         }
 
         protected override void UpdateState()
+        {
+        }
+
+        protected void UpdateUiFromScene()
         {
             InUpdate = true;
 
@@ -214,13 +218,17 @@ namespace DerekWare.Iris
             }
         }
 
-        void UpdateScene()
+        void UpdateSceneFromUi()
         {
             SceneItem.Power = PowerStatePanel.Power;
             SceneItem.Color = SolidColorPanel.GroupBox.Checked ? SolidColorPanel.Color : null;
             SceneItem.MultiZoneColors = MultiZoneColorPanel.GroupBox.Checked ? MultiZoneColorPanel.Colors : null;
-            SceneItem.Theme = ThemeButtonPanel.GroupBox.Checked ? ThemeFactory.Instance.CreateInstance(ThemeButtonPanel.SelectedTheme.Name) : null;
-            SceneItem.Effect = EffectButtonPanel.GroupBox.Checked ? EffectFactory.Instance.CreateInstance(EffectButtonPanel.SelectedEffect.Name) : null;
+            SceneItem.Theme = ThemeButtonPanel.GroupBox.Checked && ThemeButtonPanel.SelectedTheme is not null
+                ? ThemeFactory.Instance.CreateInstance(ThemeButtonPanel.SelectedTheme.Name)
+                : null;
+            SceneItem.Effect = EffectButtonPanel.GroupBox.Checked && EffectButtonPanel.SelectedEffect is not null
+                ? EffectFactory.Instance.CreateInstance(EffectButtonPanel.SelectedEffect.Name)
+                : null;
         }
 
         #region Event Handlers
@@ -234,8 +242,8 @@ namespace DerekWare.Iris
 
             SceneItem.MultiZoneColors = e.Property;
             MultiZoneColorPanel.Colors = e.Property;
-            UpdateScene();
             base.OnMultiZoneColorsChanged(sender, e);
+            UpdateSceneFromUi();
         }
 
         protected override void OnPowerStateChanged(object sender, PowerStateChangedEventArgs e)
@@ -247,20 +255,22 @@ namespace DerekWare.Iris
 
             SceneItem.Power = e.Property;
             PowerStatePanel.Power = e.Property;
-            UpdateScene();
             base.OnPowerStateChanged(sender, e);
+            UpdateSceneFromUi();
         }
 
         protected override void OnSelectedEffectChanged(object sender, SelectedEffectChangedEventArgs e)
         {
             EffectButtonPanel.SelectedEffect = e.Property;
             base.OnSelectedEffectChanged(sender, e);
+            UpdateSceneFromUi();
         }
 
         protected override void OnSelectedThemeChanged(object sender, SelectedThemeChangedEventArgs e)
         {
             ThemeButtonPanel.SelectedTheme = e.Property;
             base.OnSelectedThemeChanged(sender, e);
+            UpdateSceneFromUi();
         }
 
         protected override void OnSolidColorChanged(object sender, ColorChangedEventArgs e)
@@ -272,8 +282,8 @@ namespace DerekWare.Iris
 
             SceneItem.Color = e.Property;
             SolidColorPanel.Color = e.Property;
-            UpdateScene();
             base.OnSolidColorChanged(sender, e);
+            UpdateSceneFromUi();
         }
 
         void OnCheckedChanged(object sender, EventArgs e)
@@ -292,7 +302,7 @@ namespace DerekWare.Iris
 
             if(!groupBox.Checked)
             {
-                UpdateScene();
+                UpdateSceneFromUi();
                 return;
             }
 
@@ -316,9 +326,9 @@ namespace DerekWare.Iris
                 MultiZoneColorPanel.GroupBox.Checked = false;
             }
 
-            UpdateScene();
+            UpdateSceneFromUi();
 
-            InUpdate = true;
+            InUpdate = false;
         }
 
         void OnDevicePropertiesChanged(object sender, DeviceEventArgs e)
@@ -329,7 +339,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            UpdateState();
+            UpdateUiFromScene();
         }
 
         #endregion
