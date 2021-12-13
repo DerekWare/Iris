@@ -38,6 +38,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             return GetProperty<GetGroupRequest, GroupResponse>(responseHandler);
         }
 
+        public Task<HostFirmwareResponse> GetHostFirmware(Dispatcher.ResponseHandler<HostFirmwareResponse> responseHandler)
+        {
+            return GetProperty<GetHostFirmwareRequest, HostFirmwareResponse>(responseHandler);
+        }
+
         public Task<LabelResponse> GetLabel(Dispatcher.ResponseHandler<LabelResponse> responseHandler)
         {
             return GetProperty<GetLabelRequest, LabelResponse>(responseHandler);

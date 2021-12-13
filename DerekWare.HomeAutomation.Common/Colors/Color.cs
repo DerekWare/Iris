@@ -48,6 +48,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
         }
 
         public bool IsWhite => Saturation == 0;
+        public string Name => this.GetColorName();
 
         public double Brightness
         {
@@ -96,7 +97,8 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
         public override string ToString()
         {
-            return new JObject(new JProperty(nameof(Hue), Hue),
+            return Name ??
+                   new JObject(new JProperty(nameof(Hue), Hue),
                                new JProperty(nameof(Saturation), Saturation),
                                new JProperty(nameof(Brightness), Brightness),
                                new JProperty(nameof(Kelvin), Kelvin)).ToString();
@@ -106,6 +108,13 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
         public static Color Parse(string text)
         {
+            var c = Colors.GetColorByName(text);
+
+            if(c is not null)
+            {
+                return c;
+            }
+
             var j = JObject.Parse(text);
             return new Color(j[nameof(Hue)].Value<double>(),
                              j[nameof(Saturation)].Value<double>(),
@@ -212,8 +221,8 @@ namespace DerekWare.HomeAutomation.Common.Colors
             }
             catch(Exception ex)
             {
-                Debug.Error(null, ex);
-                color = null;
+                Debug.Warning(null, ex);
+                color = default;
                 return false;
             }
         }

@@ -13,8 +13,6 @@ namespace DerekWare.HomeAutomation.Common.Themes
         [Browsable(false)]
         public override bool IsMultiZone => Palette.Count > 1;
 
-        public override string Name { get => base.Name; set => base.Name = value; }
-
         public List<Color> Palette { get; set; } = new();
 
         public override object Clone()

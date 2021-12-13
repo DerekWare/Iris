@@ -40,10 +40,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public override bool IsColor => _Product?.features.color ?? false;
 
-        public bool IsExtendedMultiZone => _Product?.features.extended_multizone ?? false;
-
-        public override bool IsMultiZone => _Product?.features.multizone ?? false;
-
         public override bool IsValid => !_Name.IsNullOrEmpty();
 
         public override string Name => _Name.IsNullOrEmpty() ? IpAddress : _Name;
@@ -55,6 +51,10 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         public override string Vendor => _Vendor?.name;
 
         public override int ZoneCount => _ZoneCount;
+
+        public Version FirmwareVersion { get; private set; }
+
+        public bool IsExtendedMultiZone { get; private set; }
 
         [Browsable(false)]
         public MultiZoneEffectSettings MultiZoneEffect { get => _MultiZoneEffect; set => SetMultiZoneEffect(value); }
@@ -97,6 +97,9 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         {
             base.SetMultiZoneColors(colors, transitionDuration);
 
+            // TODO my LIFX strip that runs an old version of the firmware accepts the
+            // SetExtendedColorZones message even though it won't support
+            // GetExtendedColorZones.
             if(IsMultiZone)
             {
                 Controller.SetExtendedColorZones(MultiZoneColors, transitionDuration);
@@ -160,6 +163,15 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                 }
             });
 
+            await Controller.GetHostFirmware(response =>
+            {
+                if(!Equals(response.Version, FirmwareVersion))
+                {
+                    FirmwareVersion = response.Version;
+                    OnPropertiesChanged();
+                }
+            });
+
             await Controller.GetGroup(response =>
             {
                 Lan.Client.Instance.CreateGroup(response, out var group);
@@ -188,30 +200,28 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         async Task RefreshStateAsync()
         {
-            await RefreshPropertiesAsync();
+            if(_Name.IsNullOrEmpty())
+            {
+                await RefreshPropertiesAsync();
+            }
 
             await Controller.GetPower(response =>
             {
                 base.SetPower(response.Power);
             });
 
-            if(IsExtendedMultiZone)
+            // Rather than using the product registry, we'll attempt to discover device capabilities
+            // by using the color messages. If we get a successful response, then we know the device
+            // is color, multizone, etc.
+            if(!IsMultiZone)
             {
-                await Controller.GetExtendedColorZones(response =>
+                await Controller.GetColor(response =>
                 {
-                    if(_ZoneCount != response.ZoneCount)
-                    {
-                        _ZoneCount = response.ZoneCount;
-                        OnPropertiesChanged();
-                    }
-
-                    if(!_MultiZoneColors.SequenceEqual(response.Colors))
-                    {
-                        base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
-                    }
+                    base.SetColor(response.Color, TimeSpan.Zero);
                 });
             }
-            else if(IsMultiZone)
+
+            if(!IsExtendedMultiZone)
             {
                 await Controller.GetColorZones(response =>
                 {
@@ -227,13 +237,21 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                     }
                 });
             }
-            else
+
+            await Controller.GetExtendedColorZones(response =>
             {
-                await Controller.GetColor(response =>
+                if(!IsExtendedMultiZone || (_ZoneCount != response.ZoneCount))
                 {
-                    base.SetColor(response.Color, TimeSpan.Zero);
-                });
-            }
+                    IsExtendedMultiZone = true;
+                    _ZoneCount = response.ZoneCount;
+                    OnPropertiesChanged();
+                }
+
+                if(!_MultiZoneColors.SequenceEqual(response.Colors))
+                {
+                    base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
+                }
+            });
 
             // TODO query firmware effect/waveform
         }

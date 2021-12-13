@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DerekWare.Reflection;
+using Newtonsoft.Json.Linq;
 
 namespace DerekWare.HomeAutomation.Common.Colors
 {
@@ -18,7 +19,8 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
         public override string ToString()
         {
-            return $"{{ StartIndex:{StartIndex}, EndIndex:{EndIndex}, Color:{Color} }}";
+            return new JObject(new JProperty(nameof(StartIndex), StartIndex), new JProperty(nameof(EndIndex), EndIndex), new JProperty(nameof(Color), Color))
+                .ToString();
         }
 
         #region Equality
@@ -166,6 +168,11 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
         public static bool Overlaps(ColorZone x, ColorZone y)
         {
+            if(x is null || y is null)
+            {
+                return false;
+            }
+
             return x.StartIndex <= y.StartIndex ? x.EndIndex >= y.StartIndex : y.EndIndex >= x.StartIndex;
         }
     }

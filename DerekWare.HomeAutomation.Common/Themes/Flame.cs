@@ -21,10 +21,16 @@ namespace DerekWare.HomeAutomation.Common.Themes
             Hot
         }
 
+        static readonly Dictionary<FlameTemperature, Tuple<Color, Color>> ColorMap = new()
+        {
+            { FlameTemperature.Cool, new Tuple<Color, Color>(new Color(0, 1, 0.25, 1), new Color(45.0 / 360, 1, 1, 1)) },
+            { FlameTemperature.Warm, new Tuple<Color, Color>(new Color(0, 1, 0.25, 1), new Color(45.0 / 360, 1, 1, 1)) },
+            { FlameTemperature.Hot, new Tuple<Color, Color>(new Color(240.0 / 360, 1, 0.5, 1), new Color(180.0 / 360, 0, 1, 1)) }
+        };
+
         public override bool IsDynamic => true;
         public override bool IsMultiZone => true;
         public FlameDirection Direction { get; set; }
-
         public FlameTemperature Temperature { get; set; }
 
         public override object Clone()
@@ -34,54 +40,8 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
         public override IReadOnlyCollection<Color> GetPalette(IDevice targetDevice)
         {
-            Color min = new(), max = new();
-
-            switch(Temperature)
-            {
-                case FlameTemperature.Cool:
-                    min.Hue = 0;
-                    min.Saturation = 1;
-                    min.Brightness = 0.25;
-                    min.Kelvin = 1;
-
-                    max.Hue = 45.0 / 360;
-                    max.Saturation = 1;
-                    max.Brightness = 1;
-                    max.Kelvin = 1;
-
-                    break;
-
-                case FlameTemperature.Warm:
-                    min.Hue = 30.0 / 360;
-                    min.Saturation = 1;
-                    min.Brightness = 0.25;
-                    min.Kelvin = 1;
-
-                    max.Hue = 60.0 / 360;
-                    max.Saturation = 1;
-                    max.Brightness = 1;
-                    max.Kelvin = 1;
-
-                    break;
-
-                case FlameTemperature.Hot:
-                    min.Hue = 240.0 / 360;
-                    min.Saturation = 1;
-                    min.Brightness = 0.5;
-                    min.Kelvin = 1;
-
-                    max.Hue = 180.0 / 360;
-                    max.Saturation = 0;
-                    max.Brightness = 1;
-                    max.Kelvin = 1;
-
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            List<Color> colors = new();
+            var (min, max) = ColorMap[Temperature];
+            var colors = new List<Color>();
 
             for(var i = 0; i < targetDevice.ZoneCount; ++i)
             {

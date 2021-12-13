@@ -91,6 +91,7 @@
     <Compile Include="Messages\Acknowledgement.cs" />
     <Compile Include="Messages\Color.cs" />
     <Compile Include="Messages\Extensions.cs" />
+    <Compile Include="Messages\HostFirmware.cs" />
     <Compile Include="Messages\Group.cs" />
     <Compile Include="Messages\Label.cs" />
     <Compile Include="Messages\LightState.cs" />

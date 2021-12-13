@@ -15,16 +15,12 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public static Product GetProduct(this Vendor vendor, int productId)
         {
-            return (from product in vendor.products
-                    where product.pid == productId
-                    select product).FirstOrDefault();
+            return vendor.products.FirstOrDefault(product => product.pid == productId);
         }
 
         public static Vendor GetVendor(int vendorId)
         {
-            return (from vendor in Vendors
-                    where vendor.vid == vendorId
-                    select vendor).FirstOrDefault();
+            return Vendors.FirstOrDefault(vendor => vendor.vid == vendorId);
         }
 
         static void Load(Path path)
@@ -70,11 +66,40 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             public Features features { get; set; }
             public string name { get; set; }
             public int pid { get; set; }
+            public Upgrade[] upgrades { get; set; }
 
             public override string ToString()
             {
                 return name;
             }
+        }
+
+        /*
+            "upgrades": [
+                {
+                    "major": 2,
+                    "minor": 77,
+                    "features": {
+                        "extended_multizone": true
+                    }
+                },
+                {
+                    "major": 2,
+                    "minor": 80,
+                    "features": {
+                        "temperature_range": [
+                            1500,
+                            9000
+                        ]
+                    }
+                }
+            ]
+         */
+        public class Upgrade
+        {
+            public Features features { get; set; }
+            public int major { get; set; }
+            public int minor { get; set; }
         }
 
         /*

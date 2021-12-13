@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Colors
 {
@@ -22,12 +21,12 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if(value is Color)
+            if(value is Color or null)
             {
                 return value;
             }
 
-            var sourceType = value?.GetType();
+            var sourceType = value.GetType();
 
             if(typeof(System.Drawing.Color) == sourceType)
             {
@@ -36,9 +35,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
             if(typeof(string) == sourceType)
             {
-                var valueString = value.ToString();
-                var field = typeof(Colors).GetField(valueString, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Static);
-                return field is not null ? field.GetValue(null) : Color.Parse(valueString);
+                return Color.Parse((string)value);
             }
 
             throw new NotSupportedException();
@@ -51,7 +48,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
                 throw new NotSupportedException();
             }
 
-            if(destinationType == typeof(Color))
+            if(typeof(Color) == destinationType)
             {
                 return value;
             }
@@ -63,9 +60,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
             if(typeof(string) == destinationType)
             {
-                var field = typeof(Colors).GetFields(BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Static)
-                                          .FirstOrDefault(field => field.GetValue(null).Equals(color));
-                return field is not null ? field.Name : color.ToString();
+                return color.ToString();
             }
 
             throw new NotSupportedException();

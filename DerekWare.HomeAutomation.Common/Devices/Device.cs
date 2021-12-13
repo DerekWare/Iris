@@ -55,7 +55,6 @@ namespace DerekWare.HomeAutomation.Common
         public abstract IReadOnlyCollection<IDeviceGroup> Groups { get; }
 
         public abstract bool IsColor { get; }
-        public abstract bool IsMultiZone { get; }
         public abstract bool IsValid { get; }
         public abstract string Name { get; }
         public abstract string Product { get; }
@@ -79,6 +78,7 @@ namespace DerekWare.HomeAutomation.Common
         public virtual event EventHandler<DeviceEventArgs> StateChanged;
 
         public virtual string Family => Client.Family;
+        public virtual bool IsMultiZone => ZoneCount > 1;
 
         [Browsable(false)]
         public double Brightness
