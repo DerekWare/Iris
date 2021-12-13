@@ -402,6 +402,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyVersion.cs</LastGenOutput>
     </Content>
+    <Content Include="index.html" />
     <None Include="readme.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -413,7 +414,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>md "$(SolutionDir)Publish"
-copy /y "$(SolutionDir)$(OutDir)readme.md" "$(SolutionDir)Publish"
+copy /y "$(SolutionDir)$(OutDir)index.html" "$(SolutionDir)Publish"
 powershell Compress-Archive '$(SolutionDir)$(OutDir)*' -DestinationPath '$(SolutionDir)Publish\$(TargetName).zip' -force
 </PostBuildEvent>
   </PropertyGroup>

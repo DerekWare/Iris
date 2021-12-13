@@ -1,0 +1,33 @@
+﻿<h2 id="download">Download</h2>
+<p>The latest version is here: <a href="http://www.derekware.com/software/iris/DerekWare%20Iris.zip">http://www.derekware.com/software/iris/DerekWare%20Iris.zip</a>.</p>
+<h2 id="about">About</h2>
+<p>DerekWare Iris is a Windows application that allows you to control your LIFX and Philips Hue devices from your desktop, including dynamic animations called Effects and saved settings called Scenes that allow you to quickly apply colors and effects to multiple lights.</p>
+<h2 id="basic-light-control">Basic Light Control</h2>
+<p>Find the light you want to control in the tree on the left of the main screen. When you select it, you&#39;ll see the Action Panel open. Within that UI, you can turn the device on or off, change the light color, select a color Theme or animate the device with an Effect.</p>
+<p>To change the color of the light, select a standard color from the drop-down list such as, &quot;Warm White.&quot; You may also manually change the hue, saturation, brightness and kelvin values of the light in the text boxes below the standard color list. You may also click on the color box to the right to bring up the color picker, which is similar to other color pickers in Windows.</p>
+<p>Multizone lights, such as the LIFX Z strip, can set multiple colors at the same time. Like the solid color controls, you may click on the color band under, &quot;Zone Colors,&quot; to select individual zone colors.</p>
+<h2 id="groups">Groups</h2>
+<p>The Philips Hue and LIFX apps that come from the device manufacturer allow you to create groups of lights that can be controlled together (LIFX also provides Locations, which are just another type of group). DerekWare Iris reads these groups from the device or bridge and allows you to control them the same way you would control a single light.</p>
+<p>Additionally, if your group has multiple single-zone lights, DerekWare Iris will treat the group as a multizone light, so you can use multizone Themes and Effects. For example, I have a lamp with 6 Philips Hue bulbs. In DerekWare Iris, I can control the lights both individually and as a single 6-zone light.</p>
+<p>You may not create or modify groups within DerekWare Iris. Currently, that can only be done in the stock LIFX and Philips Hue mobile apps.</p>
+<h2 id="themes">Themes</h2>
+<p>A theme is simply a collection of colors that may be applied with a single button-click. For example, the Spectrum effect sets each color zone in your multizone device to a different hue that maps to the visible spectrum of light. This is particularly cool with large numbers of color zones, such as a 10-meter LIFX Z strip that has 80 color zones.</p>
+<p>Currently, all themes are dynamic and while you may adjust some of the settings, you can not yet create and save your own theme. User themes are coming soon.</p>
+<h2 id="effects">Effects</h2>
+<p>An effect is a dynamic animation that modifies the colors of your lights over time. For example, the Move effect shifts the colors in your multizone light so that it looks like your colors are moving. Like themes, each effect has its own set of properties you may modify when you apply the theme.</p>
+<p>To test this out, try clicking the Spectrum theme, then click the Move effect.</p>
+<h2 id="scenes">Scenes</h2>
+<p>A scene is a collection of devices and their properties that may be saved and applied whenever you choose. When you create a new scene, a device selector dialog will pop up. Find the individual devices or groups that you want to include in the scene and check their box(es). You&#39;ll see a tab appear in the action panel that looks similar to what you see when you&#39;re modifying a device&#39;s properties, but now, you&#39;re modifying the scene properties. When you first add a device to the scene, the scene will capture the current state of the device, but you may modify it in the scene editor panel. Once you&#39;ve added your devices and set their properties, you can apply the scene by clicking, &quot;Scenes =&gt; Apply Scene,&quot; or just double-clicking the scene name in the list. If you exit the app, the scenes are saved to the settings, so they&#39;ll still be there when you restart.</p>
+<h2 id="why-don-t-i-see-my-devices-">Why Don&#39;t I See my Devices?</h2>
+<p>DerekWare Iris sends out a network beacon, looking for any LIFX lights to respond. If that works, you&#39;ll see your LIFX devices automatically appear in the device list. If they don&#39;t, either because your light just ignored the beacon or because your router dropped the beacon network packets (as mine does), you can manually add your devices by IP address under the File menu. Any device the app can successfully connect to will be saved for the next time, so you shouldn&#39;t have to keep adding them every time you start the app.</p>
+<p>For Philips Hue devices, you must register DerekWare Iris with your bridge. Click, &quot;File =&gt; Connect to Hue Bridge,&quot; and either find your bridge in the list or enter the IP address manually. Then, walk to your Hue Bridge device and click the big button on top. Walk back to your PC and click OK in the connection dialog and that&#39;s it!</p>
+<h2 id="why-don-t-i-see-the-themes-and-effects-from-the-mobile-apps-">Why Don&#39;t I See the Themes and Effects from the Mobile Apps?</h2>
+<p>All themes, scenes and effects are built directly into DerekWare Iris and are not related to the ones you can create in the LIFX or Philips Hue mobile apps.</p>
+<h2 id="how-do-i-get-updates-">How Do I Get Updates?</h2>
+<p>DerekWare Iris automatically checks for updates on application startup, so you&#39;ll always have the latest published version. If you leave Iris running all the time and never restart it, you can manually check for updates in the Help menu. If there are updates available, a dialog will pop up, prompting you to update. If not, nothing will happen.</p>
+<h2 id="can-i-see-the-source-code-">Can I See the Source Code?</h2>
+<p><a href="https://github.com/DerekWare/Iris">https://github.com/DerekWare/Iris</a></p>
+<h2 id="can-i-make-changes-to-the-code-">Can I Make Changes to the Code?</h2>
+<p>Sure. Feel free to fork the code and do whatever you like. I&#39;m not using any license for the code.</p>
+<h2 id="when-is-feature-x-or-a-bug-fix-for-y-coming-">When Is Feature X or a Bug Fix for Y Coming?</h2>
+<p>Soon? This is very much a work in progress, but it&#39;s a fun hobby, so I work on it pretty frequently.</p>

@@ -1,3 +1,8 @@
+## Download
+
+The latest version is here: http://www.derekware.com/software/iris/DerekWare%20Iris.zip.
+
+
 ## About
 
 DerekWare Iris is a Windows application that allows you to control your LIFX and Philips Hue devices from your desktop, including dynamic animations called Effects and saved settings called Scenes that allow you to quickly apply colors and effects to multiple lights.
@@ -55,8 +60,6 @@ All themes, scenes and effects are built directly into DerekWare Iris and are no
 ## How Do I Get Updates?
 
 DerekWare Iris automatically checks for updates on application startup, so you'll always have the latest published version. If you leave Iris running all the time and never restart it, you can manually check for updates in the Help menu. If there are updates available, a dialog will pop up, prompting you to update. If not, nothing will happen.
-
-If you forgot where you got the original package or want to recommend it to someone else, the latest version is at http://www.derekware.com/software/iris/DerekWare%20Iris.zip.
 
 
 ## Can I See the Source Code?
