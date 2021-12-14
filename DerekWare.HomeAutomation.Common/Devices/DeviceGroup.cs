@@ -5,6 +5,7 @@ using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
+using DerekWare.Strings;
 
 namespace DerekWare.HomeAutomation.Common
 {
@@ -23,7 +24,9 @@ namespace DerekWare.HomeAutomation.Common
     {
         public abstract IReadOnlyCollection<IDevice> Devices { get; }
 
-        public virtual int DeviceCount => Devices.Count;
+        public int DeviceCount => Devices.Count;
+
+        public string DeviceNames => Devices.Select(i => i.Name).Join(", ");
 
         [Browsable(false)]
         public override IReadOnlyCollection<IDeviceGroup> Groups => Array.Empty<IDeviceGroup>();

@@ -12,6 +12,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
     {
         internal readonly SynchronizedHashSet<Device> InternalDevices = new();
 
+        SynchronizedList<Device> SortedDevices = new();
+
         internal DeviceGroup(GroupResponse response)
             : this()
         {
@@ -28,7 +30,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         public override IClient Client => Lan.Client.Instance;
 
         [Browsable(false)]
-        public override IReadOnlyCollection<IDevice> Devices => InternalDevices;
+        public override IReadOnlyCollection<IDevice> Devices => SortedDevices;
 
         public override string Name { get; }
 
@@ -77,6 +79,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             {
                 device.StateChanged += OnDeviceStateChanged;
             }
+
+            SortedDevices = new SynchronizedList<Device>(InternalDevices.OrderBy(i => i.Name));
 
             OnStateChanged();
             OnPropertiesChanged();

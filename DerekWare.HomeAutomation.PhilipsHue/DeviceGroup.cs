@@ -13,6 +13,8 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         internal readonly Group HueDevice;
         internal readonly SynchronizedList<Device> InternalDevices = new();
 
+        SynchronizedList<Device> SortedDevices = new();
+
         internal DeviceGroup(Group hueDevice)
         {
             HueDevice = hueDevice;
@@ -32,7 +34,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public override IClient Client => PhilipsHue.Client.Instance;
 
         [Browsable(false)]
-        public override IReadOnlyCollection<IDevice> Devices => InternalDevices;
+        public override IReadOnlyCollection<IDevice> Devices => SortedDevices;
 
         public string ModelId => HueDevice.ModelId;
 
@@ -90,6 +92,8 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             {
                 device.StateChanged += OnDeviceStateChanged;
             }
+
+            SortedDevices = new SynchronizedList<Device>(InternalDevices.OrderBy(i => i.Name));
 
             OnStateChanged();
             OnPropertiesChanged();
