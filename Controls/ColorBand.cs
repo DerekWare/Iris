@@ -38,8 +38,19 @@ namespace DerekWare.Iris
             }
         }
 
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            Invalidate();
+            base.OnEnabledChanged(e);
+        }
+
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            if(!Enabled)
+            {
+                return;
+            }
+
             var width = (float)Size.Width / _Colors.Length;
             var index = (int)(e.X / width);
 
@@ -57,18 +68,25 @@ namespace DerekWare.Iris
         {
             base.OnPaint(e);
 
-            var width = (float)Size.Width / _Colors.Length;
-            var height = (float)Size.Height;
+            var controlWidth = Size.Width;
+            var controlHeight = Size.Height;
+            var segmentWidth = controlWidth / (float)_Colors.Length;
             var x = 0.0f;
+
+            if(!Enabled)
+            {
+                e.Graphics.FillRectangle(SystemBrushes.Control, 0, 0, controlWidth, controlHeight);
+                return;
+            }
 
             foreach(var color in _Colors.Select(color => color?.ToRgb() ?? System.Drawing.Color.Black))
             {
                 using(var brush = new SolidBrush(color))
                 {
-                    e.Graphics.FillRectangle(brush, x, 0, Size.Width - x, height);
+                    e.Graphics.FillRectangle(brush, x, 0, controlWidth - x, controlHeight);
                 }
 
-                x += width;
+                x += segmentWidth;
             }
         }
 

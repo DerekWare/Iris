@@ -181,9 +181,6 @@
     <Compile Include="Controls\PowerStatePanel.Designer.cs">
       <DependentUpon>PowerStatePanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\StatePanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Controls\TreeView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -402,7 +399,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyVersion.cs</LastGenOutput>
     </Content>
-    <Content Include="index.html" />
+    <Content Include="index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="readme.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

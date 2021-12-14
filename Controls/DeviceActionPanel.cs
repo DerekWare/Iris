@@ -117,13 +117,24 @@ namespace DerekWare.Iris
             InUpdate = true;
 
             PowerStatePanel.Power = Device?.Power ?? PowerState.Off;
+            PowerStatePanel.Enabled = Device is not null;
+
             BrightnessPanel.Brightness = Device?.Brightness ?? 0;
+            BrightnessPanel.Enabled = Device is not null;
+
             SolidColorPanel.Color = Device?.Color ?? Colors.Black;
+            SolidColorPanel.Enabled = Device is not null;
+
             MultiZoneColorPanel.Colors = Device?.MultiZoneColors ?? new[] { Colors.Black };
+            MultiZoneColorPanel.Enabled = Device?.IsMultiZone ?? false;
+
             ThemeButtonPanel.DeviceFamily = Device?.Family;
             ThemeButtonPanel.SelectedTheme = Device?.Theme;
+            ThemeButtonPanel.Enabled = Device is not null;
+
             EffectButtonPanel.DeviceFamily = Device?.Family;
             EffectButtonPanel.SelectedEffect = Device?.Effect;
+            EffectButtonPanel.Enabled = Device is not null;
 
             InUpdate = false;
         }

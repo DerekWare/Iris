@@ -38,18 +38,7 @@ namespace DerekWare.HomeAutomation.Common
         [Browsable(false)]
         public override string Product => null;
 
-        public override int ZoneCount
-        {
-            get
-            {
-                SplitDeviceTypes(Devices, out var multizone, out var singles);
-
-                var multizoneCount = multizone.IsNullOrEmpty() ? 0 : multizone.Max(i => i.ZoneCount);
-                var singleCount = singles.Count;
-
-                return Math.Max(1, Math.Max(multizoneCount, singleCount));
-            }
-        }
+        public override int ZoneCount { get { return Devices.Sum(i => i.ZoneCount); } }
 
         [Browsable(false)]
         public override Color Color { get => Devices.FirstOrDefault()?.Color ?? new Color(); set => base.Color = value; }
@@ -67,22 +56,7 @@ namespace DerekWare.HomeAutomation.Common
         [Browsable(false)]
         public override IReadOnlyCollection<Color> MultiZoneColors
         {
-            get
-            {
-                SplitDeviceTypes(Devices, out var multizone, out var singles);
-
-                multizone = multizone.OrderByDescending(i => i.ZoneCount).ToList();
-
-                if(multizone.Count > 0)
-                {
-                    if(multizone[0].ZoneCount >= singles.Count)
-                    {
-                        return multizone[0].MultiZoneColors;
-                    }
-                }
-
-                return singles.Select(i => i.Color).ToList();
-            }
+            get { return Devices.SelectMany(i => i.MultiZoneColors).ToArray(); }
             set => base.MultiZoneColors = value;
         }
 
@@ -134,38 +108,21 @@ namespace DerekWare.HomeAutomation.Common
             Devices.ForEach(i => i.SetFirmwareEffect(effect));
         }
 
-        public override void SetMultiZoneColors(IReadOnlyCollection<Color> _colors, TimeSpan transitionDuration)
+        public override void SetMultiZoneColors(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
         {
-            SplitDeviceTypes(Devices, out var multizone, out var singles);
+            var count = ZoneCount - colors.Count;
+            var index = 0;
 
-            var colors = _colors.ToArray();
-
-            foreach(var device in multizone)
+            if(count > 0)
             {
-                var c = new Color[device.ZoneCount];
-
-                for(var i = 0; i < c.Length; ++i)
-                {
-                    var j = (i * colors.Length) / c.Length;
-                    c[i] = colors[j];
-                }
-
-                device.SetMultiZoneColors(c, transitionDuration);
+                colors = colors.Append(colors.Last().Repeat(count)).ToArray();
             }
 
+            foreach(var device in Devices)
             {
-                var c = new Color[singles.Count];
-
-                for(var i = 0; i < c.Length; ++i)
-                {
-                    var j = (i * colors.Length) / c.Length;
-                    c[i] = colors[j];
-                }
-
-                for(var i = 0; i < c.Length; ++i)
-                {
-                    singles[i].SetColor(c[i], transitionDuration);
-                }
+                count = device.ZoneCount;
+                device.SetMultiZoneColors(colors.Skip(index).Take(count).ToArray(), transitionDuration);
+                index += count;
             }
         }
 
@@ -175,23 +132,5 @@ namespace DerekWare.HomeAutomation.Common
         }
 
         #endregion
-
-        protected static void SplitDeviceTypes(IReadOnlyCollection<IDevice> devices, out List<IDevice> multizone, out List<IDevice> singles)
-        {
-            multizone = new List<IDevice>();
-            singles = new List<IDevice>();
-
-            foreach(var i in devices)
-            {
-                if(i.IsMultiZone)
-                {
-                    multizone.Add(i);
-                }
-                else
-                {
-                    singles.Add(i);
-                }
-            }
-        }
     }
 }
