@@ -218,19 +218,6 @@ namespace DerekWare.Iris
             }
         }
 
-        void UpdateSceneFromUi()
-        {
-            SceneItem.Power = PowerStatePanel.Power;
-            SceneItem.Color = SolidColorPanel.GroupBox.Checked ? SolidColorPanel.Color : null;
-            SceneItem.MultiZoneColors = MultiZoneColorPanel.GroupBox.Checked ? MultiZoneColorPanel.Colors : null;
-            SceneItem.Theme = ThemeButtonPanel.GroupBox.Checked && ThemeButtonPanel.SelectedTheme is not null
-                ? ThemeFactory.Instance.CreateInstance(ThemeButtonPanel.SelectedTheme.Name)
-                : null;
-            SceneItem.Effect = EffectButtonPanel.GroupBox.Checked && EffectButtonPanel.SelectedEffect is not null
-                ? EffectFactory.Instance.CreateInstance(EffectButtonPanel.SelectedEffect.Name)
-                : null;
-        }
-
         #region Event Handlers
 
         protected override void OnMultiZoneColorsChanged(object sender, ColorsChangedEventArgs e)
@@ -242,7 +229,6 @@ namespace DerekWare.Iris
 
             SceneItem.MultiZoneColors = e.Property;
             MultiZoneColorPanel.Colors = e.Property;
-            UpdateSceneFromUi();
             base.OnMultiZoneColorsChanged(sender, e);
         }
 
@@ -255,21 +241,18 @@ namespace DerekWare.Iris
 
             SceneItem.Power = e.Property;
             PowerStatePanel.Power = e.Property;
-            UpdateSceneFromUi();
             base.OnPowerStateChanged(sender, e);
         }
 
         protected override void OnSelectedEffectChanged(object sender, SelectedEffectChangedEventArgs e)
         {
             EffectButtonPanel.SelectedEffect = e.Property;
-            UpdateSceneFromUi();
             base.OnSelectedEffectChanged(sender, e);
         }
 
         protected override void OnSelectedThemeChanged(object sender, SelectedThemeChangedEventArgs e)
         {
             ThemeButtonPanel.SelectedTheme = e.Property;
-            UpdateSceneFromUi();
             base.OnSelectedThemeChanged(sender, e);
         }
 
@@ -282,53 +265,55 @@ namespace DerekWare.Iris
 
             SceneItem.Color = e.Property;
             SolidColorPanel.Color = e.Property;
-            UpdateSceneFromUi();
             base.OnSolidColorChanged(sender, e);
         }
 
         void OnCheckedChanged(object sender, EventArgs e)
         {
-            if(InUpdate)
+            if(sender is not CheckGroupBox groupBox)
             {
                 return;
             }
 
-            var groupBox = sender as CheckGroupBox;
-
-            if(groupBox is null)
+            if(groupBox.Checked)
             {
-                return;
+                if(sender == SolidColorPanel.GroupBox)
+                {
+                    MultiZoneColorPanel.GroupBox.Checked = false;
+                    ThemeButtonPanel.GroupBox.Checked = false;
+                    EffectButtonPanel.GroupBox.Checked = false;
+                }
+                else if(sender == MultiZoneColorPanel.GroupBox)
+                {
+                    SolidColorPanel.GroupBox.Checked = false;
+                    ThemeButtonPanel.GroupBox.Checked = false;
+                    EffectButtonPanel.GroupBox.Checked = false;
+                }
+                else if(sender == ThemeButtonPanel.GroupBox)
+                {
+                    SolidColorPanel.GroupBox.Checked = false;
+                    MultiZoneColorPanel.GroupBox.Checked = false;
+                }
             }
-
-            if(!groupBox.Checked)
+            else
             {
-                UpdateSceneFromUi();
-                return;
+                if(sender == SolidColorPanel.GroupBox)
+                {
+                    SceneItem.Color = null;
+                }
+                else if(sender == MultiZoneColorPanel.GroupBox)
+                {
+                    SceneItem.MultiZoneColors = null;
+                }
+                else if(sender == ThemeButtonPanel.GroupBox)
+                {
+                    SceneItem.Theme = null;
+                }
+                else if(sender == EffectButtonPanel.GroupBox)
+                {
+                    SceneItem.Effect = null;
+                }
             }
-
-            InUpdate = true;
-
-            if(sender == SolidColorPanel.GroupBox)
-            {
-                MultiZoneColorPanel.GroupBox.Checked = false;
-                ThemeButtonPanel.GroupBox.Checked = false;
-                EffectButtonPanel.GroupBox.Checked = false;
-            }
-            else if(sender == MultiZoneColorPanel.GroupBox)
-            {
-                SolidColorPanel.GroupBox.Checked = false;
-                ThemeButtonPanel.GroupBox.Checked = false;
-                EffectButtonPanel.GroupBox.Checked = false;
-            }
-            else if(sender == ThemeButtonPanel.GroupBox)
-            {
-                SolidColorPanel.GroupBox.Checked = false;
-                MultiZoneColorPanel.GroupBox.Checked = false;
-            }
-
-            UpdateSceneFromUi();
-
-            InUpdate = false;
         }
 
         void OnDevicePropertiesChanged(object sender, DeviceEventArgs e)

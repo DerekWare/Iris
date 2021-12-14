@@ -65,7 +65,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // Decide the direction of movement based on the effect behavior
             UpdateDirection(renderState);
 
-            var cyclePosition = renderState.CyclePosition;
+            var offset = renderState.CyclePosition + Offset;
 
             // Using different algorithms for Random and the others because of possible drift
             // that isn't apparent in Random. Random keeps track of the current position within
@@ -73,8 +73,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // value in the render state.
             if(Behavior == EffectBehavior.Random)
             {
-                var cycleIncrement = renderState.CycleIncrement * (Direction == EffectDirection.Forward ? 1 : -1);
-                ColorOffset += cycleIncrement;
+                ColorOffset += renderState.CycleIncrement * (Direction == EffectDirection.Forward ? 1 : -1);
 
                 if(ColorOffset >= 1)
                 {
@@ -85,12 +84,12 @@ namespace DerekWare.HomeAutomation.Common.Effects
                     ColorOffset += Math.Floor(-ColorOffset) + 1;
                 }
 
-                cyclePosition = ColorOffset;
+                offset = ColorOffset;
             }
 
             for(var i = 0; i < colors.Length; ++i)
             {
-                var hue = cyclePosition + Offset + (((double)i / ZoneCount) * Window);
+                var hue = offset + (((double)i / ZoneCount) * Window);
 
                 switch(hue)
                 {
