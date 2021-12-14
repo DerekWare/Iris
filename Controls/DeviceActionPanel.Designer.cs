@@ -152,7 +152,7 @@ namespace DerekWare.Iris
             this.ThemeButtonPanel.Padding = new System.Windows.Forms.Padding(8);
             this.ThemeButtonPanel.Size = new System.Drawing.Size(956, 349);
             this.ThemeButtonPanel.TabIndex = 4;
-            this.ThemeButtonPanel.SelectedThemeChanged += new System.EventHandler<DerekWare.Iris.SelectedThemeChangedEventArgs>(this.OnSelectedThemeChanged);
+            this.ThemeButtonPanel.SelectedThemeChanged += new System.EventHandler<DerekWare.Iris.SelectedThemeChangedEventArgs>(this.OnSelectedThemeClicked);
             // 
             // EffectButtonPanel
             // 
@@ -166,7 +166,7 @@ namespace DerekWare.Iris
             this.EffectButtonPanel.Padding = new System.Windows.Forms.Padding(8);
             this.EffectButtonPanel.Size = new System.Drawing.Size(956, 350);
             this.EffectButtonPanel.TabIndex = 5;
-            this.EffectButtonPanel.SelectedEffectChanged += new System.EventHandler<DerekWare.Iris.SelectedEffectChangedEventArgs>(this.OnSelectedEffectChanged);
+            this.EffectButtonPanel.SelectedEffectChanged += new System.EventHandler<DerekWare.Iris.SelectedEffectChangedEventArgs>(this.OnSelectedEffectClicked);
             // 
             // BrightnessPanel
             // 

@@ -107,6 +107,38 @@ namespace DerekWare.Iris
             base.OnHandleDestroyed(e);
         }
 
+        protected virtual void OnSelectedEffectChanged(Effect effect)
+        {
+            if(InUpdate || Device is null)
+            {
+                return;
+            }
+
+            InUpdate = true;
+            Device.Theme = null;
+            Device.Power = PowerState.On;
+            Device.Effect = effect;
+            InUpdate = false;
+
+            UpdateUiFromDevice();
+        }
+
+        protected virtual void OnSelectedThemeChanged(Theme theme)
+        {
+            if(InUpdate || Device is null)
+            {
+                return;
+            }
+
+            InUpdate = true;
+            Device.Effect = null;
+            Device.Power = PowerState.On;
+            Device.Theme = theme;
+            InUpdate = false;
+
+            UpdateUiFromDevice();
+        }
+
         protected virtual void UpdateProperties()
         {
             PropertyGrid.SelectedObject = Device;
@@ -143,15 +175,15 @@ namespace DerekWare.Iris
 
         protected virtual void OnBrightnessChanged(object sender, BrightnessChangedEventArgs e)
         {
-            InUpdate = true;
-
-            if(Device is not null)
+            if(InUpdate || Device is null)
             {
-                Device.Effect = null;
-                Device.Power = PowerState.On;
-                Device.Brightness = e.Property;
+                return;
             }
 
+            InUpdate = true;
+            Device.Effect = null;
+            Device.Power = PowerState.On;
+            Device.Brightness = e.Property;
             InUpdate = false;
 
             UpdateUiFromDevice();
@@ -159,21 +191,16 @@ namespace DerekWare.Iris
 
         protected virtual void OnMultiZoneColorsChanged(object sender, ColorsChangedEventArgs e)
         {
-            if(InUpdate)
+            if(InUpdate || Device is null)
             {
                 return;
             }
 
             InUpdate = true;
-
-            if(Device is not null)
-            {
-                Device.Theme = null;
-                Device.Effect = null;
-                Device.Power = PowerState.On;
-                Device.MultiZoneColors = e.Property;
-            }
-
+            Device.Theme = null;
+            Device.Effect = null;
+            Device.Power = PowerState.On;
+            Device.MultiZoneColors = e.Property;
             InUpdate = false;
 
             UpdateUiFromDevice();
@@ -181,24 +208,19 @@ namespace DerekWare.Iris
 
         protected virtual void OnPowerStateChanged(object sender, PowerStateChangedEventArgs e)
         {
-            if(InUpdate)
+            if(InUpdate || Device is null)
             {
                 return;
             }
 
             InUpdate = true;
-
-            if(Device is not null)
-            {
-                Device.Power = e.Property;
-            }
-
+            Device.Power = e.Property;
             InUpdate = false;
 
             UpdateUiFromDevice();
         }
 
-        protected virtual void OnSelectedEffectChanged(object sender, SelectedEffectChangedEventArgs e)
+        protected virtual void OnSelectedEffectClicked(object sender, SelectedEffectChangedEventArgs e)
         {
             if(InUpdate)
             {
@@ -210,21 +232,10 @@ namespace DerekWare.Iris
                 return;
             }
 
-            InUpdate = true;
-
-            if(Device is not null)
-            {
-                Device.Theme = null;
-                Device.Power = PowerState.On;
-                Device.Effect = effect;
-            }
-
-            InUpdate = false;
-
-            UpdateUiFromDevice();
+            OnSelectedEffectChanged(effect);
         }
 
-        protected virtual void OnSelectedThemeChanged(object sender, SelectedThemeChangedEventArgs e)
+        protected virtual void OnSelectedThemeClicked(object sender, SelectedThemeChangedEventArgs e)
         {
             if(InUpdate)
             {
@@ -236,37 +247,22 @@ namespace DerekWare.Iris
                 return;
             }
 
-            InUpdate = true;
-
-            if(Device is not null)
-            {
-                Device.Effect = null;
-                Device.Power = PowerState.On;
-                Device.Theme = theme;
-            }
-
-            InUpdate = false;
-
+            OnSelectedThemeChanged(theme);
             UpdateUiFromDevice();
         }
 
         protected virtual void OnSolidColorChanged(object sender, ColorChangedEventArgs e)
         {
-            if(InUpdate)
+            if(InUpdate || Device is null)
             {
                 return;
             }
 
             InUpdate = true;
-
-            if(Device is not null)
-            {
-                Device.Theme = null;
-                Device.Effect = null;
-                Device.Power = PowerState.On;
-                Device.Color = e.Property;
-            }
-
+            Device.Theme = null;
+            Device.Effect = null;
+            Device.Power = PowerState.On;
+            Device.Color = e.Property;
             InUpdate = false;
 
             UpdateUiFromDevice();

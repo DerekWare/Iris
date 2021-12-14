@@ -86,6 +86,20 @@ namespace DerekWare.Iris
             base.OnHandleDestroyed(e);
         }
 
+        protected override void OnSelectedEffectChanged(Effect effect)
+        {
+            SceneItem.Effect = effect;
+            EffectButtonPanel.SelectedEffect = effect;
+            base.OnSelectedEffectChanged(effect);
+        }
+
+        protected override void OnSelectedThemeChanged(Theme theme)
+        {
+            SceneItem.Theme = theme;
+            ThemeButtonPanel.SelectedTheme = theme;
+            base.OnSelectedThemeChanged(theme);
+        }
+
         protected override void UpdateUiFromDevice()
         {
         }
@@ -242,18 +256,6 @@ namespace DerekWare.Iris
             SceneItem.Power = e.Property;
             PowerStatePanel.Power = e.Property;
             base.OnPowerStateChanged(sender, e);
-        }
-
-        protected override void OnSelectedEffectChanged(object sender, SelectedEffectChangedEventArgs e)
-        {
-            EffectButtonPanel.SelectedEffect = e.Property;
-            base.OnSelectedEffectChanged(sender, e);
-        }
-
-        protected override void OnSelectedThemeChanged(object sender, SelectedThemeChangedEventArgs e)
-        {
-            ThemeButtonPanel.SelectedTheme = e.Property;
-            base.OnSelectedThemeChanged(sender, e);
         }
 
         protected override void OnSolidColorChanged(object sender, ColorChangedEventArgs e)

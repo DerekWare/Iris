@@ -54,7 +54,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public Version FirmwareVersion { get; private set; }
 
-        public bool IsExtendedMultiZone { get; private set; }
+        public bool? IsExtendedMultiZone { get; private set; }
 
         [Browsable(false)]
         public MultiZoneEffectSettings MultiZoneEffect { get => _MultiZoneEffect; set => SetMultiZoneEffect(value); }
@@ -221,7 +221,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                 });
             }
 
-            if(!IsExtendedMultiZone)
+            if(!IsExtendedMultiZone.HasValue || !IsExtendedMultiZone.Value)
             {
                 await Controller.GetColorZones(response =>
                 {
@@ -241,25 +241,32 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                 });
             }
 
-            await Controller.GetExtendedColorZones(response =>
+            if(!IsExtendedMultiZone.HasValue || IsExtendedMultiZone.Value)
             {
-                // My LIFX Z strip with old firmware responds to this message, but with
-                // an empty color array.
-                if(!response.Colors.IsNullOrEmpty())
-                {
-                    if(!IsExtendedMultiZone || (_ZoneCount != response.ZoneCount))
-                    {
-                        IsExtendedMultiZone = true;
-                        _ZoneCount = response.ZoneCount;
-                        OnPropertiesChanged();
-                    }
+                // Assume failure so if we never get a valid response, we don't keep sending
+                // this message.
+                IsExtendedMultiZone ??= false;
 
-                    if(!_MultiZoneColors.SequenceEqual(response.Colors))
+                await Controller.GetExtendedColorZones(response =>
+                {
+                    // My LIFX Z strip with old firmware responds to this message, but with
+                    // an empty color array.
+                    if(!response.Colors.IsNullOrEmpty())
                     {
-                        base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
+                        if(!IsExtendedMultiZone.Value || (_ZoneCount != response.ZoneCount))
+                        {
+                            IsExtendedMultiZone = true;
+                            _ZoneCount = response.ZoneCount;
+                            OnPropertiesChanged();
+                        }
+
+                        if(!_MultiZoneColors.SequenceEqual(response.Colors))
+                        {
+                            base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
+                        }
                     }
-                }
-            });
+                });
+            }
 
             // TODO query firmware effect/waveform
         }
