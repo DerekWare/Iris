@@ -29,9 +29,11 @@ namespace DerekWare.Iris
         /// </summary>
         private void InitializeComponent()
         {
-            this.GroupBox = new CheckGroupBox();
+            this.components = new System.ComponentModel.Container();
+            this.GroupBox = new DerekWare.Iris.CheckGroupBox();
             this.LayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.TrackBar = new System.Windows.Forms.TrackBar();
+            this.Timer = new System.Windows.Forms.Timer(this.components);
             this.GroupBox.SuspendLayout();
             this.LayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TrackBar)).BeginInit();
@@ -39,13 +41,16 @@ namespace DerekWare.Iris
             // 
             // GroupBox
             // 
+            this.GroupBox.ApplyChildState = false;
             this.GroupBox.AutoSize = true;
             this.GroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.GroupBox.Checked = false;
             this.GroupBox.Controls.Add(this.LayoutPanel);
             this.GroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GroupBox.Location = new System.Drawing.Point(8, 8);
             this.GroupBox.Name = "GroupBox";
             this.GroupBox.Padding = new System.Windows.Forms.Padding(8);
+            this.GroupBox.ShowCheckBox = false;
             this.GroupBox.Size = new System.Drawing.Size(187, 83);
             this.GroupBox.TabIndex = 9;
             this.GroupBox.TabStop = false;
@@ -81,6 +86,11 @@ namespace DerekWare.Iris
             this.TrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.TrackBar.ValueChanged += new System.EventHandler(this.BrightnessTrackBar_ValueChanged);
             // 
+            // Timer
+            // 
+            this.Timer.Interval = 250;
+            this.Timer.Tick += new System.EventHandler(this.Timer_Tick);
+            // 
             // BrightnessPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -105,5 +115,6 @@ namespace DerekWare.Iris
         internal CheckGroupBox GroupBox;
         private System.Windows.Forms.TableLayoutPanel LayoutPanel;
         private System.Windows.Forms.TrackBar TrackBar;
+        private System.Windows.Forms.Timer Timer;
     }
 }

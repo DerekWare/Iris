@@ -1,5 +1,6 @@
 ﻿using DerekWare.HomeAutomation.Common.Colors;
 using Q42.HueApi;
+using Q42.HueApi.ColorConverters.HSB;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
 {
@@ -30,24 +31,46 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public const double SaturationMax = 254;
         public const double SaturationMin = 0;
 
-        public static Color FromHueColor(int? hue, int? saturation, byte brightness, int? colorTemperature)
+        public static Color FromHueColor(string colorMode, int? hue, int? saturation, byte? brightness, int? colorTemperature)
         {
-            var h = hue ?? HueMin;
-            var s = saturation ?? SaturationMin;
-            double b = brightness;
-            var m = colorTemperature ?? MiredMin;
+            switch(colorMode)
+            {
+                case null:
+                case "":
+                case "ct":
+                {
+                    var b = brightness ?? BrightnessMin;
+                    var m = colorTemperature ?? MiredMin;
 
-            h = (h - HueMin) / (HueMax - HueMin);
-            s = (s - SaturationMin) / (SaturationMax - SaturationMin);
-            b = (b - BrightnessMin) / (BrightnessMax - BrightnessMin);
-            m = (m - MiredMin) / (MiredMax - MiredMin);
+                    b = (b - BrightnessMin) / (BrightnessMax - BrightnessMin);
+                    m = (m - MiredMin) / (MiredMax - MiredMin);
 
-            return new Color(h, s, b, m);
+                    return new Color(0, 0, b, m);
+                }
+
+                case "hs":
+                case "xy":
+                {
+                    var h = hue ?? HueMin;
+                    var s = saturation ?? SaturationMin;
+                    var b = brightness ?? BrightnessMin;
+                    var m = colorTemperature ?? MiredMin;
+
+                    h = (h - HueMin) / (HueMax - HueMin);
+                    s = (s - SaturationMin) / (SaturationMax - SaturationMin);
+                    b = (b - BrightnessMin) / (BrightnessMax - BrightnessMin);
+                    m = (m - MiredMin) / (MiredMax - MiredMin);
+
+                    return new Color(h, s, b, m);
+                }
+            }
+
+            return null;
         }
 
         public static Color FromState(State state)
         {
-            return FromHueColor(state.Hue, state.Saturation, state.Brightness, state.ColorTemperature);
+            return FromHueColor(state.ColorMode, state.Hue, state.Saturation, state.Brightness, state.ColorTemperature);
         }
 
         public static double MiredFromKelvin(double k)
@@ -55,58 +78,22 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             return 1000000.0 / k;
         }
 
-        public static void ToHueColor(this Color src, out int h, out int s, out byte b, out int m)
+        public static void ToHueColor(this Color src, out int? h, out int? s, out byte? b, out int? m)
         {
-            h = (int)(HueMin + (src.Hue * (HueMax - HueMin)));
-            s = (int)(SaturationMin + (src.Saturation * (SaturationMax - SaturationMin)));
+            // For colors, set hue, saturation, brightness; for white, set brightness and mired/colortemp
+            // TODO color bulbs don't seem to work with white values the same way white-only lights do.
+            // The color values used by the mobile app use hue/saturation/brightness/mired, but the
+            // white-only lights use just brightness/mired.
+            h = src.IsWhite ? null : (int)(HueMin + (src.Hue * (HueMax - HueMin)));
+            s = src.IsWhite ? null : (int)(SaturationMin + (src.Saturation * (SaturationMax - SaturationMin)));
             b = (byte)(BrightnessMin + (src.Brightness * (BrightnessMax - BrightnessMin)));
-            m = (int)(MiredMin + (src.Kelvin * (MiredMax - MiredMin)));
+            m = src.IsWhite ? (int)(MiredMin + (src.Kelvin * (MiredMax - MiredMin))) : null;
         }
 
         public static LightCommand ToLightCommand(this Color src)
         {
-            // For colors, set hue, saturation, brightness; for white, set brightness and mired/colortemp
             ToHueColor(src, out var h, out var s, out var b, out var m);
-
-            var cmd = new LightCommand();
-
-            if(src.IsWhite)
-            {
-                cmd.Hue = null;
-                cmd.Saturation = null;
-                cmd.Brightness = b;
-                cmd.ColorTemperature = m;
-            }
-            else
-            {
-                cmd.Hue = h;
-                cmd.Saturation = s;
-                cmd.Brightness = b;
-                cmd.ColorTemperature = null;
-            }
-
-            return cmd;
-        }
-
-        public static void ToState(this Color src, State state)
-        {
-            // For colors, set hue, saturation, brightness; for white, set brightness and mired/colortemp
-            ToHueColor(src, out var h, out var s, out var b, out var m);
-
-            if(src.IsWhite)
-            {
-                state.Hue = null;
-                state.Saturation = null;
-                state.Brightness = b;
-                state.ColorTemperature = m;
-            }
-            else
-            {
-                state.Hue = h;
-                state.Saturation = s;
-                state.Brightness = b;
-                state.ColorTemperature = null;
-            }
+            return new LightCommand { Hue = h, Saturation = s, Brightness = b, ColorTemperature = m };
         }
     }
 }

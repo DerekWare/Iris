@@ -57,10 +57,23 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public override async void RefreshState()
         {
-            HueDevice = await PhilipsHue.Client.Instance.HueClient.GetLightAsync(HueDevice.Id);
+            var device = await PhilipsHue.Client.Instance.HueClient.GetLightAsync(HueDevice.Id);
 
-            base.SetColor(Colors.FromState(HueDevice.State), TimeSpan.Zero);
+            if(device is null)
+            {
+                return;
+            }
+
+            HueDevice = device;
+
             base.SetPower(HueDevice.State.On ? PowerState.On : PowerState.Off);
+
+            var color = Colors.FromState(HueDevice.State);
+
+            if(color is not null)
+            {
+                base.SetColor(Colors.FromState(HueDevice.State), TimeSpan.Zero);
+            }
         }
 
         public override void SetColor(Color color, TimeSpan transitionDuration)

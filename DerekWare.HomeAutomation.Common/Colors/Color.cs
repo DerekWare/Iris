@@ -47,7 +47,7 @@ namespace DerekWare.HomeAutomation.Common.Colors
             this.Deserialize(info, context);
         }
 
-        public bool IsWhite => Saturation == 0;
+        public bool IsWhite => Saturation <= double.Epsilon;
         public string Name => this.GetColorName();
 
         public double Brightness

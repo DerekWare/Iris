@@ -8,6 +8,7 @@ namespace DerekWare.Iris
     {
         double _Brightness;
         bool InUpdate;
+        object TimerLock = new();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), Browsable(true)]
         public event EventHandler<BrightnessChangedEventArgs> BrightnessChanged;
@@ -37,6 +38,19 @@ namespace DerekWare.Iris
             if(InUpdate)
             {
                 return;
+            }
+
+            lock(TimerLock)
+            {
+                Timer.Start();
+            }
+        }
+
+        void Timer_Tick(object sender, EventArgs e)
+        {
+            lock(TimerLock)
+            {
+                Timer.Stop();
             }
 
             BrightnessChanged?.Invoke(this, new BrightnessChangedEventArgs { Property = (double)TrackBar.Value / TrackBar.Maximum });

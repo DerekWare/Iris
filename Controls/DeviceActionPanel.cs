@@ -54,6 +54,7 @@ namespace DerekWare.Iris
             {
                 _Device.StateChanged += OnDeviceStateChanged;
                 _Device.PropertiesChanged += OnDevicePropertiesChanged;
+                _Device.RefreshState();
             }
 
             UpdateProperties();

@@ -206,20 +206,25 @@ namespace DerekWare.HomeAutomation.Common
             }
 
             _Color = color.Clone();
-            _MultiZoneColors = _Color.Repeat(ZoneCount).ToList();
+            _MultiZoneColors = _Color.Repeat(ZoneCount).ToArray();
             OnStateChanged();
         }
 
         public virtual void SetMultiZoneColors(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
         {
-            colors = colors.Take(Math.Min(ZoneCount, colors.Count)).ToList();
+            colors = colors.Take(Math.Min(ZoneCount, colors.Count)).ToArray();
+
+            if(colors.Count < ZoneCount)
+            {
+                colors = colors.Append(colors.Last().Repeat(ZoneCount - colors.Count)).ToArray();
+            }
 
             if(colors.SafeEmpty().SequenceEqual(_MultiZoneColors))
             {
                 return;
             }
 
-            _MultiZoneColors = colors.Select(i => i.Clone()).ToList();
+            _MultiZoneColors = colors.Select(i => i.Clone()).ToArray();
             _Color = _MultiZoneColors.Average();
             OnStateChanged();
         }
