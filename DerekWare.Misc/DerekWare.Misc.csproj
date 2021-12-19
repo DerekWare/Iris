@@ -187,6 +187,13 @@
     <Compile Include="Reflection\Property.cs" />
     <Compile Include="Reflection\Reflector.cs" />
     <Compile Include="Reflection\TypeConverter.cs" />
+    <Compile Include="Schedule\DailyEvent.cs" />
+    <Compile Include="Schedule\DateEvent.cs" />
+    <Compile Include="Schedule\Extensions.cs" />
+    <Compile Include="Schedule\Interfaces.cs" />
+    <Compile Include="Schedule\MonthlyEvent.cs" />
+    <Compile Include="Schedule\TimeEvent.cs" />
+    <Compile Include="Schedule\WeeklyEvent.cs" />
     <Compile Include="Security\Aes.cs" />
     <Compile Include="Security\Transform.cs" />
     <Compile Include="SimpleDate.cs" />
