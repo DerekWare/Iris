@@ -5,9 +5,9 @@ using DerekWare.HomeAutomation.Common;
 
 namespace DerekWare.Iris
 {
-    public partial class DeviceSelectionForm : Form
+    public partial class DeviceSelectionDialog : Form
     {
-        public DeviceSelectionForm()
+        public DeviceSelectionDialog()
         {
             InitializeComponent();
         }
@@ -28,7 +28,7 @@ namespace DerekWare.Iris
 
         public static bool Show(IWin32Window owner, ref IReadOnlyCollection<IDevice> devices)
         {
-            var form = new DeviceSelectionForm();
+            var form = new DeviceSelectionDialog();
             form.DeviceTreeView.CheckedDevices = devices;
 
             var result = form.ShowDialog(owner);

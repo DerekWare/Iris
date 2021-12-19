@@ -67,7 +67,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         public bool ApplyScene()
         {
-            if(Device is null)
+            if(!(Device?.IsValid ?? false))
             {
                 return false;
             }
@@ -124,7 +124,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         public bool SnapshotDeviceState()
         {
-            if(Device is null)
+            if(!(Device?.IsValid ?? false))
             {
                 return false;
             }

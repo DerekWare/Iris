@@ -37,7 +37,7 @@ namespace DerekWare.HomeAutomation.Common.Devices
 
             if(Client is not null)
             {
-                Client.DeviceDiscovered += Client_OnDeviceDiscovered;
+                Client.DeviceDiscovered += OnDeviceDiscovered;
             }
         }
 
@@ -98,17 +98,12 @@ namespace DerekWare.HomeAutomation.Common.Devices
             {
                 if(_Client is not null)
                 {
-                    _Client.DeviceDiscovered -= Client_OnDeviceDiscovered;
+                    _Client.DeviceDiscovered -= OnDeviceDiscovered;
                 }
 
                 _Client = null;
                 _Device = null;
             }
-        }
-
-        protected virtual void OnDeviceDiscovered(DeviceEventArgs e)
-        {
-            DeviceDiscovered?.Invoke(this, e);
         }
 
         #region Equality
@@ -184,14 +179,17 @@ namespace DerekWare.HomeAutomation.Common.Devices
 
         #region Event Handlers
 
-        void Client_OnDeviceDiscovered(object sender, DeviceEventArgs e)
+        void OnDeviceDiscovered(object sender, DeviceEventArgs e)
         {
             if(!Matches(e.Device))
             {
                 return;
             }
 
-            OnDeviceDiscovered(e);
+            _Device = e.Device;
+            _Client = e.Device.Client;
+
+            DeviceDiscovered?.Invoke(this, e);
         }
 
         #endregion

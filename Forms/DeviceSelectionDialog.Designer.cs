@@ -1,7 +1,7 @@
 ﻿
 namespace DerekWare.Iris
 {
-    partial class DeviceSelectionForm
+    partial class DeviceSelectionDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace DerekWare.Iris
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeviceSelectionForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeviceSelectionDialog));
             this.DeviceTreeView = new DerekWare.Iris.DeviceSelectionTreeView();
             this.AcceptButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
@@ -69,7 +69,7 @@ namespace DerekWare.Iris
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // DeviceSelectionForm
+            // DeviceSelectionDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -78,7 +78,7 @@ namespace DerekWare.Iris
             this.Controls.Add(this.AcceptButton);
             this.Controls.Add(this.DeviceTreeView);
             this.MinimizeBox = false;
-            this.Name = "DeviceSelectionForm";
+            this.Name = "DeviceSelectionDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select Devices";
             this.ResumeLayout(false);

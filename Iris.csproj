@@ -184,11 +184,11 @@
     <Compile Include="Controls\TreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\DeviceSelectionForm.cs">
+    <Compile Include="Forms\DeviceSelectionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DeviceSelectionForm.Designer.cs">
-      <DependentUpon>DeviceSelectionForm.cs</DependentUpon>
+    <Compile Include="Forms\DeviceSelectionDialog.Designer.cs">
+      <DependentUpon>DeviceSelectionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\EffectButtonPanel.cs">
       <SubType>UserControl</SubType>
@@ -289,8 +289,8 @@
     <EmbeddedResource Include="Controls\BrightnessPanel.resx">
       <DependentUpon>BrightnessPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DeviceSelectionForm.resx">
-      <DependentUpon>DeviceSelectionForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\DeviceSelectionDialog.resx">
+      <DependentUpon>DeviceSelectionDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\EffectButtonPanel.resx">
       <DependentUpon>EffectButtonPanel.cs</DependentUpon>

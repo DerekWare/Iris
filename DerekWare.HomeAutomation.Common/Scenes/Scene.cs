@@ -22,6 +22,8 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             Name = name;
         }
 
+        public bool AutoApply { get; set; }
+
         public SynchronizedHashSet<SceneItem> Items { get; set; } = new();
 
         public string Name { get; set; }

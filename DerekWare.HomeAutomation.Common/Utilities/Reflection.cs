@@ -80,6 +80,11 @@ namespace DerekWare.HomeAutomation.Common
             return found.Values;
         }
 
+        public static IEnumerable<PropertyInfo> GetVisibleProperties(this object obj)
+        {
+            return GetVisibleProperties(obj.GetType());
+        }
+
         public static IEnumerable<PropertyInfo> GetVisibleProperties(this Type type)
         {
             return type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(IsVisible);

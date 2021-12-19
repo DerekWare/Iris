@@ -37,6 +37,7 @@ namespace DerekWare.Iris
 
             LoadSettings();
             CheckForUpdates();
+
             base.OnLoad(e);
         }
 
@@ -74,7 +75,7 @@ namespace DerekWare.Iris
                 HueClient.Instance.Connect(Settings.Default.HueBridgeAddress, Settings.Default.HueApiKey);
             }
 
-            // Deserialize cached effect, them and scene settings
+            // Load effects, themes and scenes
             EffectFactory.Instance.Deserialize(Settings.Default.Effects);
             ThemeFactory.Instance.Deserialize(Settings.Default.Themes);
             SceneFactory.Instance.Deserialize(Settings.Default.Scenes);
@@ -122,6 +123,16 @@ namespace DerekWare.Iris
             ComponentTreeView.SelectedScene?.Apply();
         }
 
+        void AutomaticallyApplySceneToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if(ScenePanel?.Scene is null)
+            {
+                return;
+            }
+
+            ScenePanel.Scene.AutoApply = AutomaticallyApplySceneToolStripMenuItem.Checked;
+        }
+
         void BridgeMenuItem_Click(object sender, EventArgs e)
         {
             var dlg = new ConnectBridgeDialog();
@@ -158,6 +169,7 @@ namespace DerekWare.Iris
                 case ComponentTreeView.SceneNode sceneNode:
                     ScenePanel = new ScenePanel(sceneNode.Scene) { Dock = DockStyle.Fill };
                     RootLayoutPanel.Controls.Add(ScenePanel, 1, 0);
+                    AutomaticallyApplySceneToolStripMenuItem.Checked = sceneNode.Scene.AutoApply;
                     break;
             }
 
@@ -165,14 +177,14 @@ namespace DerekWare.Iris
             RenameSceneToolStripMenuItem.Enabled = ScenePanel is not null;
             RemoveSceneToolStripMenuItem.Enabled = ScenePanel is not null;
             ApplySceneToolStripMenuItem.Enabled = ScenePanel is not null;
-            // UpdateSceneToolStripMenuItem.Enabled = ScenePanel is not null;
+            AutomaticallyApplySceneToolStripMenuItem.Enabled = ScenePanel is not null;
         }
 
         void ComponentTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if(e.Button == MouseButtons.Right)
             {
-                ComponentTreeView.SelectedNode = (DeviceTreeView.TreeNode)e.Node;
+                ComponentTreeView.SelectedNode = (TreeView.TreeNode)e.Node;
 
                 if(e.Node is ComponentTreeView.SceneNode || (e.Node == ComponentTreeView.ScenesNode))
                 {

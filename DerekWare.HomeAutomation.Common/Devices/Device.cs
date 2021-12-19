@@ -5,6 +5,7 @@ using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
+using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.HomeAutomation.Common.Themes;
 
 namespace DerekWare.HomeAutomation.Common
@@ -96,6 +97,15 @@ namespace DerekWare.HomeAutomation.Common
             get => EffectFactory.Instance.GetRunningEffects(this).FirstOrDefault();
             set
             {
+                // TODO we don't currently have a way to see if any of the properties have
+                // changed, so just assume they have and always apply the new effect.
+#if false
+                if(Equals(Effect, value))
+                {
+                    return;
+                }
+#endif
+
                 EffectFactory.Instance.Stop(this);
                 value?.Start(this);
                 OnStateChanged();
@@ -238,6 +248,20 @@ namespace DerekWare.HomeAutomation.Common
 
             _Power = power;
             OnStateChanged();
+
+            // If a scene is configured to start automatically and this device was just powered
+            // on, start the scene.
+            // TODO this should really be in the Scene, but this is simpler.
+            if(power == PowerState.On)
+            {
+                var scenes = from s in SceneFactory.Instance
+                             where s.AutoApply
+                             from d in this.GetDeviceGroups().Cast<IDevice>().Append(this)
+                             where s.Contains(d)
+                             select s;
+
+                scenes.FirstOrDefault()?.Apply();
+            }
         }
 
         #endregion

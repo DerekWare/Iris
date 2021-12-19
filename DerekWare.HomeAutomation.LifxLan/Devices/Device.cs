@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
@@ -17,6 +18,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         internal SynchronizedHashSet<DeviceGroup> InternalGroups = new();
 
         readonly DeviceController Controller;
+        int _IsValid;
 
         MultiZoneEffectSettings _MultiZoneEffect;
         string _Name;
@@ -40,7 +42,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public override bool IsColor => _Product?.features.color ?? false;
 
-        public override bool IsValid => !_Name.IsNullOrEmpty();
+        public override bool IsValid => _IsValid != 0;
 
         public override string Name => _Name.IsNullOrEmpty() ? IpAddress : _Name;
 
@@ -269,6 +271,10 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             }
 
             // TODO query firmware effect/waveform
+            if(0 == Interlocked.Exchange(ref _IsValid, 1))
+            {
+                OnPropertiesChanged();
+            }
         }
     }
 }

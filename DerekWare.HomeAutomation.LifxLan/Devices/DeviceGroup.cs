@@ -72,18 +72,25 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         {
             foreach(Device device in e.OldItems.SafeEmpty())
             {
+                device.PropertiesChanged -= OnDevicePropertiesChanged;
                 device.StateChanged -= OnDeviceStateChanged;
             }
 
             foreach(Device device in e.NewItems.SafeEmpty())
             {
+                device.PropertiesChanged += OnDevicePropertiesChanged;
                 device.StateChanged += OnDeviceStateChanged;
             }
 
             SortedDevices = new SynchronizedList<Device>(InternalDevices.OrderBy(i => i.Name));
 
-            OnStateChanged();
             OnPropertiesChanged();
+            OnStateChanged();
+        }
+
+        void OnDevicePropertiesChanged(object sender, DeviceEventArgs e)
+        {
+            SortedDevices = new SynchronizedList<Device>(InternalDevices.OrderBy(i => i.Name));
         }
 
         void OnDeviceStateChanged(object sender, DeviceEventArgs e)
