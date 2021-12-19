@@ -40,9 +40,13 @@ namespace DerekWare.Iris
             set
             {
                 _Power = value;
-                InUpdate = true;
-                ComboBox.SelectedItem = value;
-                InUpdate = false;
+
+                if(!ComboBox.DroppedDown)
+                {
+                    InUpdate = true;
+                    ComboBox.SelectedItem = value;
+                    InUpdate = false;
+                }
             }
         }
 

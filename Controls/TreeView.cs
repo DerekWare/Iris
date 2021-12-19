@@ -7,7 +7,7 @@ namespace DerekWare.Iris
 {
     class TreeView : System.Windows.Forms.TreeView
     {
-        protected new bool DesignMode => Extensions.IsDesignMode();
+        protected new bool DesignMode => base.DesignMode || Extensions.IsDesignMode();
 
         // Intelligently adds or updates nodes using the correct node type and automatically sorted
         public class TreeNode : System.Windows.Forms.TreeNode

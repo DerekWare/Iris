@@ -18,7 +18,7 @@ namespace DerekWare.Iris
 
         public event EventHandler<ColorsChangedEventArgs> ColorsChanged;
 
-        public new bool DesignMode => Extensions.IsDesignMode();
+        public new bool DesignMode => base.DesignMode || Extensions.IsDesignMode();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
         public IReadOnlyCollection<Color> Colors

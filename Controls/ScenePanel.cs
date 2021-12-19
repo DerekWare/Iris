@@ -30,7 +30,7 @@ namespace DerekWare.Iris
         [Browsable(false)]
         public Scene Scene { get; }
 
-        protected new bool DesignMode => Extensions.IsDesignMode();
+        protected new bool DesignMode => base.DesignMode || Extensions.IsDesignMode();
 
         public SceneItem SceneItemFromTabPage(SceneTabPage page)
         {

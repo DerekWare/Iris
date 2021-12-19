@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 using DerekWare.Collections;
+using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
@@ -11,9 +13,8 @@ namespace DerekWare.Iris
 {
     public partial class DeviceActionPanel : UserControl
     {
-        protected bool InUpdate;
-
         readonly IDevice _Device;
+        int _InUpdateCounter;
 
         public DeviceActionPanel(IDevice device)
             : this()
@@ -44,6 +45,24 @@ namespace DerekWare.Iris
                     DescriptionLabel.Text = value;
                     DescriptionLabel.Visible = true;
                     BaseLayoutPanel.RowStyles[0] = new RowStyle(SizeType.AutoSize);
+                }
+            }
+        }
+
+        protected bool InUpdate
+        {
+            get => _InUpdateCounter > 0;
+            set
+            {
+                if(value)
+                {
+                    var n = Interlocked.Increment(ref _InUpdateCounter);
+                    Debug.Assert(n >= 1);
+                }
+                else
+                {
+                    var n = Interlocked.Decrement(ref _InUpdateCounter);
+                    Debug.Assert(n >= 0);
                 }
             }
         }

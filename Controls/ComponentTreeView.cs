@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Scenes;
+using DerekWare.Strings;
 
 namespace DerekWare.Iris
 {
@@ -38,14 +39,20 @@ namespace DerekWare.Iris
 
         public bool Activate(TreeNode node)
         {
-            if(node is SceneNode sceneNode)
+            if(node is not SceneNode sceneNode)
             {
-                sceneNode.Scene.Apply();
-                MessageBox.Show($@"Scene ""{sceneNode.Scene.Name}"" successfully applied.", ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return true;
+                return false;
             }
 
-            return false;
+            sceneNode.Scene.Apply();
+
+            var sceneName = sceneNode.Scene.Name;
+            var deviceNames = sceneNode.Scene.Items.Select(i => i.Device.Name).Join(", ");
+            var message = $"Scene \"{sceneName}\" applied to {deviceNames}";
+            MessageBox.Show(message, ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            return true;
+
         }
 
         public void CreateScene(string name = "My Scene")
@@ -102,7 +109,7 @@ namespace DerekWare.Iris
 
             IReadOnlyCollection<IDevice> devices = scene.Items.Select(i => i.Device).ToList();
 
-            if(!DeviceSelectionForm.Show(Parent, ref devices))
+            if(!DeviceSelectionDialog.Show(Parent, ref devices))
             {
                 return false;
             }
