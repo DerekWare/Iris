@@ -22,6 +22,16 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void DoWork(Thread sender, DoWorkEventArgs e)
         {
+            // Wait for the device to be valid. If the effect is started too early,
+            // the device may not have valid colors yet.
+            while(!Device.IsValid)
+            {
+                if(Thread.CancelEvent.WaitOne(TimeSpan.FromSeconds(1)))
+                {
+                    return;
+                }
+            }
+            
             Palette = Device.MultiZoneColors.ToArray();
             Colors = Palette.ToArray();
 

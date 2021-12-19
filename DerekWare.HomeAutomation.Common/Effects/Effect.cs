@@ -60,8 +60,15 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         internal void Start(IDevice device)
         {
-            // We shouldn't already be running, but just in case
-            Stop();
+            if(IsRunning)
+            {
+                if(!Equals(Device, device))
+                {
+                    throw new ArgumentException("Effect already running on another device");
+                }
+
+                return;
+            }
 
             // Save the device
             _Device = device ?? throw new ArgumentNullException(nameof(device));
@@ -98,6 +105,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         void OnDeviceStateChanged()
         {
+            // If the device (or all devices in the group) is turned off, stop running
             if(Device?.Power == PowerState.Off)
             {
                 Stop();

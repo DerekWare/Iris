@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using DerekWare.Diagnostics;
 using DerekWare.Reflection;
-using DerekWare.Threading;
 using DoWorkEventArgs = DerekWare.Threading.DoWorkEventArgs;
+using Thread = DerekWare.Threading.Thread;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {
@@ -30,6 +31,11 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void StartEffect()
         {
+            if(Thread is not null)
+            {
+                return;
+            }
+
             Thread = new Thread { Name = $"{GetType().Name}", SupportsCancellation = true, KeepAlive = false };
             Thread.DoWork += DoWork;
             Thread.Start();
@@ -37,18 +43,20 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void StopEffect()
         {
-            if(Thread is null)
+            var thread = Interlocked.Exchange(ref Thread, null);
+
+            if(thread is null)
             {
                 return;
             }
 
-            if(Thread.IsCurrentThread)
+            if(thread.IsCurrentThread)
             {
-                Thread.CancellationPending = true;
+                thread.CancellationPending = true;
             }
             else
             {
-                Thread.Stop(true);
+                thread.Stop();
             }
         }
 

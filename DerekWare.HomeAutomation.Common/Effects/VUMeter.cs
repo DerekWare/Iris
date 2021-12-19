@@ -31,7 +31,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Description("The color of the unused portions of the device."), Browsable(false)]
         public Color BackgroundColor => Colors.Colors.Black;
 
-        [Browsable(false)]
+        [Browsable(false), Range(0.0, 1.0)]
         public double Kelvin => 1;
 
 #if UseRms || UseBandPassFilter
@@ -52,9 +52,16 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Browsable(false)]
         public new TimeSpan Duration { get; set; }
 
+        [Range(0.0, 1.0)]
         public double MaxBrightness { get; set; } = 1;
+
+        [Range(0.0, 1.0)]
         public double MaxSaturation { get; set; } = 1;
+
+        [Range(0.0, 1.0)]
         public double MinBrightness { get; set; } = 0.25;
+
+        [Range(0.0, 1.0)]
         public double MinSaturation { get; set; } = 0.25;
 
         [Description("Shifts the center of the effect left or right.")]
@@ -138,7 +145,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 colors.SetWrappingValue(offset++, color);
             }
 
-            transitionDuration = TimeSpan.Zero;
+            // transitionDuration = TimeSpan.Zero;
 
             return true;
         }

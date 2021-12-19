@@ -8,12 +8,6 @@ namespace DerekWare.HomeAutomation.Common.Themes
 {
     public class Spectrum : Theme
     {
-        public enum EffectDirection
-        {
-            Forward,
-            Backward
-        }
-
         readonly Random Random = new();
 
         [Browsable(false)]
@@ -25,15 +19,16 @@ namespace DerekWare.HomeAutomation.Common.Themes
         [Range(0.0, 1.0)]
         public double Brightness { get; set; } = 1;
 
-        public EffectDirection Direction { get; set; }
+        [DefaultValue(Common.Direction.Forward)]
+        public Direction Direction { get; set; } = Direction.Forward;
 
         [Range(0.0, 1.0)]
         public double Kelvin { get; set; } = 1;
 
-        [Range(-1.0, 1.0), Description("Start the spectrum from a specific point in the spectrum.")]
+        [Range(-1.0, 1.0), Description("Start the colors from a specific point in the spectrum.")]
         public double Offset { get; set; }
 
-        [Description("Start the spectrum from a random point in the spectrum.")]
+        [Description("Start the colors from a random point in the spectrum.")]
         public bool RandomOffset { get; set; }
 
         [Range(0.0, 1.0)]
@@ -49,35 +44,34 @@ namespace DerekWare.HomeAutomation.Common.Themes
             return Reflection.Clone(this);
         }
 
-        public override IReadOnlyCollection<Color> GetPalette(IDevice targetDevice)
+        public Color[] GetPalette(int count)
         {
-            var colors = new List<Color>();
             var offset = RandomOffset ? Random.NextDouble() : Offset;
+            var colors = new Color[count];
 
-            for(var i = 0; i < targetDevice.ZoneCount; ++i)
+            for(var i = 0; i < count; ++i)
             {
-                var hue = ((double)i / targetDevice.ZoneCount) * Window;
-                hue += offset;
+                var hue = (offset + (((double)i / count) * Window)) % 1.0;
 
-                switch(hue)
+                if(hue < 0)
                 {
-                    case >= 1:
-                        hue -= Math.Floor(hue);
-                        break;
-                    case < 0:
-                        hue += Math.Floor(-hue) + 1;
-                        break;
+                    hue = 1.0 - hue;
                 }
 
-                colors.Add(new Color { Hue = hue, Saturation = Saturation, Brightness = Brightness, Kelvin = Kelvin });
+                colors[i] = new Color(hue, Saturation, Brightness, Kelvin);
             }
 
-            if(Direction == EffectDirection.Backward)
+            if(Direction == Direction.Backward)
             {
-                colors.Reverse();
+                Array.Reverse(colors);
             }
 
             return colors;
+        }
+
+        public override IReadOnlyCollection<Color> GetPalette(IDevice targetDevice)
+        {
+            return GetPalette(targetDevice.ZoneCount);
         }
     }
 }
