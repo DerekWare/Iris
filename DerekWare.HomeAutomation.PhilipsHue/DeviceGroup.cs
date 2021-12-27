@@ -37,6 +37,19 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         internal SynchronizedHashSet<IDevice> InternalChildren => Children;
 
+        // TODO can we send a message for an entire group?
+#if false
+        public override void SetColor(Color color, TimeSpan transitionDuration)
+        {
+            Color.ToLightCommand().SendCommandAsync(new[] { HueDevice.Id });
+        }
+
+        public override void SetPower(PowerState power)
+        {
+            new LightCommand { On = Power == PowerState.On }.SendCommandAsync(new[] { HueDevice.Id });
+        }
+#endif
+
         protected override void OnPropertiesChanged()
         {
             base.OnPropertiesChanged();

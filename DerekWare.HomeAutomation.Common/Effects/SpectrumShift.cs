@@ -33,9 +33,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Range(0.0, 1.0)]
         public double Saturation { get => Theme.Saturation; set => Theme.Saturation = value; }
 
-        [Description("Set all devices to the same color rather than treating them as a multizone device.")]
-        public bool SingleColor { get; set; }
-
         [Description(
              "The window size is how much of the visible spectrum to show at once. A window size of 1 will show all of it. A window size of 0 will show a single color. A window size of 0.5 will show half of the spectrum at one time."),
          Range(0.0, 1.0)]
@@ -50,7 +47,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         {
             Theme.Offset = GetColorOffset(renderState) + Offset;
             Theme.Direction = Behavior == EffectBehavior.Random ? Direction.Forward : Direction;
-            colors = Theme.GetPalette(SingleColor ? colors.Length : 1);
+            colors = Theme.GetPalette(colors.Length);
             return true;
         }
     }
