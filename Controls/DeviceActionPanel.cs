@@ -180,13 +180,13 @@ namespace DerekWare.Iris
             MultiZoneColorPanel.Colors = Device?.MultiZoneColors ?? new[] { Colors.Black };
             MultiZoneColorPanel.Enabled = Device?.IsMultiZone ?? false;
 
-            ThemeButtonPanel.DeviceFamily = Device?.Family;
-            ThemeButtonPanel.SelectedTheme = Device?.Theme;
-            ThemeButtonPanel.Enabled = Device is not null;
+            ThemePanel.DeviceFamily = Device?.Family;
+            ThemePanel.SelectedObject = Device?.Theme;
+            ThemePanel.Enabled = Device is not null;
 
-            EffectButtonPanel.DeviceFamily = Device?.Family;
-            EffectButtonPanel.SelectedEffect = Device?.Effect;
-            EffectButtonPanel.Enabled = Device is not null;
+            EffectPanel.DeviceFamily = Device?.Family;
+            EffectPanel.SelectedObject = Device?.Effect;
+            EffectPanel.Enabled = Device is not null;
 
             InUpdate = false;
         }
@@ -240,7 +240,7 @@ namespace DerekWare.Iris
             UpdateUiFromDevice();
         }
 
-        protected virtual void OnSelectedEffectClicked(object sender, SelectedEffectChangedEventArgs e)
+        protected virtual void OnSelectedEffectClicked(object sender, PropertyChangedEventArgs<IReadOnlyEffectProperties> e)
         {
             if(InUpdate)
             {
@@ -255,7 +255,7 @@ namespace DerekWare.Iris
             OnSelectedEffectChanged(effect);
         }
 
-        protected virtual void OnSelectedThemeClicked(object sender, SelectedThemeChangedEventArgs e)
+        protected virtual void OnSelectedThemeClicked(object sender, PropertyChangedEventArgs<IReadOnlyThemeProperties> e)
         {
             if(InUpdate)
             {

@@ -172,7 +172,16 @@
     <Compile Include="Controls\CheckGroupBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\DevicePropertyTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DevicePropertyTabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\DeviceSelectionTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\EffectTabControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\PowerStatePanel.cs">
@@ -180,6 +189,21 @@
     </Compile>
     <Compile Include="Controls\PowerStatePanel.Designer.cs">
       <DependentUpon>PowerStatePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EffectTabPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\EffectTabPanel.Designer.cs">
+      <DependentUpon>EffectTabPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ThemeTabPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ThemeTabPanel.Designer.cs">
+      <DependentUpon>ThemeTabPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ThemeTabControl.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\TreeView.cs">
       <SubType>Component</SubType>
@@ -288,6 +312,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Controls\BrightnessPanel.resx">
       <DependentUpon>BrightnessPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\EffectTabPanel.resx">
+      <DependentUpon>EffectTabPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ThemeTabPanel.resx">
+      <DependentUpon>ThemeTabPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DeviceSelectionDialog.resx">
       <DependentUpon>DeviceSelectionDialog.cs</DependentUpon>

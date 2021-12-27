@@ -15,8 +15,8 @@ namespace DerekWare.Iris
         public SceneItemPanel(SceneItem sceneItem)
         {
             SceneItem = sceneItem;
-            ThemeButtonPanel.DeviceFamily = SceneItem.Family;
-            EffectButtonPanel.DeviceFamily = SceneItem.Family;
+            ThemePanel.DeviceFamily = SceneItem.Family;
+            EffectPanel.DeviceFamily = SceneItem.Family;
 
             EnableCheckBoxes(this);
             UpdateUiFromScene();
@@ -89,14 +89,14 @@ namespace DerekWare.Iris
         protected override void OnSelectedEffectChanged(Effect effect)
         {
             SceneItem.Effect = effect;
-            EffectButtonPanel.SelectedEffect = effect;
+            EffectPanel.SelectedObject = effect;
             base.OnSelectedEffectChanged(effect);
         }
 
         protected override void OnSelectedThemeChanged(Theme theme)
         {
             SceneItem.Theme = theme;
-            ThemeButtonPanel.SelectedTheme = theme;
+            ThemePanel.SelectedObject = theme;
             base.OnSelectedThemeChanged(theme);
         }
 
@@ -119,11 +119,11 @@ namespace DerekWare.Iris
                 MultiZoneColorPanel.GroupBox.Checked = false;
                 MultiZoneColorPanel.Colors = new[] { Colors.Black };
 
-                ThemeButtonPanel.GroupBox.Checked = false;
-                ThemeButtonPanel.SelectedTheme = null;
+                ThemePanel.GroupBox.Checked = false;
+                ThemePanel.SelectedObject = null;
 
-                EffectButtonPanel.GroupBox.Checked = false;
-                EffectButtonPanel.SelectedEffect = null;
+                EffectPanel.GroupBox.Checked = false;
+                EffectPanel.SelectedObject = null;
             }
             else
             {
@@ -135,8 +135,8 @@ namespace DerekWare.Iris
                     MultiZoneColorPanel.GroupBox.Checked = false;
                     MultiZoneColorPanel.Colors = new[] { Colors.Black };
 
-                    ThemeButtonPanel.GroupBox.Checked = true;
-                    ThemeButtonPanel.SelectedTheme = SceneItem.Theme;
+                    ThemePanel.GroupBox.Checked = true;
+                    ThemePanel.SelectedObject = SceneItem.Theme;
                 }
                 else if(SceneItem.MultiZoneColors is not null)
                 {
@@ -147,8 +147,8 @@ namespace DerekWare.Iris
                     MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors;
                     MultiZoneColorPanel.Enabled = true;
 
-                    ThemeButtonPanel.GroupBox.Checked = false;
-                    ThemeButtonPanel.SelectedTheme = null;
+                    ThemePanel.GroupBox.Checked = false;
+                    ThemePanel.SelectedObject = null;
                 }
                 else if(SceneItem.Color is not null)
                 {
@@ -158,8 +158,8 @@ namespace DerekWare.Iris
                     MultiZoneColorPanel.GroupBox.Checked = false;
                     MultiZoneColorPanel.Colors = new[] { Colors.Black };
 
-                    ThemeButtonPanel.GroupBox.Checked = false;
-                    ThemeButtonPanel.SelectedTheme = null;
+                    ThemePanel.GroupBox.Checked = false;
+                    ThemePanel.SelectedObject = null;
                 }
                 else
                 {
@@ -169,19 +169,19 @@ namespace DerekWare.Iris
                     MultiZoneColorPanel.GroupBox.Checked = false;
                     MultiZoneColorPanel.Colors = new[] { Colors.Black };
 
-                    ThemeButtonPanel.GroupBox.Checked = false;
-                    ThemeButtonPanel.SelectedTheme = null;
+                    ThemePanel.GroupBox.Checked = false;
+                    ThemePanel.SelectedObject = null;
                 }
 
                 if(SceneItem.Effect is not null)
                 {
-                    EffectButtonPanel.GroupBox.Checked = true;
-                    EffectButtonPanel.SelectedEffect = SceneItem.Effect;
+                    EffectPanel.GroupBox.Checked = true;
+                    EffectPanel.SelectedObject = SceneItem.Effect;
                 }
                 else
                 {
-                    EffectButtonPanel.GroupBox.Checked = false;
-                    EffectButtonPanel.SelectedEffect = null;
+                    EffectPanel.GroupBox.Checked = false;
+                    EffectPanel.SelectedObject = null;
                 }
             }
 
@@ -192,10 +192,10 @@ namespace DerekWare.Iris
             BrightnessPanel.Enabled = false; // TODO?
             SolidColorPanel.Enabled = enable;
             MultiZoneColorPanel.Enabled = enable;
-            ThemeButtonPanel.Enabled = enable;
-            ThemeButtonPanel.Enabled = enable;
-            EffectButtonPanel.Enabled = enable;
-            EffectButtonPanel.Enabled = enable;
+            ThemePanel.Enabled = enable;
+            ThemePanel.Enabled = enable;
+            EffectPanel.Enabled = enable;
+            EffectPanel.Enabled = enable;
 
             InUpdate = false;
         }
@@ -282,16 +282,16 @@ namespace DerekWare.Iris
                 if(sender == SolidColorPanel.GroupBox)
                 {
                     MultiZoneColorPanel.GroupBox.Checked = false;
-                    ThemeButtonPanel.GroupBox.Checked = false;
-                    EffectButtonPanel.GroupBox.Checked = false;
+                    ThemePanel.GroupBox.Checked = false;
+                    EffectPanel.GroupBox.Checked = false;
                 }
                 else if(sender == MultiZoneColorPanel.GroupBox)
                 {
                     SolidColorPanel.GroupBox.Checked = false;
-                    ThemeButtonPanel.GroupBox.Checked = false;
-                    EffectButtonPanel.GroupBox.Checked = false;
+                    ThemePanel.GroupBox.Checked = false;
+                    EffectPanel.GroupBox.Checked = false;
                 }
-                else if(sender == ThemeButtonPanel.GroupBox)
+                else if(sender == ThemePanel.GroupBox)
                 {
                     SolidColorPanel.GroupBox.Checked = false;
                     MultiZoneColorPanel.GroupBox.Checked = false;
@@ -307,11 +307,11 @@ namespace DerekWare.Iris
                 {
                     SceneItem.MultiZoneColors = null;
                 }
-                else if(sender == ThemeButtonPanel.GroupBox)
+                else if(sender == ThemePanel.GroupBox)
                 {
                     SceneItem.Theme = null;
                 }
-                else if(sender == EffectButtonPanel.GroupBox)
+                else if(sender == EffectPanel.GroupBox)
                 {
                     SceneItem.Effect = null;
                 }

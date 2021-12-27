@@ -41,14 +41,14 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 if(device is IDeviceGroup group)
                 {
                     // Add any effects that may be running on this group's children
-                    foreach(var i in group.Devices)
+                    foreach(var i in group.Children)
                     {
                         effects.AddRange(_RunningEffects.Where(effect => effect.Device.Equals(i)));
                     }
 
                     // Find any effects that may be running on OTHER groups with which
                     // this group may have common members. Ugh.
-                    foreach(var i in group.Devices)
+                    foreach(var i in group.Children)
                     foreach(var j in i.Groups)
                     {
                         effects.AddRange(_RunningEffects.Where(effect => effect.Device.Equals(j)));

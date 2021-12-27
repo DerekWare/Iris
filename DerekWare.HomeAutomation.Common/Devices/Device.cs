@@ -47,7 +47,7 @@ namespace DerekWare.HomeAutomation.Common
     }
 
     // Optional base class for devices
-    public abstract class Device : IDevice, IEquatable<Device>
+    public abstract class Device : IDevice
     {
         [Browsable(false)]
         public abstract IClient Client { get; }
@@ -176,11 +176,6 @@ namespace DerekWare.HomeAutomation.Common
             return (Family == other.Family) && (Uuid == other.Uuid);
         }
 
-        public bool Equals(Device other)
-        {
-            return Equals(other as IDevice);
-        }
-
         public override bool Equals(object other)
         {
             return Equals(other as IDevice);
@@ -192,16 +187,6 @@ namespace DerekWare.HomeAutomation.Common
             {
                 return ((Family != null ? Family.GetHashCode() : 0) * 397) ^ (Uuid != null ? Uuid.GetHashCode() : 0);
             }
-        }
-
-        public static bool operator ==(Device left, Device right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(Device left, Device right)
-        {
-            return !Equals(left, right);
         }
 
         #endregion

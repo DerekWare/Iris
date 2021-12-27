@@ -24,7 +24,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public override IClient Client => PhilipsHue.Client.Instance;
 
         [Browsable(false)]
-        public override IReadOnlyCollection<IDeviceGroup> Groups => PhilipsHue.Client.Instance.Groups.Where(i => i.Devices.Contains(this)).ToList();
+        public override IReadOnlyCollection<IDeviceGroup> Groups => PhilipsHue.Client.Instance.Groups.Where(i => i.Children.Contains(this)).ToList();
 
         public string Id => HueDevice.Id;
 

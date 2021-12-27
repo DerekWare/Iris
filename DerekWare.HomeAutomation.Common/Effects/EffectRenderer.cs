@@ -17,6 +17,22 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false)]
         public override bool IsFirmware => false;
 
+        public override bool IsRunning => Thread?.IsEnabled ?? false;
+
+        public override IDevice Device
+        {
+            get => base.Device;
+            protected set
+            {
+                if(IsRunning && !Equals(Device, value))
+                {
+                    throw new ThreadStateException("Thread is running");
+                }
+
+                base.Device = value;
+            }
+        }
+
         [Description("The time it takes for the effect to complete a full cycle and start over.")]
         public virtual TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(30);
 

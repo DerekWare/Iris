@@ -12,10 +12,10 @@ namespace DerekWare.Iris
     public partial class EffectButtonPanel : UserControl
     {
         string _DeviceFamily;
-        IReadOnlyEffectProperties _SelectedEffect;
+        IReadOnlyEffectProperties _SelectedObject;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), Browsable(true)]
-        public event EventHandler<SelectedEffectChangedEventArgs> SelectedEffectChanged;
+        public event EventHandler<PropertyChangedEventArgs<IReadOnlyEffectProperties>> SelectedObjectChanged;
 
         public EffectButtonPanel()
         {
@@ -42,12 +42,12 @@ namespace DerekWare.Iris
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
-        public IReadOnlyEffectProperties SelectedEffect
+        public IReadOnlyEffectProperties SelectedObject
         {
-            get => _SelectedEffect;
+            get => _SelectedObject;
             set
             {
-                _SelectedEffect = value;
+                _SelectedObject = value;
                 UpdateState();
             }
         }
@@ -73,7 +73,7 @@ namespace DerekWare.Iris
                 var effect = (IReadOnlyEffectProperties)button.Tag;
                 button.Enabled = effect.IsCompatible(DeviceFamily);
 
-                if(effect.Matches(SelectedEffect))
+                if(effect.Matches(SelectedObject))
                 {
                     button.BackColor = SystemColors.Highlight;
                     button.ForeColor = SystemColors.HighlightText;
@@ -91,8 +91,8 @@ namespace DerekWare.Iris
 
         void OnClick(object sender, EventArgs e)
         {
-            // Don't update SelectedEffect until the caller has a chance to display the property editor
-            SelectedEffectChanged?.Invoke(this, new SelectedEffectChangedEventArgs { Property = (IReadOnlyEffectProperties)((Button)sender).Tag });
+            // Don't update SelectedObject until the caller has a chance to display the property editor
+            SelectedObjectChanged?.Invoke(this, new SelectedEffectChangedEventArgs { Property = (IReadOnlyEffectProperties)((Button)sender).Tag });
         }
 
         #endregion

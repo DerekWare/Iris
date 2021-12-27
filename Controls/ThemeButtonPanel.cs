@@ -12,10 +12,10 @@ namespace DerekWare.Iris
     public partial class ThemeButtonPanel : UserControl
     {
         string _DeviceFamily;
-        IReadOnlyThemeProperties _SelectedTheme;
+        IReadOnlyThemeProperties _SelectedObject;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), Browsable(true)]
-        public event EventHandler<SelectedThemeChangedEventArgs> SelectedThemeChanged;
+        public event EventHandler<PropertyChangedEventArgs<IReadOnlyThemeProperties>> SelectedObjectChanged;
 
         public ThemeButtonPanel()
         {
@@ -42,12 +42,12 @@ namespace DerekWare.Iris
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
-        public IReadOnlyThemeProperties SelectedTheme
+        public IReadOnlyThemeProperties SelectedObject
         {
-            get => _SelectedTheme;
+            get => _SelectedObject;
             set
             {
-                _SelectedTheme = value;
+                _SelectedObject = value;
                 UpdateState();
             }
         }
@@ -73,7 +73,7 @@ namespace DerekWare.Iris
                 var theme = (IReadOnlyThemeProperties)button.Tag;
                 button.Enabled = theme.IsCompatible(DeviceFamily);
 
-                if(theme.Matches(SelectedTheme))
+                if(theme.Matches(SelectedObject))
                 {
                     button.BackColor = SystemColors.Highlight;
                     button.ForeColor = SystemColors.HighlightText;
@@ -91,8 +91,8 @@ namespace DerekWare.Iris
 
         void OnClick(object sender, EventArgs e)
         {
-            // Don't update SelectedTheme until the caller has a chance to display the property editor
-            SelectedThemeChanged?.Invoke(this, new SelectedThemeChangedEventArgs { Property = (IReadOnlyThemeProperties)((Button)sender).Tag });
+            // Don't update SelectedObject until the caller has a chance to display the property editor
+            SelectedObjectChanged?.Invoke(this, new SelectedThemeChangedEventArgs { Property = (IReadOnlyThemeProperties)((Button)sender).Tag });
         }
 
         #endregion

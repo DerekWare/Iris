@@ -31,7 +31,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                     return;
                 }
             }
-            
+
             Palette = Device.MultiZoneColors.ToArray();
             Colors = Palette.ToArray();
 

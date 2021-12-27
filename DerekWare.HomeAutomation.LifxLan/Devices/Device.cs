@@ -178,14 +178,14 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             {
                 Lan.Client.Instance.CreateGroup(response, out var group);
                 InternalGroups.Add(group);
-                group.InternalDevices.Add(this);
+                group.InternalChildren.Add(this);
             });
 
             await Controller.GetLocation(response =>
             {
                 Lan.Client.Instance.CreateGroup(response, out var group);
                 InternalGroups.Add(group);
-                group.InternalDevices.Add(this);
+                group.InternalChildren.Add(this);
             });
 
             await Controller.GetLabel(response =>

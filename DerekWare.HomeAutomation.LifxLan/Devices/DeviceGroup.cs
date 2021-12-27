@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
@@ -10,27 +7,14 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 {
     public sealed class DeviceGroup : Common.DeviceGroup
     {
-        internal readonly SynchronizedHashSet<Device> InternalDevices = new();
-
-        SynchronizedList<Device> SortedDevices = new();
-
         internal DeviceGroup(GroupResponse response)
-            : this()
         {
             Name = response.Label;
             Uuid = response.Uuid;
         }
 
-        DeviceGroup()
-        {
-            InternalDevices.CollectionChanged += OnContentsChanged;
-        }
-
         [Browsable(false)]
         public override IClient Client => Lan.Client.Instance;
-
-        [Browsable(false)]
-        public override IReadOnlyCollection<IDevice> Devices => SortedDevices;
 
         public override string Name { get; }
 
@@ -38,21 +22,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public override string Vendor => null;
 
-        public override void Dispose()
-        {
-            List<Device> devices;
-
-            lock(InternalDevices.SyncRoot)
-            {
-                devices = InternalDevices.ToList();
-                InternalDevices.Clear();
-            }
-
-            foreach(var device in devices)
-            {
-                device.Dispose();
-            }
-        }
+        internal SynchronizedHashSet<IDevice> InternalChildren => Children;
 
         protected override void OnPropertiesChanged()
         {
@@ -65,39 +35,5 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             base.OnStateChanged();
             Lan.Client.Instance.OnStateChanged(this);
         }
-
-        #region Event Handlers
-
-        void OnContentsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            foreach(Device device in e.OldItems.SafeEmpty())
-            {
-                device.PropertiesChanged -= OnDevicePropertiesChanged;
-                device.StateChanged -= OnDeviceStateChanged;
-            }
-
-            foreach(Device device in e.NewItems.SafeEmpty())
-            {
-                device.PropertiesChanged += OnDevicePropertiesChanged;
-                device.StateChanged += OnDeviceStateChanged;
-            }
-
-            SortedDevices = new SynchronizedList<Device>(InternalDevices.OrderBy(i => i.Name));
-
-            OnPropertiesChanged();
-            OnStateChanged();
-        }
-
-        void OnDevicePropertiesChanged(object sender, DeviceEventArgs e)
-        {
-            SortedDevices = new SynchronizedList<Device>(InternalDevices.OrderBy(i => i.Name));
-        }
-
-        void OnDeviceStateChanged(object sender, DeviceEventArgs e)
-        {
-            OnStateChanged();
-        }
-
-        #endregion
     }
 }

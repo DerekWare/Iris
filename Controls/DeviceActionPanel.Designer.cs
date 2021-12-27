@@ -1,6 +1,9 @@
 ﻿
+using System;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common.Effects;
+using DerekWare.HomeAutomation.Common.Themes;
 
 namespace DerekWare.Iris
 {
@@ -38,8 +41,8 @@ namespace DerekWare.Iris
             this.SolidColorPanel = new DerekWare.Iris.SolidColorPanel();
             this.MultiZoneColorPanel = new DerekWare.Iris.MultiZoneColorPanel();
             this.PowerStatePanel = new DerekWare.Iris.PowerStatePanel();
-            this.ThemeButtonPanel = new DerekWare.Iris.ThemeButtonPanel();
-            this.EffectButtonPanel = new DerekWare.Iris.EffectButtonPanel();
+            this.ThemePanel = new DerekWare.Iris.ThemeButtonPanel();
+            this.EffectPanel = new DerekWare.Iris.EffectButtonPanel();
             this.BrightnessPanel = new DerekWare.Iris.BrightnessPanel();
             this.DescriptionLabel = new System.Windows.Forms.Label();
             this.BaseLayoutPanel.SuspendLayout();
@@ -82,8 +85,8 @@ namespace DerekWare.Iris
             this.StateLayoutPanel.Controls.Add(this.SolidColorPanel, 0, 1);
             this.StateLayoutPanel.Controls.Add(this.MultiZoneColorPanel, 0, 2);
             this.StateLayoutPanel.Controls.Add(this.PowerStatePanel, 0, 0);
-            this.StateLayoutPanel.Controls.Add(this.ThemeButtonPanel, 0, 3);
-            this.StateLayoutPanel.Controls.Add(this.EffectButtonPanel, 0, 4);
+            this.StateLayoutPanel.Controls.Add(this.ThemePanel, 0, 3);
+            this.StateLayoutPanel.Controls.Add(this.EffectPanel, 0, 4);
             this.StateLayoutPanel.Controls.Add(this.BrightnessPanel, 1, 0);
             this.StateLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.StateLayoutPanel.Location = new System.Drawing.Point(0, 52);
@@ -140,33 +143,33 @@ namespace DerekWare.Iris
             this.PowerStatePanel.TabIndex = 0;
             this.PowerStatePanel.PowerStateChanged += new System.EventHandler<DerekWare.Iris.PowerStateChangedEventArgs>(this.OnPowerStateChanged);
             // 
-            // ThemeButtonPanel
+            // ThemePanel
             // 
-            this.ThemeButtonPanel.AutoSize = true;
-            this.ThemeButtonPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.StateLayoutPanel.SetColumnSpan(this.ThemeButtonPanel, 2);
-            this.ThemeButtonPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ThemeButtonPanel.Location = new System.Drawing.Point(8, 556);
-            this.ThemeButtonPanel.Margin = new System.Windows.Forms.Padding(8);
-            this.ThemeButtonPanel.Name = "ThemeButtonPanel";
-            this.ThemeButtonPanel.Padding = new System.Windows.Forms.Padding(8);
-            this.ThemeButtonPanel.Size = new System.Drawing.Size(956, 349);
-            this.ThemeButtonPanel.TabIndex = 4;
-            this.ThemeButtonPanel.SelectedThemeChanged += new System.EventHandler<DerekWare.Iris.SelectedThemeChangedEventArgs>(this.OnSelectedThemeClicked);
+            this.ThemePanel.AutoSize = true;
+            this.ThemePanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.StateLayoutPanel.SetColumnSpan(this.ThemePanel, 2);
+            this.ThemePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ThemePanel.Location = new System.Drawing.Point(8, 556);
+            this.ThemePanel.Margin = new System.Windows.Forms.Padding(8);
+            this.ThemePanel.Name = "ThemePanel";
+            this.ThemePanel.Padding = new System.Windows.Forms.Padding(8);
+            this.ThemePanel.Size = new System.Drawing.Size(956, 349);
+            this.ThemePanel.TabIndex = 4;
+            this.ThemePanel.SelectedObjectChanged += new EventHandler<PropertyChangedEventArgs<IReadOnlyThemeProperties>>(this.OnSelectedThemeClicked);
             // 
-            // EffectButtonPanel
+            // EffectPanel
             // 
-            this.EffectButtonPanel.AutoSize = true;
-            this.EffectButtonPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.StateLayoutPanel.SetColumnSpan(this.EffectButtonPanel, 2);
-            this.EffectButtonPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EffectButtonPanel.Location = new System.Drawing.Point(8, 921);
-            this.EffectButtonPanel.Margin = new System.Windows.Forms.Padding(8);
-            this.EffectButtonPanel.Name = "EffectButtonPanel";
-            this.EffectButtonPanel.Padding = new System.Windows.Forms.Padding(8);
-            this.EffectButtonPanel.Size = new System.Drawing.Size(956, 350);
-            this.EffectButtonPanel.TabIndex = 5;
-            this.EffectButtonPanel.SelectedEffectChanged += new System.EventHandler<DerekWare.Iris.SelectedEffectChangedEventArgs>(this.OnSelectedEffectClicked);
+            this.EffectPanel.AutoSize = true;
+            this.EffectPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.StateLayoutPanel.SetColumnSpan(this.EffectPanel, 2);
+            this.EffectPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.EffectPanel.Location = new System.Drawing.Point(8, 921);
+            this.EffectPanel.Margin = new System.Windows.Forms.Padding(8);
+            this.EffectPanel.Name = "EffectPanel";
+            this.EffectPanel.Padding = new System.Windows.Forms.Padding(8);
+            this.EffectPanel.Size = new System.Drawing.Size(956, 350);
+            this.EffectPanel.TabIndex = 5;
+            this.EffectPanel.SelectedObjectChanged += new EventHandler<PropertyChangedEventArgs<IReadOnlyEffectProperties>>(this.OnSelectedEffectClicked);
             // 
             // BrightnessPanel
             // 
@@ -218,8 +221,8 @@ namespace DerekWare.Iris
         protected System.Windows.Forms.PropertyGrid PropertyGrid;
         protected MultiZoneColorPanel MultiZoneColorPanel;
         protected PowerStatePanel PowerStatePanel;
-        protected ThemeButtonPanel ThemeButtonPanel;
-        protected EffectButtonPanel EffectButtonPanel;
+        protected ThemeButtonPanel ThemePanel;
+        protected EffectButtonPanel EffectPanel;
         protected BrightnessPanel BrightnessPanel;
     }
 }

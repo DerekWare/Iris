@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
 using DerekWare.Collections;
 using Newtonsoft.Json;
@@ -33,25 +32,26 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         #endregion
 
-        readonly object DeviceStateLock = new();
+        readonly object DeviceStateTaskLock = new();
 
-        IDevice _Device;
+        readonly object SyncRoot = new();
+
         Task DeviceStateTask;
 
         [JsonIgnore]
         public string Description => this.GetDescription();
 
-        [Browsable(false), JsonIgnore]
-        public IDevice Device => _Device;
-
         [Browsable(false)]
         public virtual string Family => null;
 
         [Browsable(false)]
-        public bool IsRunning => Device is not null;
+        public virtual bool IsRunning => Device is not null;
 
         [Browsable(false)]
-        public string Name => this.GetName();
+        public virtual string Name => this.GetName();
+
+        [Browsable(false), JsonIgnore]
+        public virtual IDevice Device { get; protected set; }
 
         public virtual void Dispose()
         {
@@ -60,60 +60,67 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         internal void Start(IDevice device)
         {
-            if(IsRunning)
+            lock(SyncRoot)
             {
-                if(!Equals(Device, device))
+                if(IsRunning)
                 {
-                    throw new ArgumentException("Effect already running on another device");
+                    if(!Equals(Device, device))
+                    {
+                        throw new ArgumentException("Effect already running on another device");
+                    }
+
+                    return;
                 }
 
-                return;
+                // Save the device
+                Device = device ?? throw new ArgumentNullException(nameof(device));
+
+                // Register for device state changes. If the device turns off, we can stop
+                // the effect. This will get called all the damned time when an effect is
+                // modifying the device, but I don't currently have a better way.
+                Device.StateChanged += OnDeviceStateChanged;
+
+                // Register with the factory
+                EffectFactory.Instance.OnEffectStarted(this);
+
+                // Start doing the things
+                StartEffect();
             }
-
-            // Save the device
-            _Device = device ?? throw new ArgumentNullException(nameof(device));
-
-            // Register for device state changes. If the device turns off, we can stop
-            // the effect. This will get called all the damned time when an effect is
-            // modifying the device, but I don't currently have a better way.
-            Device.StateChanged += OnDeviceStateChanged;
-
-            // Register with the factory
-            EffectFactory.Instance.OnEffectStarted(this);
-
-            // Start doing the things
-            StartEffect();
         }
 
         // Stop the effect for all devices
         internal void Stop()
         {
-            // Stop doing the things
-            StopEffect();
-
-            // Unregister with the factory
-            EffectFactory.Instance.OnEffectStopped(this);
-
-            // Release the device
-            var device = Interlocked.Exchange(ref _Device, null);
-
-            if(device is not null)
+            lock(SyncRoot)
             {
-                device.StateChanged -= OnDeviceStateChanged;
+                if(!IsRunning)
+                {
+                    return;
+                }
+
+                // Stop doing the things
+                StopEffect();
+
+                // Unregister with the factory
+                EffectFactory.Instance.OnEffectStopped(this);
+
+                // Release the device
+                Device.StateChanged -= OnDeviceStateChanged;
+                Device = null;
             }
         }
 
         void OnDeviceStateChanged()
         {
+            lock(DeviceStateTaskLock)
+            {
+                DeviceStateTask = null;
+            }
+
             // If the device (or all devices in the group) is turned off, stop running
             if(Device?.Power == PowerState.Off)
             {
                 Stop();
-            }
-
-            lock(DeviceStateLock)
-            {
-                DeviceStateTask = null;
             }
         }
 
@@ -143,12 +150,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
         {
             // Schedule a task to prevent any deadlocks or recursion that could be caused by this
             // event handler being called in response to a change this effect made to the device.
-            lock(DeviceStateLock)
+            lock(DeviceStateTaskLock)
             {
-                if(DeviceStateTask is null)
-                {
-                    DeviceStateTask = Task.Run(OnDeviceStateChanged);
-                }
+                DeviceStateTask ??= Task.Run(OnDeviceStateChanged);
             }
         }
 

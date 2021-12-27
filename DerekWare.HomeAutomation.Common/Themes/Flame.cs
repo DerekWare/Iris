@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common.Themes
@@ -30,6 +31,10 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
         public override bool IsDynamic => true;
         public override bool IsMultiZone => true;
+
+        [Range(0.0, 1.0)]
+        public double Brightness { get; set; } = 1.0;
+
         public FlameDirection Direction { get; set; }
         public FlameTemperature Temperature { get; set; }
 
@@ -56,7 +61,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
             return colors;
         }
 
-        static Color GetColor(Color min, Color max, int index, int count)
+        Color GetColor(Color min, Color max, int index, int count)
         {
             return new Color(GetColorValue(min.Hue, max.Hue, index, count),
                              GetColorValue(min.Saturation, max.Saturation, index, count),
@@ -64,9 +69,9 @@ namespace DerekWare.HomeAutomation.Common.Themes
                              GetColorValue(min.Kelvin, max.Kelvin, index, count));
         }
 
-        static double GetColorValue(double min, double max, int index, int count)
+        double GetColorValue(double min, double max, int index, int count)
         {
-            return min + (((max - min) * index) / (count - 1));
+            return (min + (((max - min) * index) / (count - 1))) * Brightness;
         }
     }
 }
