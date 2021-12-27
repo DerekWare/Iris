@@ -8,7 +8,7 @@ namespace DerekWare.Collections
     /// <summary>
     ///     Combines a List with a Dictionary to maintain the insertion order of items.
     /// </summary>
-    public class OrderedDictionary<TKey, TValue> : ObservableDictionary<TKey, TValue>, IList<KeyValuePair<TKey, TValue>>
+    public class OrderedDictionary<TKey, TValue> : SynchronizedDictionary<TKey, TValue>, IList<KeyValuePair<TKey, TValue>>
     {
         protected readonly List<KeyValuePair<TKey, TValue>> List = new List<KeyValuePair<TKey, TValue>>();
 
@@ -32,8 +32,11 @@ namespace DerekWare.Collections
 
         public override void Add(TKey key, TValue value)
         {
-            List.Add(key.ToKeyValuePair(value));
-            base.Add(key, value);
+            lock(SyncRoot)
+            {
+                List.Add(key.ToKeyValuePair(value));
+                base.Add(key, value);
+            }
         }
 
         public void Insert(int index, TKey key, TValue value)
@@ -43,11 +46,14 @@ namespace DerekWare.Collections
 
         public override bool Remove(TKey key)
         {
-            foreach(var i in List)
+            lock(SyncRoot)
             {
-                if(Equals(i.Key, key))
+                foreach(var i in List)
                 {
-                    return Remove(i);
+                    if(Equals(i.Key, key))
+                    {
+                        return Remove(i);
+                    }
                 }
             }
 
@@ -63,13 +69,19 @@ namespace DerekWare.Collections
 
         public override void Clear()
         {
-            List.Clear();
-            base.Clear();
+            lock(SyncRoot)
+            {
+                List.Clear();
+                base.Clear();
+            }
         }
 
         public override void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            List.CopyTo(array, arrayIndex);
+            lock(SyncRoot)
+            {
+                List.CopyTo(array, arrayIndex);
+            }
         }
 
         #endregion
@@ -87,7 +99,10 @@ namespace DerekWare.Collections
 
         public override IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            return Items.CreateEnumerator();
+            lock(SyncRoot)
+            {
+                return Items.CreateEnumerator();
+            }
         }
 
         #endregion
@@ -97,22 +112,31 @@ namespace DerekWare.Collections
         /// <inheritdoc />
         public int IndexOf(KeyValuePair<TKey, TValue> item)
         {
-            return List.IndexOf(item);
+            lock(SyncRoot)
+            {
+                return List.IndexOf(item);
+            }
         }
 
         /// <inheritdoc />
         public virtual void Insert(int index, KeyValuePair<TKey, TValue> item)
         {
-            List.Insert(index, item);
-            base.Add(item);
+            lock(SyncRoot)
+            {
+                List.Insert(index, item);
+                base.Add(item);
+            }
         }
 
         /// <inheritdoc />
         public void RemoveAt(int index)
         {
-            var item = this[index];
-            List.RemoveAt(index);
-            base.Remove(item);
+            lock(SyncRoot)
+            {
+                var item = this[index];
+                List.RemoveAt(index);
+                base.Remove(item);
+            }
         }
 
         #endregion

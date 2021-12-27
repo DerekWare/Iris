@@ -24,17 +24,18 @@ namespace DerekWare.HomeAutomation.Common
     // with multizone themes and effects.
     public abstract class DeviceGroup : Device, IDeviceGroup
     {
-        protected SynchronizedHashSet<IDevice> Children = new();
-        protected SynchronizedList<IDevice> SortedChildren = new();
+        protected SynchronizedHashSet<IDevice> InternalChildren = new();
+
+        SynchronizedList<IDevice> SortedChildren = new();
 
         protected DeviceGroup()
         {
-            Children.CollectionChanged += OnChildCollectionChanged;
+            InternalChildren.CollectionChanged += OnChildCollectionChanged;
         }
 
-        public int ChildCount => SortedChildren.Count;
+        public int ChildCount => Children.Count;
 
-        public string ChildNames => SortedChildren.Select(i => i.Name).Join(", ");
+        public string ChildNames => Children.Select(i => i.Name).Join(", ");
 
         [Browsable(false)]
         public override IReadOnlyCollection<IDeviceGroup> Groups => Array.Empty<IDeviceGroup>(); // TODO allow groups within groups
@@ -71,7 +72,7 @@ namespace DerekWare.HomeAutomation.Common
             set => base.Power = value;
         }
 
-        IReadOnlyCollection<IDevice> IDeviceGroup.Children => Children;
+        public IReadOnlyCollection<IDevice> Children => SortedChildren;
 
         protected override void ApplyColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
         {
@@ -114,7 +115,7 @@ namespace DerekWare.HomeAutomation.Common
 
         protected virtual void OnDevicePropertiesChanged(object sender, DeviceEventArgs e)
         {
-            SortedChildren = new SynchronizedList<IDevice>(Children.OrderBy(i => i.Name));
+            SortedChildren = new SynchronizedList<IDevice>(InternalChildren.OrderBy(i => i.Name));
             OnPropertiesChanged();
         }
 
@@ -137,7 +138,7 @@ namespace DerekWare.HomeAutomation.Common
                 device.StateChanged += OnDeviceStateChanged;
             }
 
-            SortedChildren = new SynchronizedList<IDevice>(Children.OrderBy(i => i.Name));
+            SortedChildren = new SynchronizedList<IDevice>(InternalChildren.OrderBy(i => i.Name));
             OnPropertiesChanged();
         }
 

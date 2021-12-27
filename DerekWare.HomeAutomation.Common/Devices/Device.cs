@@ -79,7 +79,7 @@ namespace DerekWare.HomeAutomation.Common
         public virtual bool IsMultiZone => ZoneCount > 1;
 
         [Browsable(false)]
-        public double Brightness { get => Color.First().Brightness; set => Color = Color.Select(color => new Color(color) { Brightness = value }).ToList(); }
+        public double Brightness { get => Color.FirstOrDefault()?.Brightness ?? 1.0; set => Color = Color.Select(color => new Color(color) { Brightness = value }).ToList(); }
 
         [Browsable(false)]
         public virtual IReadOnlyCollection<Color> Color { get => _Color; set => SetColor(value, TimeSpan.Zero); }

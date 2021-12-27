@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.PerformanceData;
 using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
@@ -21,7 +22,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             {
                 if(PhilipsHue.Client.Instance.InternalDevices.TryGetValue(i, out var device))
                 {
-                    Children.Add(device);
+                    InternalChildren.Add(device);
                 }
             }
         }
@@ -38,19 +39,23 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public override string Uuid => HueDevice.Id;
 
-        internal SynchronizedHashSet<IDevice> InternalChildren => Children;
+        internal new SynchronizedHashSet<IDevice> InternalChildren => base.InternalChildren;
 
         protected override void ApplyColor(IReadOnlyCollection<Color> color, TimeSpan transitionDuration)
         {
-            if(color.Count > 1)
+            // See if the colors are actually different. If they're not, we can optimize setting
+            // the color on the group, not the lights.
+            var first = color.First();
+            var identical = (color.Count <= 1) || color.All(i => i == first);
+            
+            if(!identical)
             {
                 base.ApplyColor(color, transitionDuration);
+                return;
             }
-            else
-            {
-                color.First().ToLightCommand().SendCommand(HueDevice);
-                Children.ForEach<Device>(i => i.SetColor(color, TimeSpan.Zero, false));
-            }
+
+            first.ToLightCommand().SendCommand(HueDevice);
+            Children.ForEach<Device>(i => i.SetColor(color, TimeSpan.Zero, false));
         }
 
         protected override void ApplyPower(PowerState power)

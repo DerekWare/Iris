@@ -98,6 +98,7 @@
     <Compile Include="Collections\Observable\ObservableList.cs" />
     <Compile Include="Collections\Observable\ObservableQueue.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />
+    <Compile Include="Collections\OrderedHashSet.cs" />
     <Compile Include="Collections\PropertySet.cs" />
     <Compile Include="Collections\Queue.cs" />
     <Compile Include="Collections\SequenceComparer.cs" />

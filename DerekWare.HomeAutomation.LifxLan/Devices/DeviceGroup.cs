@@ -20,7 +20,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public override string Uuid { get; }
 
-        internal SynchronizedHashSet<IDevice> InternalChildren => Children;
+        internal new SynchronizedHashSet<IDevice> InternalChildren => base.InternalChildren;
 
         protected override void OnPropertiesChanged()
         {
