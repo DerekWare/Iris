@@ -12,7 +12,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         {
             if(GetColor(state, out var color))
             {
-                Device.SetColor(color, RefreshRate);
+                Device.SetColor(new [] { color }, RefreshRate);
             }
         }
     }

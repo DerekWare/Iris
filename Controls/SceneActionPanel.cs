@@ -138,28 +138,31 @@ namespace DerekWare.Iris
                     ThemePanel.GroupBox.Checked = true;
                     ThemePanel.SelectedObject = SceneItem.Theme;
                 }
-                else if(SceneItem.MultiZoneColors is not null)
-                {
-                    SolidColorPanel.GroupBox.Checked = false;
-                    SolidColorPanel.Color = Colors.Black;
-
-                    MultiZoneColorPanel.GroupBox.Checked = true;
-                    MultiZoneColorPanel.Colors = SceneItem.MultiZoneColors;
-                    MultiZoneColorPanel.Enabled = true;
-
-                    ThemePanel.GroupBox.Checked = false;
-                    ThemePanel.SelectedObject = null;
-                }
                 else if(SceneItem.Color is not null)
                 {
-                    SolidColorPanel.GroupBox.Checked = true;
-                    SolidColorPanel.Color = SceneItem.Color;
+                    if(SceneItem.Color.Count > 1)
+                    {
+                        SolidColorPanel.GroupBox.Checked = false;
+                        SolidColorPanel.Color = Colors.Black;
 
-                    MultiZoneColorPanel.GroupBox.Checked = false;
-                    MultiZoneColorPanel.Colors = new[] { Colors.Black };
+                        MultiZoneColorPanel.GroupBox.Checked = true;
+                        MultiZoneColorPanel.Colors = SceneItem.Color;
+                        MultiZoneColorPanel.Enabled = true;
 
-                    ThemePanel.GroupBox.Checked = false;
-                    ThemePanel.SelectedObject = null;
+                        ThemePanel.GroupBox.Checked = false;
+                        ThemePanel.SelectedObject = null;
+                    }
+                    else
+                    {
+                        SolidColorPanel.GroupBox.Checked = true;
+                        SolidColorPanel.Color = SceneItem.Color.FirstOrDefault();
+
+                        MultiZoneColorPanel.GroupBox.Checked = false;
+                        MultiZoneColorPanel.Colors = new[] { Colors.Black };
+
+                        ThemePanel.GroupBox.Checked = false;
+                        ThemePanel.SelectedObject = null;
+                    }
                 }
                 else
                 {
@@ -241,7 +244,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            SceneItem.MultiZoneColors = e.Property;
+            SceneItem.Color = e.Property;
             MultiZoneColorPanel.Colors = e.Property;
             base.OnMultiZoneColorsChanged(sender, e);
         }
@@ -265,7 +268,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            SceneItem.Color = e.Property;
+            SceneItem.Color = new[] { e.Property };
             SolidColorPanel.Color = e.Property;
             base.OnSolidColorChanged(sender, e);
         }
@@ -305,7 +308,7 @@ namespace DerekWare.Iris
                 }
                 else if(sender == MultiZoneColorPanel.GroupBox)
                 {
-                    SceneItem.MultiZoneColors = null;
+                    SceneItem.Color = null;
                 }
                 else if(sender == ThemePanel.GroupBox)
                 {

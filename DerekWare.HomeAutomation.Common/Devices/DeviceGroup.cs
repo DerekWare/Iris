@@ -45,13 +45,7 @@ namespace DerekWare.HomeAutomation.Common
 
         public override bool IsValid => Children.All(i => i.IsValid);
 
-        [Browsable(false)]
-        public override string Product => null;
-
         public override int ZoneCount { get { return Children.Sum(i => i.ZoneCount); } }
-
-        [Browsable(false)]
-        public override Color Color { get => Children.FirstOrDefault()?.Color ?? new Color(); set => base.Color = value; }
 
         public override Effect Effect
         {
@@ -64,10 +58,10 @@ namespace DerekWare.HomeAutomation.Common
         }
 
         [Browsable(false)]
-        public override IReadOnlyCollection<Color> MultiZoneColors
+        public override IReadOnlyCollection<Color> Color
         {
-            get { return Children.SelectMany(i => i.MultiZoneColors).ToArray(); }
-            set => base.MultiZoneColors = value;
+            get { return Children.SelectMany(i => i.Color).ToArray(); }
+            set => base.Color = value;
         }
 
         [Browsable(false)]
@@ -79,24 +73,7 @@ namespace DerekWare.HomeAutomation.Common
 
         IReadOnlyCollection<IDevice> IDeviceGroup.Children => Children;
 
-        #region IDeviceState
-
-        public override void RefreshState()
-        {
-            Children.ForEach(i => i.RefreshState());
-        }
-
-        public override void SetColor(Color color, TimeSpan transitionDuration)
-        {
-            Children.ForEach(i => i.SetColor(color, transitionDuration));
-        }
-
-        public override void SetFirmwareEffect(object effect)
-        {
-            Children.ForEach(i => i.SetFirmwareEffect(effect));
-        }
-
-        public override void SetMultiZoneColors(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
+        protected override void ApplyColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
         {
             var count = ZoneCount - colors.Count;
             var index = 0;
@@ -109,14 +86,26 @@ namespace DerekWare.HomeAutomation.Common
             foreach(var device in Children)
             {
                 count = device.ZoneCount;
-                device.SetMultiZoneColors(colors.Skip(index).Take(count).ToArray(), transitionDuration);
+                device.SetColor(colors.Skip(index).Take(count).ToArray(), transitionDuration);
                 index += count;
             }
         }
 
-        public override void SetPower(PowerState power)
+        protected override void ApplyPower(PowerState power)
         {
             Children.ForEach(i => i.SetPower(power));
+        }
+
+        #region IDeviceState
+
+        public override void RefreshState()
+        {
+            Children.ForEach(i => i.RefreshState());
+        }
+
+        public override void SetFirmwareEffect(object effect)
+        {
+            Children.ForEach(i => i.SetFirmwareEffect(effect));
         }
 
         #endregion

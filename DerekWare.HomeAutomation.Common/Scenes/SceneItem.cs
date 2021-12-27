@@ -29,15 +29,11 @@ namespace DerekWare.HomeAutomation.Common.Scenes
                 switch(e.Current.Name)
                 {
                     case nameof(Color):
-                        Color = (Color)info.GetValue(e.Current.Name, typeof(Color));
+                        Color = (List<Color>)info.GetValue(e.Current.Name, typeof(List<Color>));
                         break;
 
                     case nameof(Effect):
                         Effect = (Effect)info.GetValue(e.Current.Name, typeof(Effect));
-                        break;
-
-                    case nameof(MultiZoneColors):
-                        MultiZoneColors = (List<Color>)info.GetValue(e.Current.Name, typeof(List<Color>));
                         break;
 
                     case nameof(Power):
@@ -55,11 +51,9 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         {
         }
 
-        public Color Color { get; set; }
-
         public Effect Effect { get; set; }
 
-        public IReadOnlyCollection<Color> MultiZoneColors { get; set; }
+        public IReadOnlyCollection<Color> Color { get; set; }
 
         public PowerState Power { get; set; }
 
@@ -78,11 +72,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             {
                 Device.Theme = Theme;
             }
-            else if(!MultiZoneColors.IsNullOrEmpty())
-            {
-                Device.MultiZoneColors = MultiZoneColors;
-            }
-            else if(Color is not null)
+            else if(!Color.IsNullOrEmpty())
             {
                 Device.Color = Color;
             }
@@ -107,13 +97,9 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             {
                 info.AddValue(nameof(Theme), Theme, Theme.GetType());
             }
-            else if(!MultiZoneColors.IsNullOrEmpty())
+            else if(!Color.IsNullOrEmpty())
             {
-                info.AddValue(nameof(MultiZoneColors), MultiZoneColors.ToList(), typeof(List<Color>));
-            }
-            else if(Color is not null)
-            {
-                info.AddValue(nameof(Color), Color, Color.GetType());
+                info.AddValue(nameof(Color), Color.ToList(), typeof(List<Color>));
             }
 
             if(Effect is not null)
@@ -130,8 +116,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             }
 
             Power = Device.Power;
-            Color = Device.Color?.Clone();
-            MultiZoneColors = Device.MultiZoneColors?.ToList();
+            Color = Device.Color?.ToList();
             Theme = (Theme)Device.Theme?.Clone();
             Effect = (Effect)Device.Effect?.Clone();
 

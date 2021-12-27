@@ -24,25 +24,22 @@ namespace DerekWare.HomeAutomation.Common
         bool IsColor { get; }
         bool IsMultiZone { get; }
         bool IsValid { get; }
-        string Product { get; }
-        string Vendor { get; }
         int ZoneCount { get; }
     }
 
     // State changes based on user interaction
+    // TODO combine Color/Color
     public interface IDeviceState
     {
         double Brightness { get; set; }
-        Color Color { get; set; }
+        IReadOnlyCollection<Color> Color { get; set; }
         Effect Effect { get; set; }
-        IReadOnlyCollection<Color> MultiZoneColors { get; set; }
         PowerState Power { get; set; }
         Theme Theme { get; set; }
 
         void RefreshState();
-        void SetColor(Color color, TimeSpan transitionDuration);
+        void SetColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration);
         void SetFirmwareEffect(object effect);
-        void SetMultiZoneColors(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration);
         void SetPower(PowerState power);
     }
 
@@ -58,10 +55,11 @@ namespace DerekWare.HomeAutomation.Common
         public abstract bool IsColor { get; }
         public abstract bool IsValid { get; }
         public abstract string Name { get; }
-        public abstract string Product { get; }
         public abstract string Uuid { get; }
-        public abstract string Vendor { get; }
         public abstract int ZoneCount { get; }
+
+        protected abstract void ApplyColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration);
+        protected abstract void ApplyPower(PowerState power);
 
         #region IDeviceState
 
@@ -70,8 +68,7 @@ namespace DerekWare.HomeAutomation.Common
 
         #endregion
 
-        protected Color _Color = new();
-        protected IReadOnlyCollection<Color> _MultiZoneColors = Array.Empty<Color>();
+        protected IReadOnlyCollection<Color> _Color = Array.Empty<Color>();
         protected PowerState _Power;
         protected DeviceStateRefreshTask _RefreshTask;
 
@@ -82,14 +79,10 @@ namespace DerekWare.HomeAutomation.Common
         public virtual bool IsMultiZone => ZoneCount > 1;
 
         [Browsable(false)]
-        public double Brightness
-        {
-            get => Color.Brightness;
-            set => MultiZoneColors = MultiZoneColors.Select(color => new Color(color) { Brightness = value }).ToList();
-        }
+        public double Brightness { get => Color.First().Brightness; set => Color = Color.Select(color => new Color(color) { Brightness = value }).ToList(); }
 
         [Browsable(false)]
-        public virtual Color Color { get => _Color; set => SetColor(value, TimeSpan.Zero); }
+        public virtual IReadOnlyCollection<Color> Color { get => _Color; set => SetColor(value, TimeSpan.Zero); }
 
         [Browsable(false)]
         public virtual Effect Effect
@@ -111,9 +104,6 @@ namespace DerekWare.HomeAutomation.Common
                 OnStateChanged();
             }
         }
-
-        [Browsable(false)]
-        public virtual IReadOnlyCollection<Color> MultiZoneColors { get => _MultiZoneColors; set => SetMultiZoneColors(value, TimeSpan.Zero); }
 
         [Browsable(false)]
         public virtual PowerState Power { get => _Power; set => SetPower(value); }
@@ -142,6 +132,61 @@ namespace DerekWare.HomeAutomation.Common
         protected virtual void OnStateChanged()
         {
             StateChanged?.Invoke(this, new DeviceEventArgs { Device = this });
+        }
+
+        public virtual void SetColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration, bool apply)
+        {
+            colors = colors.Take(Math.Min(ZoneCount, colors.Count)).ToArray();
+
+            if(colors.Count < ZoneCount)
+            {
+                colors = colors.Append(colors.Last().Repeat(ZoneCount - colors.Count)).ToArray();
+            }
+
+            if(colors.SafeEmpty().SequenceEqual(Color))
+            {
+                return;
+            }
+
+            _Color = colors.Select(i => i.Clone()).ToArray();
+
+            if(apply)
+            {
+                ApplyColor(_Color, transitionDuration);
+            }
+
+            OnStateChanged();
+        }
+
+        public virtual void SetPower(PowerState power, bool apply)
+        {
+            if(Equals(power, Power))
+            {
+                return;
+            }
+
+            _Power = power;
+
+            if(apply)
+            {
+                ApplyPower(_Power);
+            }
+
+            OnStateChanged();
+
+            // If a scene is configured to start automatically and this device was just powered
+            // on, start the scene.
+            // TODO this should really be in the Scene, but this is simpler.
+            if(power == PowerState.On)
+            {
+                var scenes = from s in SceneFactory.Instance
+                             where s.AutoApply
+                             from d in this.GetDeviceGroups().Cast<IDevice>().Append(this)
+                             where s.Contains(d)
+                             select s;
+
+                scenes.FirstOrDefault()?.Apply();
+            }
         }
 
         protected virtual void StartRefreshTask()
@@ -193,60 +238,14 @@ namespace DerekWare.HomeAutomation.Common
 
         #region IDeviceState
 
-        public virtual void SetColor(Color color, TimeSpan transitionDuration)
+        public void SetColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
         {
-            if(Equals(color, _Color))
-            {
-                return;
-            }
-
-            _Color = color.Clone();
-            _MultiZoneColors = _Color.Repeat(ZoneCount).ToArray();
-            OnStateChanged();
+            SetColor(colors, transitionDuration, true);
         }
 
-        public virtual void SetMultiZoneColors(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
+        public void SetPower(PowerState power)
         {
-            colors = colors.Take(Math.Min(ZoneCount, colors.Count)).ToArray();
-
-            if(colors.Count < ZoneCount)
-            {
-                colors = colors.Append(colors.Last().Repeat(ZoneCount - colors.Count)).ToArray();
-            }
-
-            if(colors.SafeEmpty().SequenceEqual(_MultiZoneColors))
-            {
-                return;
-            }
-
-            _MultiZoneColors = colors.Select(i => i.Clone()).ToArray();
-            _Color = _MultiZoneColors.Average();
-            OnStateChanged();
-        }
-
-        public virtual void SetPower(PowerState power)
-        {
-            if(Equals(power, _Power))
-            {
-                return;
-            }
-
-            _Power = power;
-            OnStateChanged();
-
-            // If a scene is configured to start automatically and this device was just powered
-            // on, start the scene.
-            // TODO this should really be in the Scene, but this is simpler.
-            if(power == PowerState.On)
-            {
-                var scenes = from s in SceneFactory.Instance
-                             where s.AutoApply
-                             from d in this.GetDeviceGroups().Cast<IDevice>().Append(this)
-                             where s.Contains(d)
-                             select s;
-
-                scenes.FirstOrDefault()?.Apply();
-            }
+            SetPower(power, true);
         }
 
         #endregion

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using Newtonsoft.Json;
@@ -57,15 +56,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
             // Turn on the device and apply the theme
             device.Power = PowerState.On;
-
-            if(palette.Count > 1)
-            {
-                device.MultiZoneColors = palette;
-            }
-            else
-            {
-                device.Color = palette.First();
-            }
+            device.Color = palette;
         }
 
         #region IMatch

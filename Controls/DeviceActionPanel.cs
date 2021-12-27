@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using DerekWare.Collections;
@@ -174,10 +175,10 @@ namespace DerekWare.Iris
             BrightnessPanel.Brightness = Device?.Brightness ?? 0;
             BrightnessPanel.Enabled = Device is not null;
 
-            SolidColorPanel.Color = Device?.Color ?? Colors.Black;
+            SolidColorPanel.Color = Device?.Color?.FirstOrDefault() ?? Colors.Black;
             SolidColorPanel.Enabled = Device is not null;
 
-            MultiZoneColorPanel.Colors = Device?.MultiZoneColors ?? new[] { Colors.Black };
+            MultiZoneColorPanel.Colors = Device?.Color ?? new[] { Colors.Black };
             MultiZoneColorPanel.Enabled = Device?.IsMultiZone ?? false;
 
             ThemePanel.DeviceFamily = Device?.Family;
@@ -220,7 +221,7 @@ namespace DerekWare.Iris
             Device.Theme = null;
             Device.Effect = null;
             Device.Power = PowerState.On;
-            Device.MultiZoneColors = e.Property;
+            Device.Color = e.Property;
             InUpdate = false;
 
             UpdateUiFromDevice();
@@ -282,7 +283,7 @@ namespace DerekWare.Iris
             Device.Theme = null;
             Device.Effect = null;
             Device.Power = PowerState.On;
-            Device.Color = e.Property;
+            Device.Color = new [] { e.Property };
             InUpdate = false;
 
             UpdateUiFromDevice();

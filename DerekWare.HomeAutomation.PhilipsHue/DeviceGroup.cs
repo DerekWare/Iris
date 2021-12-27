@@ -1,5 +1,10 @@
-﻿using DerekWare.Collections;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
+using DerekWare.HomeAutomation.Common.Colors;
+using Q42.HueApi;
 using Q42.HueApi.Models.Groups;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
@@ -33,22 +38,26 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public override string Uuid => HueDevice.Id;
 
-        public override string Vendor => null;
-
         internal SynchronizedHashSet<IDevice> InternalChildren => Children;
 
-        // TODO can we send a message for an entire group?
-#if false
-        public override void SetColor(Color color, TimeSpan transitionDuration)
+        protected override void ApplyColor(IReadOnlyCollection<Color> color, TimeSpan transitionDuration)
         {
-            Color.ToLightCommand().SendCommandAsync(new[] { HueDevice.Id });
+            if(color.Count > 1)
+            {
+                base.ApplyColor(color, transitionDuration);
+            }
+            else
+            {
+                color.First().ToLightCommand().SendCommand(HueDevice);
+                Children.ForEach<Device>(i => i.SetColor(color, TimeSpan.Zero, false));
+            }
         }
 
-        public override void SetPower(PowerState power)
+        protected override void ApplyPower(PowerState power)
         {
-            new LightCommand { On = Power == PowerState.On }.SendCommandAsync(new[] { HueDevice.Id });
+            new LightCommand { On = power == PowerState.On }.SendCommand(HueDevice);
+            Children.ForEach<Device>(i => i.SetPower(power, false));
         }
-#endif
 
         protected override void OnPropertiesChanged()
         {

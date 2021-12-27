@@ -46,11 +46,11 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
         public override string Name => _Name.IsNullOrEmpty() ? IpAddress : _Name;
 
-        public override string Product => _Product?.name;
+        public string Product => _Product?.name;
 
         public override string Uuid => IpAddress;
 
-        public override string Vendor => _Vendor?.name;
+        public string Vendor => _Vendor?.name;
 
         public override int ZoneCount => _ZoneCount;
 
@@ -67,12 +67,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         public override void RefreshState()
         {
             RefreshStateAsync();
-        }
-
-        public override void SetColor(Color color, TimeSpan transitionDuration)
-        {
-            base.SetColor(color, transitionDuration);
-            Controller.SetColor(Color, transitionDuration);
         }
 
         public override void SetFirmwareEffect(object effect)
@@ -95,23 +89,6 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             }
         }
 
-        public override void SetMultiZoneColors(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
-        {
-            base.SetMultiZoneColors(colors, transitionDuration);
-
-            // TODO my LIFX strip that runs an old version of the firmware accepts the
-            // SetExtendedColorZones message even though it won't support
-            // GetExtendedColorZones.
-            if(IsMultiZone)
-            {
-                Controller.SetExtendedColorZones(MultiZoneColors, transitionDuration);
-            }
-            else
-            {
-                Controller.SetColor(Color, transitionDuration);
-            }
-        }
-
         public void SetMultiZoneEffect(MultiZoneEffectSettings settings)
         {
             _MultiZoneEffect = settings.Clone();
@@ -119,17 +96,31 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             OnStateChanged();
         }
 
-        public override void SetPower(PowerState power)
-        {
-            base.SetPower(power);
-            Controller.SetPower(Power);
-        }
-
         public void SetWaveform(WaveformSettings settings)
         {
             _Waveform = settings.Clone();
             Controller.SetWaveform(_Waveform);
             OnStateChanged();
+        }
+
+        protected override void ApplyColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
+        {
+            // TODO my LIFX strip that runs an old version of the firmware accepts the
+            // SetExtendedColorZones message even though it won't support
+            // GetExtendedColorZones.
+            if(IsMultiZone && (colors.Count > 1))
+            {
+                Controller.SetExtendedColorZones(colors, transitionDuration);
+            }
+            else
+            {
+                Controller.SetColor(colors.First(), transitionDuration);
+            }
+        }
+
+        protected override void ApplyPower(PowerState power)
+        {
+            Controller.SetPower(Power);
         }
 
         protected override void OnPropertiesChanged()
@@ -209,7 +200,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
 
             await Controller.GetPower(response =>
             {
-                base.SetPower(response.Power);
+                SetPower(response.Power, false);
             });
 
             // Rather than using the product registry, we'll attempt to discover device capabilities
@@ -219,7 +210,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             {
                 await Controller.GetColor(response =>
                 {
-                    base.SetColor(response.Color, TimeSpan.Zero);
+                    SetColor(new[] { response.Color }, TimeSpan.Zero, false);
                 });
             }
 
@@ -235,10 +226,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                             OnPropertiesChanged();
                         }
 
-                        if(!_MultiZoneColors.SequenceEqual(response.Colors))
-                        {
-                            base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
-                        }
+                        SetColor(response.Colors, TimeSpan.Zero, false);
                     }
                 });
             }
@@ -262,10 +250,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
                             OnPropertiesChanged();
                         }
 
-                        if(!_MultiZoneColors.SequenceEqual(response.Colors))
-                        {
-                            base.SetMultiZoneColors(response.Colors, TimeSpan.Zero);
-                        }
+                        SetColor(response.Colors, TimeSpan.Zero, false);
                     }
                 });
             }

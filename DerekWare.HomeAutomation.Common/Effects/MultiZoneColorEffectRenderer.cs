@@ -11,7 +11,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         protected abstract bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration);
 
         // The target colors to set
-        Color[] Colors;
+        Color[] Color;
 
         public override bool IsMultiZone => true;
 
@@ -32,8 +32,8 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 }
             }
 
-            Palette = Device.MultiZoneColors.ToArray();
-            Colors = Palette.ToArray();
+            Palette = Device.Color.ToArray();
+            Color = Palette.ToArray();
 
             base.DoWork(sender, e);
         }
@@ -42,19 +42,12 @@ namespace DerekWare.HomeAutomation.Common.Effects
         {
             var transitionDuration = RefreshRate;
 
-            if(!UpdateColors(state, ref Colors, ref transitionDuration))
+            if(!UpdateColors(state, ref Color, ref transitionDuration))
             {
                 return;
             }
 
-            if(Colors.Length > 1)
-            {
-                Device.SetMultiZoneColors(Colors, transitionDuration);
-            }
-            else
-            {
-                Device.SetColor(Colors[0], transitionDuration);
-            }
+            Device.SetColor(Color, transitionDuration);
         }
     }
 }
