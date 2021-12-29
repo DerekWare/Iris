@@ -76,14 +76,15 @@ namespace DerekWare.Iris
             // 
             this.TrackBar.AutoSize = false;
             this.TrackBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TrackBar.LargeChange = 10;
+            this.TrackBar.SmallChange = 1;
+            this.TrackBar.LargeChange = 5;
             this.TrackBar.Location = new System.Drawing.Point(8, 8);
             this.TrackBar.Margin = new System.Windows.Forms.Padding(0);
-            this.TrackBar.Maximum = 100;
+            this.TrackBar.Maximum = 20;
             this.TrackBar.Name = "TrackBar";
             this.TrackBar.Size = new System.Drawing.Size(155, 32);
             this.TrackBar.TabIndex = 0;
-            this.TrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.TrackBar.TickStyle = System.Windows.Forms.TickStyle.BottomRight;
             this.TrackBar.ValueChanged += new System.EventHandler(this.BrightnessTrackBar_ValueChanged);
             // 
             // Timer

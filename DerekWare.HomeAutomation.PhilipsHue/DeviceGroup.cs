@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.PerformanceData;
 using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
@@ -10,7 +9,7 @@ using Q42.HueApi.Models.Groups;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
 {
-    public class DeviceGroup : Common.DeviceGroup
+    public class DeviceGroup : Common.DeviceGroup, IHueDevice
     {
         internal readonly Group HueDevice;
 
@@ -47,20 +46,20 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             // the color on the group, not the lights.
             var first = color.First();
             var identical = (color.Count <= 1) || color.All(i => i == first);
-            
+
             if(!identical)
             {
                 base.ApplyColor(color, transitionDuration);
                 return;
             }
 
-            first.ToLightCommand().SendCommand(HueDevice);
+            SendCommand(first.ToLightCommand());
             Children.ForEach<Device>(i => i.SetColor(color, TimeSpan.Zero, false));
         }
 
         protected override void ApplyPower(PowerState power)
         {
-            new LightCommand { On = power == PowerState.On }.SendCommand(HueDevice);
+            SendCommand(new LightCommand { On = power == PowerState.On });
             Children.ForEach<Device>(i => i.SetPower(power, false));
         }
 
@@ -75,5 +74,23 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             base.OnStateChanged();
             PhilipsHue.Client.Instance.OnStateChanged(this);
         }
+
+        #region IDeviceState
+
+        public override void SetFirmwareEffect(object effect)
+        {
+            SendCommand(new LightCommand { Effect = Extensions.GetEffectType(effect) });
+        }
+
+        #endregion
+
+        #region IHueDevice
+
+        public void SendCommand(LightCommand cmd)
+        {
+            cmd.SendCommand(HueDevice);
+        }
+
+        #endregion
     }
 }

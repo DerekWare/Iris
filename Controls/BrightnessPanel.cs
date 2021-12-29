@@ -6,9 +6,9 @@ namespace DerekWare.Iris
 {
     public partial class BrightnessPanel : UserControl
     {
+        readonly object TimerLock = new();
         double _Brightness;
         bool InUpdate;
-        object TimerLock = new();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), Browsable(true)]
         public event EventHandler<BrightnessChangedEventArgs> BrightnessChanged;

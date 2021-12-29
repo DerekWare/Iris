@@ -47,12 +47,6 @@ namespace DerekWare.HomeAutomation.Common.Themes
         public Color[] GetPalette(int count)
         {
             var offset = RandomOffset ? Random.NextDouble() : Offset;
-
-            if(Window <= 0)
-            {
-                count = 1;
-            }
-
             var colors = new Color[count];
 
             for(var i = 0; i < count; ++i)

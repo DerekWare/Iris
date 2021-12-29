@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using DerekWare.Diagnostics;
 using Q42.HueApi;
 using Q42.HueApi.Models.Groups;
 
@@ -7,6 +9,30 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 {
     public static class Extensions
     {
+        public static Effect GetEffectType(object effect)
+        {
+            var hueEffect = Effect.None;
+
+            if(effect is null)
+            {
+                // Nothing to do
+            }
+            else if(effect is Effect)
+            {
+                hueEffect = (Effect)effect;
+            }
+            else if(effect is string effectName)
+            {
+                hueEffect = (Effect)Enum.Parse(typeof(Effect), effectName, true);
+            }
+            else
+            {
+                Debug.Warning(effect, "Invalid effect settings");
+            }
+
+            return hueEffect;
+        }
+
         public static Task<HueResults> SendCommand(this LightCommand command, Light light)
         {
             return Client.Instance.HueClient.SendCommandAsync(command, new[] { light.Id });

@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Colors;
 using Q42.HueApi;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
 {
-    public sealed class Device : Common.Device
+    public interface IHueDevice : IDevice
+    {
+        public void SendCommand(LightCommand cmd);
+    }
+
+    public sealed class Device : Common.Device, IHueDevice
     {
         internal Light HueDevice;
 
@@ -55,6 +59,31 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public override int ZoneCount => 1;
 
+        protected override void ApplyColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
+        {
+            // TODO white + color temperature doesn't quite seem to work
+            SendCommand(colors.First().ToLightCommand());
+        }
+
+        protected override void ApplyPower(PowerState power)
+        {
+            SendCommand(new LightCommand { On = power == PowerState.On });
+        }
+
+        protected override void OnPropertiesChanged()
+        {
+            base.OnPropertiesChanged();
+            PhilipsHue.Client.Instance.OnPropertiesChanged(this);
+        }
+
+        protected override void OnStateChanged()
+        {
+            base.OnStateChanged();
+            PhilipsHue.Client.Instance.OnStateChanged(this);
+        }
+
+        #region IDeviceState
+
         public override async void RefreshState()
         {
             var device = await PhilipsHue.Client.Instance.HueClient.GetLightAsync(HueDevice.Id);
@@ -78,41 +107,18 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public override void SetFirmwareEffect(object effect)
         {
-            switch(effect)
-            {
-                case null:
-                    new LightCommand { Effect = Q42.HueApi.Effect.None }.SendCommand(HueDevice);
-                    break;
-                case string effectName:
-                    new LightCommand { Effect = (Effect)Enum.Parse(typeof(Effect), effectName, true) }.SendCommand(HueDevice);
-                    break;
-                default:
-                    Debug.Warning(this, "Invalid effect settings");
-                    break;
-            }
+            SendCommand(new LightCommand { Effect = Extensions.GetEffectType(effect) });
         }
 
-        protected override void ApplyColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
+        #endregion
+
+        #region IHueDevice
+
+        public void SendCommand(LightCommand cmd)
         {
-            // TODO white + color temperature doesn't quite seem to work
-            colors.First().ToLightCommand().SendCommand(HueDevice);
+            cmd.SendCommand(HueDevice);
         }
 
-        protected override void ApplyPower(PowerState power)
-        {
-            new LightCommand { On = power == PowerState.On }.SendCommand(HueDevice);
-        }
-
-        protected override void OnPropertiesChanged()
-        {
-            base.OnPropertiesChanged();
-            PhilipsHue.Client.Instance.OnPropertiesChanged(this);
-        }
-
-        protected override void OnStateChanged()
-        {
-            base.OnStateChanged();
-            PhilipsHue.Client.Instance.OnStateChanged(this);
-        }
+        #endregion
     }
 }

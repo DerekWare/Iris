@@ -1,6 +1,5 @@
 ﻿using DerekWare.HomeAutomation.Common.Colors;
 using Q42.HueApi;
-using Q42.HueApi.ColorConverters.HSB;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
 {
