@@ -79,7 +79,11 @@ namespace DerekWare.HomeAutomation.Common
         public virtual bool IsMultiZone => ZoneCount > 1;
 
         [Browsable(false)]
-        public double Brightness { get => Color.FirstOrDefault()?.Brightness ?? 1.0; set => Color = Color.Select(color => new Color(color) { Brightness = value }).ToList(); }
+        public double Brightness
+        {
+            get => Color.FirstOrDefault()?.Brightness ?? 1.0;
+            set => Color = Color.Select(color => new Color(color) { Brightness = value }).ToList();
+        }
 
         [Browsable(false)]
         public virtual IReadOnlyCollection<Color> Color { get => _Color; set => SetColor(value, TimeSpan.Zero); }
@@ -90,17 +94,21 @@ namespace DerekWare.HomeAutomation.Common
             get => EffectFactory.Instance.GetRunningEffects(this).FirstOrDefault();
             set
             {
-                // TODO we don't currently have a way to see if any of the properties have
-                // changed, so just assume they have and always apply the new effect.
-#if false
-                if(Equals(Effect, value))
+                // Stop any running effects
+                EffectFactory.Instance.Stop(this);
+
+                if(value is null)
                 {
                     return;
                 }
-#endif
 
-                EffectFactory.Instance.Stop(this);
-                value?.Start(this);
+                // Always clone the effect so we don't reuse an old one with stale state
+                value = (Effect)value.Clone();
+
+                // Start running
+                value.Start(this);
+
+                // Signal the state change
                 OnStateChanged();
             }
         }
@@ -114,24 +122,20 @@ namespace DerekWare.HomeAutomation.Common
             get => null; // TODO
             set
             {
-                value?.Apply(this);
+                if(value is null)
+                {
+                    return;
+                }
+
+                // Always clone the theme so we don't reuse an old one with stale state
+                value = (Theme)value.Clone();
+
+                // Start running
+                value.Apply(this);
+
+                // Signal the state change
                 OnStateChanged();
             }
-        }
-
-        public override string ToString()
-        {
-            return $"{Name} ({Family})";
-        }
-
-        protected virtual void OnPropertiesChanged()
-        {
-            PropertiesChanged?.Invoke(this, new DeviceEventArgs { Device = this });
-        }
-
-        protected virtual void OnStateChanged()
-        {
-            StateChanged?.Invoke(this, new DeviceEventArgs { Device = this });
         }
 
         public virtual void SetColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration, bool apply)
@@ -187,6 +191,21 @@ namespace DerekWare.HomeAutomation.Common
 
                 scenes.FirstOrDefault()?.Apply();
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{Name} ({Family})";
+        }
+
+        protected virtual void OnPropertiesChanged()
+        {
+            PropertiesChanged?.Invoke(this, new DeviceEventArgs { Device = this });
+        }
+
+        protected virtual void OnStateChanged()
+        {
+            StateChanged?.Invoke(this, new DeviceEventArgs { Device = this });
         }
 
         protected virtual void StartRefreshTask()
