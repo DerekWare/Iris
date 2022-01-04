@@ -99,7 +99,7 @@ namespace DerekWare.HomeAutomation.Common.Scenes
             }
             else if(!Color.IsNullOrEmpty())
             {
-                info.AddValue(nameof(Color), Color, typeof(List<Color>));
+                info.AddValue(nameof(Color), Color.ToList(), typeof(List<Color>));
             }
 
             if(Effect is not null)

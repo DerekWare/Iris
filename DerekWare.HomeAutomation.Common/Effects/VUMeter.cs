@@ -15,8 +15,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
     [Name("VU Meter"), Description("Hooks your sound device and responds to sounds made by your PC, including music.")]
     public class VUMeter : MultiZoneColorEffectRenderer
     {
-        static readonly TimeSpan MaxRecorderBufferDuration = TimeSpan.FromSeconds(0.25);
-
         AudioProcessor AudioProcessor;
         AudioRecorder AudioRecorder;
 #if UseBandPassFilter
@@ -77,7 +75,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override void StartEffect()
         {
-            AudioRecorder = new AudioRecorder { MaxDuration = RefreshRate.Min(MaxRecorderBufferDuration) };
+            AudioRecorder = new AudioRecorder { MaxDuration = TimeSpan.FromSeconds(0.25) };
             AudioProcessor = new AudioProcessor(AudioRecorder);
 #if UseBandPassFilter
             Filter = BiQuadFilter.PeakingEQ(AudioRecorder.Format.SampleRate, 120, 1, 0);
