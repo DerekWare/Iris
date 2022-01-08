@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using DerekWare.Diagnostics;
+using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common.Effects;
+using DerekWare.HomeAutomation.Common.Themes;
 
 namespace DerekWare.HomeAutomation.Common.Devices
 {
     [Description("DeferredDevice allows for lazy loading of a device based on Family and Uuid.")]
-    public interface IDeferredDevice : IFamily, IUuid, IName, ISerializable, IEquatable<DeferredDevice>, IMatch, IDisposable
+    public interface IDeferredDevice : IDevice, ISerializable, IEquatable<DeferredDevice>, IMatch
     {
-        public IClient Client { get; }
         public IDevice Device { get; }
     }
 
@@ -20,6 +23,8 @@ namespace DerekWare.HomeAutomation.Common.Devices
         IDevice _Device;
 
         public event EventHandler<DeviceEventArgs> DeviceDiscovered;
+        public event EventHandler<DeviceEventArgs> PropertiesChanged;
+        public event EventHandler<DeviceEventArgs> StateChanged;
 
         public DeferredDevice(IDevice device)
         {
@@ -28,6 +33,10 @@ namespace DerekWare.HomeAutomation.Common.Devices
 
             Family = _Device.Family;
             Uuid = _Device.Uuid;
+
+            _Client.DeviceDiscovered += OnDeviceDiscovered;
+            _Device.PropertiesChanged += OnPropertiesChanged;
+            _Device.StateChanged += OnStateChanged;
         }
 
         public DeferredDevice(SerializationInfo info, StreamingContext context)
@@ -35,14 +44,16 @@ namespace DerekWare.HomeAutomation.Common.Devices
             Family = (string)info.GetValue(nameof(Family), typeof(string));
             Uuid = (string)info.GetValue(nameof(Uuid), typeof(string));
 
-            if(Client is not null)
-            {
-                Client.DeviceDiscovered += OnDeviceDiscovered;
-            }
+            FindDevice();
         }
 
         protected DeferredDevice()
         {
+        }
+
+        ~DeferredDevice()
+        {
+            Dispose();
         }
 
         public IClient Client
@@ -51,12 +62,7 @@ namespace DerekWare.HomeAutomation.Common.Devices
             {
                 if(_Client is null)
                 {
-                    _Client = ClientFactory.Instance.CreateInstance(Family);
-
-                    if(_Client is null)
-                    {
-                        Debug.Warning(this, $"Unable to find client {Family}");
-                    }
+                    FindClient();
                 }
 
                 return _Client;
@@ -69,17 +75,7 @@ namespace DerekWare.HomeAutomation.Common.Devices
             {
                 if(_Device is null)
                 {
-                    if(Client is null)
-                    {
-                        return null;
-                    }
-
-                    _Device = Client.Devices.FirstOrDefault(i => i.Uuid == Uuid) ?? Client.Groups.FirstOrDefault(i => i.Uuid == Uuid);
-
-                    if(_Device is null)
-                    {
-                        Debug.Warning(this, $"Unable to find device {Uuid}");
-                    }
+                    FindDevice();
                 }
 
                 return _Device;
@@ -87,23 +83,101 @@ namespace DerekWare.HomeAutomation.Common.Devices
         }
 
         public string Family { get; }
-
+        public IReadOnlyCollection<IDeviceGroup> Groups => Device?.Groups;
+        public bool IsColor => Device?.IsColor ?? false;
+        public bool IsMultiZone => Device?.IsMultiZone ?? false;
+        public bool IsValid => Device?.IsValid ?? false;
         public string Name => Device?.Name ?? Uuid;
-
         public string Uuid { get; }
+        public int ZoneCount => Device?.ZoneCount ?? 0;
 
-        protected virtual void Dispose(bool disposing)
+        public double Brightness
         {
-            if(disposing)
+            get => Device?.Brightness ?? 0;
+            set
             {
-                if(_Client is not null)
+                if(Device is not null)
                 {
-                    _Client.DeviceDiscovered -= OnDeviceDiscovered;
+                    Device.Brightness = value;
                 }
-
-                _Client = null;
-                _Device = null;
             }
+        }
+
+        public IReadOnlyCollection<Color> Color
+        {
+            get => Device?.Color;
+            set
+            {
+                if(Device is not null)
+                {
+                    Device.Color = value;
+                }
+            }
+        }
+
+        public Effect Effect
+        {
+            get => Device?.Effect;
+            set
+            {
+                if(Device is not null)
+                {
+                    Device.Effect = value;
+                }
+            }
+        }
+
+        public PowerState Power
+        {
+            get => Device?.Power ?? PowerState.Off;
+            set
+            {
+                if(Device is not null)
+                {
+                    Device.Power = value;
+                }
+            }
+        }
+
+        public Theme Theme
+        {
+            get => Device?.Theme;
+            set
+            {
+                if(Device is not null)
+                {
+                    Device.Theme = value;
+                }
+            }
+        }
+
+        protected bool FindClient()
+        {
+            _Client = ClientFactory.Instance.CreateInstance(Family);
+
+            if(_Client is null)
+            {
+                Debug.Warning(this, $"Unable to find client {Family}");
+                return false;
+            }
+
+            _Client.DeviceDiscovered += OnDeviceDiscovered;
+            return true;
+        }
+
+        protected bool FindDevice()
+        {
+            _Device = Client?.Devices.FirstOrDefault(i => i.Uuid == Uuid) ?? Client?.Groups.FirstOrDefault(i => i.Uuid == Uuid);
+
+            if(_Device is null)
+            {
+                Debug.Warning(this, $"Unable to find device {Uuid}");
+                return false;
+            }
+
+            _Device.PropertiesChanged += OnPropertiesChanged;
+            _Device.StateChanged += OnStateChanged;
+            return true;
         }
 
         #region Equality
@@ -120,12 +194,22 @@ namespace DerekWare.HomeAutomation.Common.Devices
                 return true;
             }
 
-            return (Family == other.Family) && (Uuid == other.Uuid);
+            return Matches(other);
+        }
+
+        public bool Equals(IDevice other)
+        {
+            if(other is DeferredDevice deferredDevice)
+            {
+                return Equals(deferredDevice);
+            }
+            
+            return Device?.Equals(other) ?? false;
         }
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as DeferredDevice);
+            return Equals(obj as DeferredDevice) || Equals(obj as IDevice);
         }
 
         public override int GetHashCode()
@@ -148,12 +232,46 @@ namespace DerekWare.HomeAutomation.Common.Devices
 
         #endregion
 
+        #region IDeviceState
+
+        public void RefreshState()
+        {
+            Device?.RefreshState();
+        }
+
+        public void SetColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
+        {
+            Device?.SetColor(colors, transitionDuration);
+        }
+
+        public void SetFirmwareEffect(object effect)
+        {
+            Device?.SetFirmwareEffect(effect);
+        }
+
+        public void SetPower(PowerState power)
+        {
+            Device?.SetPower(power);
+        }
+
+        #endregion
+
         #region IDisposable
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            if(_Client is not null)
+            {
+                _Client.DeviceDiscovered -= OnDeviceDiscovered;
+                _Client = null;
+            }
+
+            if(_Device is not null)
+            {
+                _Device.PropertiesChanged -= OnPropertiesChanged;
+                _Device.StateChanged -= OnStateChanged;
+                _Device = null;
+            }
         }
 
         #endregion
@@ -189,7 +307,20 @@ namespace DerekWare.HomeAutomation.Common.Devices
             _Device = e.Device;
             _Client = e.Device.Client;
 
+            _Device.PropertiesChanged += OnPropertiesChanged;
+            _Device.StateChanged += OnStateChanged;
+
             DeviceDiscovered?.Invoke(this, e);
+        }
+
+        void OnPropertiesChanged(object sender, DeviceEventArgs e)
+        {
+            PropertiesChanged?.Invoke(this, e);
+        }
+
+        void OnStateChanged(object sender, DeviceEventArgs e)
+        {
+            StateChanged?.Invoke(this, e);
         }
 
         #endregion

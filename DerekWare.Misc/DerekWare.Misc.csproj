@@ -83,11 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\Array.cs" />
-    <Compile Include="Collections\DistinctList.cs" />
     <Compile Include="Collections\Enumerable.cs" />
     <Compile Include="Collections\Group\Group.cs" />
     <Compile Include="Collections\Group\GroupCollection.cs" />
-    <Compile Include="Collections\KeyedList.cs" />
     <Compile Include="Collections\KeyValuePair.cs" />
     <Compile Include="Collections\LimitedQueue.cs" />
     <Compile Include="Collections\Lookup.cs" />
@@ -97,8 +95,9 @@
     <Compile Include="Collections\Observable\ObservableHashSet.cs" />
     <Compile Include="Collections\Observable\ObservableList.cs" />
     <Compile Include="Collections\Observable\ObservableQueue.cs" />
-    <Compile Include="Collections\OrderedDictionary.cs" />
-    <Compile Include="Collections\OrderedHashSet.cs" />
+    <Compile Include="Collections\Ordered\OrderedDictionary.cs" />
+    <Compile Include="Collections\Ordered\OrderedHashSet.cs" />
+    <Compile Include="Collections\Ordered\SortedHashSet.cs" />
     <Compile Include="Collections\PropertySet.cs" />
     <Compile Include="Collections\Queue.cs" />
     <Compile Include="Collections\SequenceComparer.cs" />

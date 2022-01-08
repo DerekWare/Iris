@@ -16,8 +16,8 @@ namespace DerekWare.HomeAutomation.Common.Colors
             var count = Math.Min(src.Count, dst.Count);
             var zones = new List<ColorZone>();
 
-            var si = src.GetEnumerator();
-            var di = dst.GetEnumerator();
+            using var si = src.GetEnumerator();
+            using var di = dst.GetEnumerator();
             byte index = 0;
 
             while(si.MoveNext() && di.MoveNext())

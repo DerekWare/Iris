@@ -14,8 +14,6 @@ namespace DerekWare.Iris
 
         public DeviceSelectionTreeView()
         {
-            ShowFamilyNodes = true;
-            ShowStateNode = true;
         }
 
         [Browsable(false)]

@@ -310,8 +310,6 @@ namespace DerekWare.Iris
             this.ComponentTreeView.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.ComponentTreeView.Name = "ComponentTreeView";
             this.ComponentTreeView.SelectedNode = null;
-            this.ComponentTreeView.ShowFamilyNodes = true;
-            this.ComponentTreeView.ShowStateNode = true;
             this.ComponentTreeView.Size = new System.Drawing.Size(274, 748);
             this.ComponentTreeView.TabIndex = 0;
             this.ComponentTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ComponentTreeView_AfterSelect);

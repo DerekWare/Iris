@@ -6,6 +6,7 @@ using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
+using DerekWare.Misc;
 using DerekWare.Strings;
 
 namespace DerekWare.HomeAutomation.Common
@@ -24,9 +25,7 @@ namespace DerekWare.HomeAutomation.Common
     // with multizone themes and effects.
     public abstract class DeviceGroup : Device, IDeviceGroup
     {
-        protected SynchronizedHashSet<IDevice> InternalChildren = new();
-
-        SynchronizedList<IDevice> SortedChildren = new();
+        protected SortedHashSet<IDevice> InternalChildren = new((x, y) => StringComparer.OrdinalIgnoreCase.Compare(x.Name, y.Name));
 
         protected DeviceGroup()
         {
@@ -36,6 +35,9 @@ namespace DerekWare.HomeAutomation.Common
         public int ChildCount => Children.Count;
 
         public string ChildNames => Children.Select(i => i.Name).Join(", ");
+
+        [Browsable(false)]
+        public IReadOnlyCollection<IDevice> Children => InternalChildren;
 
         [Browsable(false)]
         public override IReadOnlyCollection<IDeviceGroup> Groups => Array.Empty<IDeviceGroup>(); // TODO allow groups within groups
@@ -48,6 +50,9 @@ namespace DerekWare.HomeAutomation.Common
 
         public override int ZoneCount { get { return Children.Sum(i => i.ZoneCount); } }
 
+        [Browsable(false)]
+        public override IReadOnlyCollection<Color> Color { get { return Children.SelectMany(i => i.Color).ToArray(); } set => base.Color = value; }
+
         public override Effect Effect
         {
             get => base.Effect;
@@ -59,20 +64,11 @@ namespace DerekWare.HomeAutomation.Common
         }
 
         [Browsable(false)]
-        public override IReadOnlyCollection<Color> Color
-        {
-            get { return Children.SelectMany(i => i.Color).ToArray(); }
-            set => base.Color = value;
-        }
-
-        [Browsable(false)]
         public override PowerState Power
         {
             get { return Children.Any(i => i.Power == PowerState.On) ? PowerState.On : PowerState.Off; }
             set => base.Power = value;
         }
-
-        public IReadOnlyCollection<IDevice> Children => SortedChildren;
 
         protected override void ApplyColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
         {
@@ -115,7 +111,7 @@ namespace DerekWare.HomeAutomation.Common
 
         protected virtual void OnDevicePropertiesChanged(object sender, DeviceEventArgs e)
         {
-            SortedChildren = new SynchronizedList<IDevice>(InternalChildren.OrderBy(i => i.Name));
+            InternalChildren.Sort();
             OnPropertiesChanged();
         }
 
@@ -138,7 +134,6 @@ namespace DerekWare.HomeAutomation.Common
                 device.StateChanged += OnDeviceStateChanged;
             }
 
-            SortedChildren = new SynchronizedList<IDevice>(InternalChildren.OrderBy(i => i.Name));
             OnPropertiesChanged();
         }
 

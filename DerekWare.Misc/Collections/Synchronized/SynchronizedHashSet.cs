@@ -17,12 +17,7 @@ namespace DerekWare.Collections
         {
         }
 
-        public SynchronizedHashSet(IEnumerable<T> items)
-            : base(items)
-        {
-        }
-
-        public SynchronizedHashSet(IEnumerable<T> items, IEqualityComparer<T> comparer)
+        public SynchronizedHashSet(IEnumerable<T> items, IEqualityComparer<T> comparer = null)
             : base(items, comparer)
         {
         }

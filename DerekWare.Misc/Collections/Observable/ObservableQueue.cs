@@ -39,7 +39,7 @@ namespace DerekWare.Collections
         public virtual int CopyTo(T[] array, int arrayIndex, int count)
         {
             count = Math.Min(count, Count);
-            var e = Items.GetEnumerator();
+            using var e = Items.GetEnumerator();
 
             for(var i = 0; i < count; ++i)
             {

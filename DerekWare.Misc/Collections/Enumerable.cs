@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace DerekWare.Collections
 {
@@ -82,7 +83,7 @@ namespace DerekWare.Collections
                 throw new IndexOutOfRangeException("N must be >= 1");
             }
 
-            var e = items.GetEnumerator();
+            using var e = items.GetEnumerator();
 
             while(true)
             {
@@ -253,13 +254,13 @@ namespace DerekWare.Collections
         ///     Returns a flattened list of all nodes in a tree. This is basically a recursive version of SelectMany that works
         ///     with a typed enumerable and maintains the original element ordering.
         /// </summary>
-        public static DistinctList<T> Collapse<T>(
+        public static OrderedHashSet<T> Collapse<T>(
             this T root,
             Func<T, IEnumerable<T>> selector = null,
             IEqualityComparer<T> comparer = null,
             int depth = int.MaxValue)
         {
-            var results = new DistinctList<T>(comparer);
+            var results = new OrderedHashSet<T>(comparer);
             results.Collapse(root, selector, depth);
             return results;
         }
@@ -268,13 +269,13 @@ namespace DerekWare.Collections
         ///     Returns a flattened list of all nodes in a tree. This is basically a recursive version of SelectMany that works
         ///     with a typed enumerable and maintains the original element ordering.
         /// </summary>
-        public static DistinctList<T> Collapse<T>(
+        public static OrderedHashSet<T> Collapse<T>(
             this IEnumerable<T> collection,
             Func<T, IEnumerable<T>> selector = null,
             IEqualityComparer<T> comparer = null,
             int depth = int.MaxValue)
         {
-            var results = new DistinctList<T>(comparer);
+            var results = new OrderedHashSet<T>(comparer);
             collection.ForEach(item => results.Collapse(item, selector, depth));
             return results;
         }
@@ -828,6 +829,32 @@ namespace DerekWare.Collections
             return result;
         }
 
+        public static int FindInsertionPoint<T>(this IList<T> items, T item, IComparer<T> comparer = null)
+        {
+            comparer = comparer ?? Comparer<T>.Default;
+            return FindInsertionPoint(items, item, (x, y) => comparer.Compare(x, y));
+        }
+
+        public static int FindInsertionPoint<T>(this IList<T> items, T item, Func<T, T, int> comparer)
+        {
+            var i = 0;
+
+            using(var e = items.SafeEmpty().GetEnumerator())
+            {
+                while(e.MoveNext())
+                {
+                    if(comparer(item, e.Current) < 0)
+                    {
+                        break;
+                    }
+
+                    ++i;
+                }
+            }
+
+            return i;
+        }
+
         public static T[] ToArray<T>(this IEnumerable @this)
         {
             return @this.Cast<T>().ToArray();
@@ -856,9 +883,9 @@ namespace DerekWare.Collections
         ///     This is functionally equivalent to Distinct().ToList(), except that it returns a collection object that extends the
         ///     functionality of List.
         /// </summary>
-        public static DistinctList<T> ToDistinctList<T>(this IEnumerable<T> @this, IEqualityComparer<T> comparer = null)
+        public static OrderedHashSet<T> ToOrderedHashSet<T>(this IEnumerable<T> @this, IEqualityComparer<T> comparer = null)
         {
-            return new DistinctList<T>(@this, comparer);
+            return new OrderedHashSet<T>(@this, comparer);
         }
 
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> @this, IEqualityComparer<T> comparer = null)
@@ -920,7 +947,7 @@ namespace DerekWare.Collections
         ///     Returns a flattened list of all nodes in a tree. This is basically a recursive version of SelectMany that works
         ///     with a typed enumerable and maintains the original element ordering.
         /// </summary>
-        static void Collapse<T>(this DistinctList<T> results, T root, Func<T, IEnumerable<T>> selector, int depth)
+        static void Collapse<T>(this OrderedHashSet<T> results, T root, Func<T, IEnumerable<T>> selector, int depth)
         {
             selector = selector ?? (item => item as IEnumerable<T>);
 

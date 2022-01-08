@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DerekWare.Collections
 {
@@ -21,28 +20,22 @@ namespace DerekWare.Collections
         {
         }
 
-        public OrderedHashSet(ISet<T> other)
-            : base(other)
+        public OrderedHashSet(IEnumerable<T> items, IEqualityComparer<T> comparer = null)
+            : base(items, comparer)
         {
         }
 
-        public OrderedHashSet(IEnumerable<T> other)
-            : base(other)
-        {
-        }
-
-        public IReadOnlyList<T> OrderedItems
+        public virtual T this[int index]
         {
             get
             {
                 lock(SyncRoot)
                 {
-                    return List.ToList();
+                    return List[index];
                 }
             }
+            set => throw new NotSupportedException();
         }
-
-        public T this[int index] { get => List[index]; set => throw new NotSupportedException(); }
 
         public override bool Add(T item)
         {
@@ -54,6 +47,20 @@ namespace DerekWare.Collections
                 }
 
                 List.Add(item);
+                return true;
+            }
+        }
+
+        public virtual bool Insert(int index, T item)
+        {
+            lock(SyncRoot)
+            {
+                if(!base.Add(item))
+                {
+                    return false;
+                }
+
+                List.Insert(index, item);
                 return true;
             }
         }
@@ -106,7 +113,10 @@ namespace DerekWare.Collections
 
         public override IEnumerator<T> GetEnumerator()
         {
-            return OrderedItems.GetEnumerator();
+            lock(SyncRoot)
+            {
+                return List.CreateEnumerator();
+            }
         }
 
         #endregion
@@ -122,25 +132,17 @@ namespace DerekWare.Collections
             }
         }
 
-        public void Insert(int index, T item)
-        {
-            lock(SyncRoot)
-            {
-                if(!base.Add(item))
-                {
-                    return;
-                }
-
-                List.Insert(index, item);
-            }
-        }
-
         public void RemoveAt(int index)
         {
             lock(SyncRoot)
             {
                 Remove(List[index]);
             }
+        }
+
+        void IList<T>.Insert(int index, T item)
+        {
+            Insert(index, item);
         }
 
         #endregion

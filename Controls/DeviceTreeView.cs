@@ -16,7 +16,7 @@ namespace DerekWare.Iris
         readonly DeviceFilterNode StateNode = new("State") { HideDevices = true };
 
         bool _ShowFamilyNodes;
-        bool _ShowStateNode;
+        bool _ShowStateNodes;
 
         public DeviceTreeView()
         {
@@ -56,12 +56,12 @@ namespace DerekWare.Iris
             }
         }
 
-        public bool ShowStateNode
+        public bool ShowStateNodes
         {
-            get => _ShowStateNode;
+            get => _ShowStateNodes;
             set
             {
-                _ShowStateNode = value;
+                _ShowStateNodes = value;
 
                 if(DesignMode)
                 {

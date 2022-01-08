@@ -51,33 +51,30 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         {
         }
 
-        public Effect Effect { get; set; }
-
-        public IReadOnlyCollection<Color> Color { get; set; }
-
-        public PowerState Power { get; set; }
-
-        public Theme Theme { get; set; }
+        public new IReadOnlyCollection<Color> Color { get; set; }
+        public new Effect Effect { get; set; }
+        public new PowerState Power { get; set; }
+        public new Theme Theme { get; set; }
 
         public bool ApplyScene()
         {
-            if(!(Device?.IsValid ?? false))
+            if(!IsValid)
             {
                 return false;
             }
 
-            Device.Power = Power;
+            base.Power = Power;
 
             if(Theme is not null)
             {
-                Device.Theme = Theme;
+                base.Theme = Theme;
             }
             else if(!Color.IsNullOrEmpty())
             {
-                Device.Color = Color;
+                base.Color = Color;
             }
 
-            Device.Effect = Effect;
+            base.Effect = Effect;
 
             return true;
         }
@@ -110,15 +107,15 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
         public bool SnapshotDeviceState()
         {
-            if(!(Device?.IsValid ?? false))
+            if(!IsValid)
             {
                 return false;
             }
 
-            Power = Device.Power;
-            Color = Device.Color?.ToList();
-            Theme = (Theme)Device.Theme?.Clone();
-            Effect = (Effect)Device.Effect?.Clone();
+            Power = base.Power;
+            Color = base.Color?.ToList();
+            Theme = (Theme)base.Theme?.Clone();
+            Effect = (Effect)base.Effect?.Clone();
 
             return true;
         }

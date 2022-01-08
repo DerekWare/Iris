@@ -20,7 +20,7 @@ namespace DerekWare.Iris
         {
             LabelEdit = true;
             ShowFamilyNodes = true;
-            ShowStateNode = true;
+            ShowStateNodes = true;
 
             if(DesignMode)
             {

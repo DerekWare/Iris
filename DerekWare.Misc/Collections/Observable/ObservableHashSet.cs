@@ -28,12 +28,7 @@ namespace DerekWare.Collections
             Items = new HashSet<T>(comparer ?? EqualityComparer<T>.Default);
         }
 
-        public ObservableHashSet(IEnumerable<T> items)
-        {
-            Items = new HashSet<T>(items.SafeEmpty());
-        }
-
-        public ObservableHashSet(IEnumerable<T> items, IEqualityComparer<T> comparer)
+        public ObservableHashSet(IEnumerable<T> items, IEqualityComparer<T> comparer = null)
         {
             Items = new HashSet<T>(items.SafeEmpty(), comparer ?? EqualityComparer<T>.Default);
         }
