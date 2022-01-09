@@ -13,7 +13,7 @@ namespace DerekWare.Net.HLS
             Metadata.AddRange(metadata);
         }
 
-        public ObservableDictionary<string, string> Metadata { get; } = new ObservableDictionary<string, string>();
+        public ObservableDictionary<string, string> Metadata { get; } = new();
 
         public override IEnumerable<KeyValuePair<object, object>> Properties
         {

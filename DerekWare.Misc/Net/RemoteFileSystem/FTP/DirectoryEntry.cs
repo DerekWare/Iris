@@ -41,7 +41,7 @@ namespace DerekWare.Net.RemoteFileSystem.FTP
 
         public static IDirectoryEntry Create(FileSystemInfo info)
         {
-            return info.Attributes.HasFlag(FileAttributes.Directory) ? (IDirectoryEntry)new Directory(info) : new File(info);
+            return info.Attributes.HasFlag(FileAttributes.Directory) ? new Directory(info) : new File(info);
         }
 
         public static T Create<T>(FileSystemInfo info)

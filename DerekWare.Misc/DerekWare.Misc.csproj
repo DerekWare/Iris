@@ -87,8 +87,9 @@
     <Compile Include="Collections\Group\Group.cs" />
     <Compile Include="Collections\Group\GroupCollection.cs" />
     <Compile Include="Collections\KeyValuePair.cs" />
+    <Compile Include="Collections\LambdaComparer.cs" />
     <Compile Include="Collections\LimitedQueue.cs" />
-    <Compile Include="Collections\Lookup.cs" />
+    <Compile Include="Collections\Map.cs" />
     <Compile Include="Collections\Observable\ObservableCollectionNotifier.cs" />
     <Compile Include="Collections\Observable\ObservableDictionary.cs" />
     <Compile Include="Collections\Observable\ObservableDictionaryNotifier.cs" />
@@ -200,7 +201,7 @@
     <Compile Include="Strings\CharacterComparer.cs" />
     <Compile Include="Strings\Enumerable.cs" />
     <Compile Include="Strings\StringBuilding.cs" />
-    <Compile Include="Strings\StringMatch.cs" />
+    <Compile Include="Strings\StringMatching.cs" />
     <Compile Include="Strings\StringParsing.cs" />
     <Compile Include="Threading\IThread.cs" />
     <Compile Include="Threading\Task.cs" />

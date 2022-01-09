@@ -14,7 +14,7 @@ namespace DerekWare.Collections
     public class ObservableQueue<T> : ObservableCollectionNotifier<T>, IObservableQueue<T>
     {
         protected readonly Queue<T> Items;
-        protected readonly ManualResetEventSlim ItemsAvailableEvent = new ManualResetEventSlim(false);
+        protected readonly ManualResetEventSlim ItemsAvailableEvent = new(false);
 
         public ObservableQueue()
         {
@@ -34,7 +34,7 @@ namespace DerekWare.Collections
         public virtual int Count => Items.Count;
         public virtual bool IsSynchronized => false;
         public WaitHandle ItemsAvailable => ItemsAvailableEvent.WaitHandle;
-        public object SyncRoot { get; set; } = new object();
+        public object SyncRoot { get; set; } = new();
 
         public virtual int CopyTo(T[] array, int arrayIndex, int count)
         {

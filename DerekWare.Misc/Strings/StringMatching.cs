@@ -1,11 +1,95 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DerekWare.Collections;
 
 namespace DerekWare.Strings
 {
-    public static partial class StringParsing
+    public enum StringMatchAlgorithms
+    {
+        /// <summary>
+        ///     https://en.wikipedia.org/wiki/Levenshtein_distance
+        /// </summary>
+        LevenshteinDistance,
+
+        /// <summary>
+        ///     https://en.wikipedia.org/wiki/Hamming_distance
+        /// </summary>
+        ModifiedHammingDistance
+    }
+
+    [Flags]
+    public enum StringSplitOptions
+    {
+        None = 0,
+
+        /// <summary>
+        ///     The return value does not include array elements that contain an empty string
+        /// </summary>
+        RemoveEmptyEntries = 1 << 0,
+
+        /// <summary>
+        ///     Ignore case when comparing separators
+        /// </summary>
+        IgnoreCase = 1 << 1,
+
+        /// <summary>
+        ///     Ignore splitters within quotation marks
+        /// </summary>
+        RespectQuotes = 1 << 2,
+
+        /// <summary>
+        ///     Preserve the markers after the split
+        /// </summary>
+        PreserveMarkers = 1 << 3
+    }
+
+    public class StringBlockMarker : IEnumerable<char>
+    {
+        public char End;
+        public char Start;
+
+        public StringBlockMarker()
+        {
+        }
+
+        public StringBlockMarker(char marker)
+            : this(marker, marker)
+        {
+        }
+
+        public StringBlockMarker(char start, char end)
+        {
+            Start = start;
+            End = end;
+        }
+
+        public override string ToString()
+        {
+            return $"{Start}{End}";
+        }
+
+        #region IEnumerable
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        #endregion
+
+        #region IEnumerable<char>
+
+        public IEnumerator<char> GetEnumerator()
+        {
+            return new List<char> { Start, End }.GetEnumerator();
+        }
+
+        #endregion
+    }
+
+    public static class StringMatching
     {
         public static readonly IReadOnlyDictionary<StringMatchAlgorithms, Func<string, string, bool, int>> StringMatchAlgorithmMap =
             new Dictionary<StringMatchAlgorithms, Func<string, string, bool, int>>

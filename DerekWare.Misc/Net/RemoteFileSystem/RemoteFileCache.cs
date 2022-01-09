@@ -18,8 +18,8 @@ namespace DerekWare.Net.RemoteFileSystem
 
         public static readonly Path CacheLocation = Path.GetTempPath();
 
-        static readonly object LockContext = new object();
-        static readonly ValueMap<Path, Path> ValueMap = new ValueMap<Path, Path>();
+        static readonly object LockContext = new();
+        static readonly ValueMap<Path, Path> ValueMap = new();
 
         static RemoteFileCache()
         {

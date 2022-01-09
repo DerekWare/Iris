@@ -37,7 +37,7 @@ namespace DerekWare.Collections
         public virtual int Count => Items.Count;
         public virtual bool IsReadOnly => false;
         public virtual bool IsSynchronized => false;
-        public object SyncRoot { get; set; } = new object();
+        public object SyncRoot { get; set; } = new();
 
         public int Add(params T[] items)
         {

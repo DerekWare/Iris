@@ -25,7 +25,7 @@ namespace DerekWare.IO
     /// </summary>
     public partial class Path : IEquatable<Path>, IEquatable<object>, IComparable<Path>, IComparable<object>, IComparable
     {
-        public static readonly Path Empty = new Path();
+        public static readonly Path Empty = new();
         public static readonly char[] InvalidFileNameChars = System.IO.Path.GetInvalidFileNameChars();
         public static readonly char[] InvalidPathChars = System.IO.Path.GetInvalidPathChars();
         public static readonly char[] PathDelimiters = { System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar };
@@ -450,7 +450,7 @@ namespace DerekWare.IO
         /// <summary>
         ///     The parts of the local path. Note that this differs from the Uri class in that it includes the root.
         /// </summary>
-        public SegmentList Segments { get; } = new SegmentList();
+        public SegmentList Segments { get; } = new();
 
         /// <summary>
         ///     Ensures a local path is valid.

@@ -13,7 +13,7 @@ namespace DerekWare.Net
         public const RequestCacheLevel DefaultCacheLevel = RequestCacheLevel.Revalidate;
         public static ICredentials DefaultCredentials = CredentialCache.DefaultCredentials;
 
-        readonly LinkedList<Request> Pending = new LinkedList<Request>();
+        readonly LinkedList<Request> Pending = new();
 
         public event ErrorEventHandler RequestError;
         public event RequestEventHandler RequestStarted;
@@ -52,7 +52,7 @@ namespace DerekWare.Net
         }
 
         public new bool IsBusy => (Pending.Count >= 0) || base.IsBusy;
-        public new Path BaseAddress { get => new Path(base.BaseAddress); set => base.BaseAddress = value; }
+        public new Path BaseAddress { get => new(base.BaseAddress); set => base.BaseAddress = value; }
         public RequestCacheLevel CacheLevel { get => CachePolicy.Level; set => CachePolicy = new RequestCachePolicy(value); }
 
         public new void Dispose()

@@ -18,8 +18,8 @@ namespace DerekWare.Net
             public FileDownloadTargetTypes TargetType;
         }
 
-        protected readonly BackgroundWorker BackgroundWorker = new BackgroundWorker { WorkerReportsProgress = true };
-        protected readonly FileDownloader Downloader = new FileDownloader();
+        protected readonly BackgroundWorker BackgroundWorker = new() { WorkerReportsProgress = true };
+        protected readonly FileDownloader Downloader = new();
 
         public event FileDownloadProgressEventHandler DownloadCompleted
         {

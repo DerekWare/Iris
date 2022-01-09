@@ -10,7 +10,7 @@ namespace DerekWare.Collections
     /// </summary>
     public class OrderedDictionary<TKey, TValue> : SynchronizedDictionary<TKey, TValue>, IList<KeyValuePair<TKey, TValue>>
     {
-        protected readonly List<KeyValuePair<TKey, TValue>> List = new List<KeyValuePair<TKey, TValue>>();
+        protected readonly List<KeyValuePair<TKey, TValue>> List = new();
 
         public OrderedDictionary()
         {
@@ -21,9 +21,14 @@ namespace DerekWare.Collections
         {
         }
 
-        public OrderedDictionary(IDictionary<TKey, TValue> other)
-            : base(other)
+        public OrderedDictionary(IDictionary<TKey, TValue> other, IEqualityComparer<TKey> comparer = null)
+            : base(other, comparer)
         {
+        }
+
+        public OrderedDictionary(IEnumerable<KeyValuePair<TKey, TValue>> other, IEqualityComparer<TKey> comparer = null)
+        {
+            AddRange(other);
         }
 
         public new IEnumerable<TKey> Keys => List.Select(i => i.Key);
@@ -36,6 +41,14 @@ namespace DerekWare.Collections
             {
                 List.Add(key.ToKeyValuePair(value));
                 base.Add(key, value);
+            }
+        }
+
+        public override void AddRange(IEnumerable<KeyValuePair<TKey, TValue>> items)
+        {
+            lock(SyncRoot)
+            {
+                base.AddRange(items);
             }
         }
 

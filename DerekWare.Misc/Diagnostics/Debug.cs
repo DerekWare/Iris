@@ -6,7 +6,7 @@ namespace DerekWare.Diagnostics
 {
     public static class Debug
     {
-        public static readonly TraceDispatcher DefaultTraceTarget = new TraceDispatcher();
+        public static readonly TraceDispatcher DefaultTraceTarget = new();
 
         static Debug()
         {

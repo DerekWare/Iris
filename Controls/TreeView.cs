@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using DerekWare.Collections;
 
 namespace DerekWare.Iris
 {
@@ -9,7 +10,6 @@ namespace DerekWare.Iris
     {
         protected new bool DesignMode => base.DesignMode || Extensions.IsDesignMode();
 
-        // Intelligently adds or updates nodes using the correct node type and automatically sorted
         public class TreeNode : System.Windows.Forms.TreeNode
         {
             public TreeNode(string text)
@@ -17,7 +17,7 @@ namespace DerekWare.Iris
                 Text = text;
             }
 
-            public IEnumerable<TreeNode> AllChildNodes => GetAllChildNodes(Nodes);
+            public IReadOnlyList<TreeNode> AllNodes => GetAllNodes<TreeNode>(Nodes).ToList();
 
             public virtual T Add<T>(T child)
                 where T : TreeNode
@@ -35,52 +35,38 @@ namespace DerekWare.Iris
             public static T Find<T>(TreeNodeCollection parent, string text)
                 where T : TreeNode
             {
-                return Find<T>(parent, i => i.Text.Equals(text));
+                return Find<T>(parent, i => Equals(i.Text, text));
             }
 
-            public static T Find<T>(TreeNodeCollection parent, Func<T, bool> wherePredicate)
+            public static T Find<T>(TreeNodeCollection parent, Func<T, bool> predicate)
                 where T : TreeNode
             {
-                return parent.OfType<T>().FirstOrDefault(wherePredicate);
+                return parent.OfType<T>().FirstOrDefault(predicate);
             }
 
             public static int FindInsertionPoint(TreeNodeCollection parent, TreeNode child)
             {
-                var index = 0;
-
-                foreach(TreeNode i in parent)
-                {
-                    if(string.Compare(child.Text, i.Text, StringComparison.CurrentCulture) < 0)
-                    {
-                        break;
-                    }
-
-                    ++index;
-                }
-
-                return index;
+                return parent.FindInsertionPoint(child, (x, y) => StringComparer.OrdinalIgnoreCase.Compare(x.Text, y.Text));
             }
 
-            public static IEnumerable<TreeNode> GetAllChildNodes(TreeNodeCollection parent)
+            public static IEnumerable<T> GetAllNodes<T>(TreeNodeCollection parent)
+                where T : TreeNode
             {
-                foreach(TreeNode node in parent)
+                foreach(var node in parent.OfType<T>())
                 {
                     yield return node;
-                }
 
-                foreach(TreeNode node in parent)
-                {
-                    foreach(var i in GetAllChildNodes(node.Nodes))
+                    foreach(var i in GetAllNodes<T>(node.Nodes))
                     {
                         yield return i;
                     }
                 }
             }
 
-            public static void Remove<T>(TreeNodeCollection parent, Func<T, bool> wherePredicate)
+            public static void Remove<T>(TreeNodeCollection parent, Func<T, bool> predicate)
                 where T : TreeNode
             {
-                parent.OfType<T>().Where(wherePredicate).ToList().ForEach(parent.Remove);
+                parent.RemoveWhere(predicate);
             }
         }
     }

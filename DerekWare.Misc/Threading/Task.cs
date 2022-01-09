@@ -12,7 +12,7 @@ namespace DerekWare.Threading
     /// </summary>
     public class Task
     {
-        protected readonly ManualResetEventSlim CompletionEvent = new ManualResetEventSlim();
+        protected readonly ManualResetEventSlim CompletionEvent = new();
 
         public event TaskCompletedEventHandler TaskCompleted;
 

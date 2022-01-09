@@ -5,14 +5,14 @@ namespace DerekWare.IO.Serialization
 {
     public abstract class XmlSerializer
     {
-        public static readonly XmlWriterSettings DefaultSettings = new XmlWriterSettings { Indent = true, IndentChars = "\t" };
+        public static readonly XmlWriterSettings DefaultSettings = new() { Indent = true, IndentChars = "\t" };
     }
 
     public class XmlSerializer<T> : XmlSerializer, IStreamSerializer<T>, IStreamDeserializer<T>
     {
-        public static readonly XmlSerializer<T> Default = new XmlSerializer<T>();
+        public static readonly XmlSerializer<T> Default = new();
 
-        readonly System.Xml.Serialization.XmlSerializer Serializer = new System.Xml.Serialization.XmlSerializer(typeof(T));
+        readonly System.Xml.Serialization.XmlSerializer Serializer = new(typeof(T));
         readonly XmlWriterSettings Settings;
 
         public XmlSerializer()

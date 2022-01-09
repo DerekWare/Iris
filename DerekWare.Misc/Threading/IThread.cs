@@ -36,7 +36,7 @@ namespace DerekWare.Threading
 
     public class CancellationRequestedEventArgs : EventArgs
     {
-        public static readonly CancellationRequestedEventArgs Default = new CancellationRequestedEventArgs();
+        public static readonly CancellationRequestedEventArgs Default = new();
     }
 
     public class DoWorkEventArgs : EventArgs

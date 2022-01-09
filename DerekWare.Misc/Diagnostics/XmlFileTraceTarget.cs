@@ -9,7 +9,7 @@ namespace DerekWare.Diagnostics
     {
         long IsDisposed;
         StreamWriter StreamWriter;
-        XmlSerializer XmlSerializer = new XmlSerializer(typeof(TraceContext));
+        XmlSerializer XmlSerializer = new(typeof(TraceContext));
         XmlWriter XmlWriter;
 
         public XmlFileTraceTarget(string fileName = null, bool append = false)

@@ -18,7 +18,7 @@ namespace DerekWare.IO
 
     public class FileInfoComparer : IComparer<FileInfo>, IComparer<Path>, IEqualityComparer<FileInfo>, IEqualityComparer<Path>
     {
-        public static readonly FileInfoComparer Default = new FileInfoComparer();
+        public static readonly FileInfoComparer Default = new();
 
         static readonly long FileTimeThreshold = TimeSpan.FromSeconds(2).Ticks;
 

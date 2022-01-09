@@ -10,10 +10,10 @@ namespace DerekWare.Threading
 {
     public class TaskFactory : IReadOnlyCollection<Task>, IDisposable
     {
-        protected readonly LinkedList<Task> Active = new LinkedList<Task>();
-        protected readonly LinkedList<Task> Pending = new LinkedList<Task>();
+        protected readonly LinkedList<Task> Active = new();
+        protected readonly LinkedList<Task> Pending = new();
         protected readonly List<Thread> Threads;
-        protected readonly ManualResetEvent WakeEvent = new ManualResetEvent(false);
+        protected readonly ManualResetEvent WakeEvent = new(false);
 
         public event TaskCompletedEventHandler TaskCompleted;
 
@@ -81,7 +81,7 @@ namespace DerekWare.Threading
             }
         }
 
-        public object SyncRoot { get; set; } = new object();
+        public object SyncRoot { get; set; } = new();
 
         /// <summary>
         ///     Pops the next node off the pending list and moves it to the active list.

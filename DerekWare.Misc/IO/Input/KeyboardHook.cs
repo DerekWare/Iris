@@ -11,7 +11,7 @@ namespace DerekWare.IO.Input
     /// </summary>
     public class KeyboardHook : IDisposable
     {
-        public static readonly KeyboardHook Default = new KeyboardHook();
+        public static readonly KeyboardHook Default = new();
 
         readonly NativeMethods.WindowsHookProc _HookProc;
         IntPtr _HookHandle;
@@ -51,7 +51,7 @@ namespace DerekWare.IO.Input
             Dispose();
         }
 
-        public object SyncRoot { get; } = new object();
+        public object SyncRoot { get; } = new();
 
         IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam)
         {

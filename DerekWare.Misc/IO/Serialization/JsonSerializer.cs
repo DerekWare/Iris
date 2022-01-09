@@ -5,12 +5,12 @@ namespace DerekWare.IO.Serialization
 {
     public abstract class JsonSerializer
     {
-        public static readonly DataContractJsonSerializerSettings DefaultSettings = new DataContractJsonSerializerSettings { UseSimpleDictionaryFormat = true };
+        public static readonly DataContractJsonSerializerSettings DefaultSettings = new() { UseSimpleDictionaryFormat = true };
     }
 
     public class JsonSerializer<T> : JsonSerializer, IStreamSerializer<T>, IStreamDeserializer<T>
     {
-        public static readonly JsonSerializer<T> Default = new JsonSerializer<T>();
+        public static readonly JsonSerializer<T> Default = new();
 
         readonly DataContractJsonSerializer Serializer;
 

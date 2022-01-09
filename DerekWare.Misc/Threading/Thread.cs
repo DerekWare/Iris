@@ -182,7 +182,7 @@ namespace DerekWare.Threading
         public virtual bool SupportsCancellation { get; set; }
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public object SyncRoot { get; set; } = new object();
+        public object SyncRoot { get; set; } = new();
 
         /// <summary>
         ///     User context.

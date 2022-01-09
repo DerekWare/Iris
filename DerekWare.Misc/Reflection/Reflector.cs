@@ -17,7 +17,7 @@ namespace DerekWare.Reflection
     {
         public const BindingFlags DefaultBindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
 
-        public static readonly ValueMap<Type, Type> MemberInstanceTypes = new ValueMap<Type, Type>
+        public static readonly ValueMap<Type, Type> MemberInstanceTypes = new()
         {
             { typeof(FieldInfo), typeof(Field) },
             { typeof(PropertyInfo), typeof(Property) },

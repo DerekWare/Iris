@@ -8,9 +8,9 @@ namespace DerekWare.Diagnostics
 {
     public class TraceDispatcher : ITraceTarget, ICollection<ITraceTarget>
     {
-        readonly Thread DispatchThread = new Thread { KeepAlive = true };
-        readonly SynchronizedQueue<TraceContext> Pending = new SynchronizedQueue<TraceContext>();
-        readonly List<ITraceTarget> Targets = new List<ITraceTarget>();
+        readonly Thread DispatchThread = new() { KeepAlive = true };
+        readonly SynchronizedQueue<TraceContext> Pending = new();
+        readonly List<ITraceTarget> Targets = new();
 
         public TraceDispatcher()
         {

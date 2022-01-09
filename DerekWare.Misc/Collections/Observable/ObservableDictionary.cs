@@ -11,7 +11,7 @@ namespace DerekWare.Collections
     {
     }
 
-    public interface IReadOnlyObservableDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>, ILookup<TKey, TValue>, IObservableCollectionNotifier
+    public interface IReadOnlyObservableDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>, IMap<TKey, TValue>, IObservableCollectionNotifier
     {
         IEqualityComparer<TKey> Comparer { get; }
     }
@@ -20,7 +20,7 @@ namespace DerekWare.Collections
     public class ObservableDictionary<TKey, TValue> : IObservableDictionary<TKey, TValue>
     {
         protected readonly Dictionary<TKey, TValue> Items;
-        protected readonly ObservableDictionaryNotifier<TKey> Notifier = new ObservableDictionaryNotifier<TKey>();
+        protected readonly ObservableDictionaryNotifier<TKey> Notifier = new();
 
         public virtual event NotifyCollectionChangedEventHandler CollectionChanged
         {
@@ -44,9 +44,14 @@ namespace DerekWare.Collections
             Items = new Dictionary<TKey, TValue>(comparer ?? EqualityComparer<TKey>.Default);
         }
 
-        public ObservableDictionary(IDictionary<TKey, TValue> other)
+        public ObservableDictionary(IDictionary<TKey, TValue> other, IEqualityComparer<TKey> comparer = null)
         {
-            Items = new Dictionary<TKey, TValue>(other);
+            Items = new Dictionary<TKey, TValue>(other, comparer ?? EqualityComparer<TKey>.Default);
+        }
+
+        public ObservableDictionary(IEnumerable<KeyValuePair<TKey, TValue>> other, IEqualityComparer<TKey> comparer = null)
+        {
+            Items = other.ToDictionary(comparer ?? EqualityComparer<TKey>.Default);
         }
 
         public virtual IEqualityComparer<TKey> Comparer => Items.Comparer;
@@ -55,7 +60,7 @@ namespace DerekWare.Collections
         public virtual ICollection<TKey> Keys => Items.Keys;
         public virtual ICollection<TValue> Values => Items.Values;
         public virtual bool IsReadOnly { get; protected set; } = false;
-        public object SyncRoot { get; set; } = new object();
+        public object SyncRoot { get; set; } = new();
 
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
         IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
@@ -67,7 +72,7 @@ namespace DerekWare.Collections
             AddRange(items);
         }
 
-        public void AddRange(IEnumerable<KeyValuePair<TKey, TValue>> items)
+        public virtual void AddRange(IEnumerable<KeyValuePair<TKey, TValue>> items)
         {
             items.ForEach(Add);
         }

@@ -20,8 +20,8 @@ namespace DerekWare.Collections
 
     public class SequenceComparer<T> : IEqualityComparer<IEnumerable<T>>, IEqualityComparer
     {
-        public static readonly SequenceComparer<T> Default = new SequenceComparer<T>(SequenceComparisonType.Sequence);
-        public static readonly SequenceComparer<T> DefaultIgnoreOrder = new SequenceComparer<T>(SequenceComparisonType.Contents);
+        public static readonly SequenceComparer<T> Default = new(SequenceComparisonType.Sequence);
+        public static readonly SequenceComparer<T> DefaultIgnoreOrder = new(SequenceComparisonType.Contents);
 
         public readonly SequenceComparisonType ComparisonType;
         public readonly IEqualityComparer<T> EqualityComparer;

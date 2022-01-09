@@ -4,8 +4,8 @@ namespace DerekWare.Strings
 {
     public class CharacterComparer : IEqualityComparer<char>, IComparer<char>
     {
-        public static readonly CharacterComparer Default = new CharacterComparer(false);
-        public static readonly CharacterComparer DefaultIgnoreCase = new CharacterComparer(true);
+        public static readonly CharacterComparer Default = new(false);
+        public static readonly CharacterComparer DefaultIgnoreCase = new(true);
 
         public readonly bool IgnoreCase;
 

@@ -13,8 +13,8 @@ namespace DerekWare.IO
     public partial class Path
     {
         public static Path ApplicationDataPath => GetSpecialFolderPath(Environment.SpecialFolder.ApplicationData) + Assembly.GetEntryAssembly().GetName().Name;
-        public static Path CurrentDirectory => new Path(Environment.CurrentDirectory);
-        public static Path SystemDirectory => new Path(Environment.SystemDirectory);
+        public static Path CurrentDirectory => new(Environment.CurrentDirectory);
+        public static Path SystemDirectory => new(Environment.SystemDirectory);
 
         public bool IsDirectoryEmpty => DirectoryExists && !GetFileSystemEntries().Any();
 

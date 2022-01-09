@@ -6,9 +6,9 @@ namespace DerekWare.IO.Serialization
 {
     public class DataContractSerializer<T> : IStreamSerializer<T>, IStreamDeserializer<T>
     {
-        public static readonly DataContractSerializer<T> Default = new DataContractSerializer<T>();
+        public static readonly DataContractSerializer<T> Default = new();
 
-        readonly DataContractSerializer Serializer = new DataContractSerializer(typeof(T));
+        readonly DataContractSerializer Serializer = new(typeof(T));
 
         #region IStreamDeserializer<T>
 

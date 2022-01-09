@@ -54,8 +54,13 @@ namespace DerekWare.Collections
         {
         }
 
-        public SynchronizedDictionary(IDictionary<TKey, TValue> other)
-            : base(other)
+        public SynchronizedDictionary(IDictionary<TKey, TValue> other, IEqualityComparer<TKey> comparer = null)
+            : base(other, comparer)
+        {
+        }
+
+        public SynchronizedDictionary(IEnumerable<KeyValuePair<TKey, TValue>> other, IEqualityComparer<TKey> comparer = null)
+            : base(other, comparer)
         {
         }
 

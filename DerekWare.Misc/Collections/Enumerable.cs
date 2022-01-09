@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace DerekWare.Collections
 {
@@ -515,7 +514,7 @@ namespace DerekWare.Collections
             return value;
         }
 
-        public static TValue GetValue<TKey, TValue>(this IReadOnlyLookup<TKey, TValue> @this, TKey key)
+        public static TValue GetValue<TKey, TValue>(this IReadOnlyMap<TKey, TValue> @this, TKey key)
         {
             @this.TryGetValue(key, out var value);
             return value;
@@ -537,12 +536,12 @@ namespace DerekWare.Collections
             return (TNew)value;
         }
 
-        public static TValue GetValueOrNew<TKey, TValue>(this ILookup<TKey, TValue> @this, TKey key, params object[] args)
+        public static TValue GetValueOrNew<TKey, TValue>(this IMap<TKey, TValue> @this, TKey key, params object[] args)
         {
             return GetValueOrNew<TKey, TValue, TValue>(@this, key, args);
         }
 
-        public static TNew GetValueOrNew<TKey, TValue, TNew>(this ILookup<TKey, TValue> @this, TKey key, params object[] args)
+        public static TNew GetValueOrNew<TKey, TValue, TNew>(this IMap<TKey, TValue> @this, TKey key, params object[] args)
             where TNew : TValue
         {
             if(!@this.TryGetValue(key, out var value) || (null == value))
@@ -636,17 +635,12 @@ namespace DerekWare.Collections
             return items.SafeEmpty().Concat(@this.SafeEmpty());
         }
 
-        public static IEnumerable<int> Range(this int count)
+        public static IEnumerable<int> TakeRange(int start, int count)
         {
-            return Range(0, 1, count);
+            return TakeRange(start, 1, count);
         }
 
-        public static IEnumerable<int> Range(int start, int count)
-        {
-            return Range(start, 1, count);
-        }
-
-        public static IEnumerable<int> Range(int start, int step, int count)
+        public static IEnumerable<int> TakeRange(int start, int step, int count)
         {
             for(var i = start; i < count; i += step)
             {
@@ -802,7 +796,7 @@ namespace DerekWare.Collections
             return true;
         }
 
-        public static bool SetValue<TKey, TValue>(this ILookup<TKey, TValue> @this, TKey key, TValue value, IEqualityComparer<TValue> comparer = null)
+        public static bool SetValue<TKey, TValue>(this IMap<TKey, TValue> @this, TKey key, TValue value, IEqualityComparer<TValue> comparer = null)
         {
             if((null != comparer) && @this.TryGetValue(key, out var c) && comparer.Equals(c, value))
             {
@@ -840,6 +834,26 @@ namespace DerekWare.Collections
             var i = 0;
 
             using(var e = items.SafeEmpty().GetEnumerator())
+            {
+                while(e.MoveNext())
+                {
+                    if(comparer(item, e.Current) < 0)
+                    {
+                        break;
+                    }
+
+                    ++i;
+                }
+            }
+
+            return i;
+        }
+
+        public static int FindInsertionPoint<T>(this IList items, T item, Func<T, T, int> comparer)
+        {
+            var i = 0;
+
+            using(var e = items.SafeEmpty().OfType<T>().GetEnumerator())
             {
                 while(e.MoveNext())
                 {

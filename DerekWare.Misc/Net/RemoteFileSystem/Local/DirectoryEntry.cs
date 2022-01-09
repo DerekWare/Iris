@@ -18,7 +18,7 @@ namespace DerekWare.Net.RemoteFileSystem.Local
         public virtual FileAttributes Attributes => Info.Attributes;
         public virtual DateTime LastWriteTime => Info.LastWriteTime;
         public virtual string Name => Info.Name;
-        public virtual Path Path => new Path(Info.FullName);
+        public virtual Path Path => new(Info.FullName);
 
         public override string ToString()
         {
@@ -30,7 +30,7 @@ namespace DerekWare.Net.RemoteFileSystem.Local
     {
         public static IDirectoryEntry Create(Type type, Path path)
         {
-            return path.Attributes.HasFlag(FileAttributes.Directory) ? (IDirectoryEntry)new Directory(new DirectoryInfo(path)) : new File(new FileInfo(path));
+            return path.Attributes.HasFlag(FileAttributes.Directory) ? new Directory(new DirectoryInfo(path)) : new File(new FileInfo(path));
         }
 
         public static T Create<T>(Path path)

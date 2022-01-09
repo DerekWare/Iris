@@ -29,7 +29,7 @@ namespace DerekWare.Collections
     public class ObservableList<T> : ObservableCollectionNotifier<T>, IObservableList<T>, IList, IEquatable<IEnumerable<T>>, IEquatable<object>
     {
         protected readonly List<T> Items;
-        protected readonly ManualResetEventSlim ItemsAvailableEvent = new ManualResetEventSlim(false);
+        protected readonly ManualResetEventSlim ItemsAvailableEvent = new(false);
 
         public ObservableList()
         {
@@ -52,7 +52,7 @@ namespace DerekWare.Collections
         public virtual bool IsSynchronized => false;
         public WaitHandle ItemsAvailable => ItemsAvailableEvent.WaitHandle;
         public virtual int Capacity { get => Items.Capacity; set => Items.Capacity = value; }
-        public object SyncRoot { get; set; } = new object();
+        public object SyncRoot { get; set; } = new();
 
         public virtual T this[int index]
         {
