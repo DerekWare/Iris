@@ -9,8 +9,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
     [Description("Randomly selects a zone and color and expands outward.")]
     public class Bloom : MultiZoneColorEffectRenderer
     {
-        readonly Random Random = new();
-
         Color BloomColor;
         int CurrentCount;
         int TargetCount = -1;
@@ -50,8 +48,8 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 CurrentCount = 1;
 
                 BloomColor = new Color(Random.NextDouble(),
-                                       (Random.NextDouble() * (MaxSaturation - MinSaturation)) + MinSaturation,
-                                       (Random.NextDouble() * (MaxBrightness - MinBrightness)) + MinBrightness,
+                                       Random.NextDouble(MinSaturation, MaxSaturation),
+                                       Random.NextDouble(MinBrightness, MaxBrightness),
                                        Kelvin);
             }
 

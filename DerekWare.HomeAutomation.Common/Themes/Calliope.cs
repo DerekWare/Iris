@@ -8,8 +8,6 @@ namespace DerekWare.HomeAutomation.Common.Themes
 {
     public class Calliope : Theme
     {
-        readonly Random Random = new();
-
         [Browsable(false)]
         public override bool IsDynamic => true;
 
@@ -42,7 +40,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
                 palette[i] = new Color
                 {
                     Hue = Random.NextDouble(),
-                    Saturation = (Random.NextDouble() * (MaxSaturation - MinSaturation)) + MinSaturation,
+                    Saturation = Random.NextDouble(MinSaturation, MaxSaturation),
                     Brightness = Brightness,
                     Kelvin = Kelvin
                 };

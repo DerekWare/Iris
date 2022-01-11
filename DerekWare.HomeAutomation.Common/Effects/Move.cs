@@ -17,8 +17,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
             Random
         }
 
-        protected readonly Random Random = new();
-
         [DefaultValue(Common.Direction.Forward)]
         protected Direction Direction = Direction.Forward;
 
@@ -108,7 +106,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                     // If we passed the randomly chosen position, reverse direction
                     if(renderState.TotalElapsed >= NextChange)
                     {
-                        NextChange += TimeSpan.FromSeconds(Duration.TotalSeconds * Random.NextDouble());
+                        NextChange += Random.NextTimeSpan(Duration);
                         Direction = Direction == Direction.Forward ? Direction.Backward : Direction.Forward;
                     }
 

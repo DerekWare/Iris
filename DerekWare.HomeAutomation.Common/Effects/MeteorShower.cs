@@ -24,20 +24,20 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Range(1, 10)]
         public int MinCount = 1;
 
-        readonly Random Random = new();
         MeteorDirection Direction;
         MeteorContext[] MeteorContexts;
-
         TimeSpan NextTime = TimeSpan.MinValue;
-        int Offset;
+        double Elapsed;
 
         public MeteorShower()
         {
-            Duration = TimeSpan.FromSeconds(30);
+            Duration = TimeSpan.FromSeconds(10);
             RefreshRate = TimeSpan.FromMilliseconds(50);
+            MinDelay = TimeSpan.FromSeconds(1);
+            MaxDelay = TimeSpan.FromSeconds(30);
         }
 
-        [Description("The maximum time between meteors.")]
+        [Description("The speed at which the meteors travel across your device.")]
         public override TimeSpan Duration { get => base.Duration; set => base.Duration = value; }
 
         [Range(0.0, 1.0)]
@@ -45,6 +45,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         [Range(1, 10)]
         public int MaxCount { get; set; } = 10;
+
+        [Description("The maximum time between showers.")]
+        public TimeSpan MaxDelay { get; set; }
 
         [Range(1, 100)]
         public int MaxDistance { get; set; } = 50;
@@ -57,6 +60,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         [Range(0.0, 1.0)]
         public double MinBrightness { get; set; } = 0.25;
+
+        [Description("The minimum time between showers.")]
+        public TimeSpan MinDelay { get; set; }
 
         [Range(1, 100)]
         public int MinDistance { get; set; } = 1;
@@ -74,6 +80,8 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration)
         {
+            transitionDuration = TimeSpan.Zero;
+
             if(renderState.TotalElapsed < NextTime)
             {
                 colors = Colors.Colors.Black.Repeat(ZoneCount).ToArray();
@@ -84,8 +92,8 @@ namespace DerekWare.HomeAutomation.Common.Effects
             if(MeteorContexts is null)
             {
                 MeteorContexts = CreateContexts().ToArray();
-                Direction = Random.NextDouble() >= 0.5 ? MeteorDirection.Forward : MeteorDirection.Backward;
-                Offset = 0;
+                Direction = Random.NextEnumValue<MeteorDirection>();
+                Elapsed = 0;
             }
 
             // Imagine an offscreen drawing surface that includes all the visible color zones, 
@@ -102,7 +110,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
             colors = Colors.Colors.Black.Repeat(totalLength).ToArray();
 
             // meteorOffset represents where in the total zones the meteors are currently positioned
-            var offset = Offset++;
+            Elapsed += renderState.CycleIncrement;
+            var position = Elapsed * totalLength;
+            var offset = Math.Min((int)Math.Round(position), meteorLength + ZoneCount);
 
             // Copy the meteor colors into the larger color array
             foreach(var meteor in MeteorContexts)
@@ -119,13 +129,12 @@ namespace DerekWare.HomeAutomation.Common.Effects
             }
 
             colors = meteorColors.ToArray();
-            transitionDuration = TimeSpan.Zero;
 
             // Reset next pass?
-            if(Offset >= (meteorLength + ZoneCount))
+            if(offset >= (meteorLength + ZoneCount))
             {
                 MeteorContexts = null;
-                NextTime = renderState.TotalElapsed + TimeSpan.FromSeconds(GetRandomValue(0, Duration.TotalSeconds));
+                NextTime = renderState.TotalElapsed + TimeSpan.FromSeconds(Random.NextDouble(MinDelay.TotalSeconds, MaxDelay.TotalSeconds));
             }
 
             return true;
@@ -134,27 +143,22 @@ namespace DerekWare.HomeAutomation.Common.Effects
         MeteorContext CreateContext()
         {
             return new MeteorContext(
-                new Color(GetRandomValue(MinHue, MaxHue), GetRandomValue(MinSaturation, MaxSaturation), GetRandomValue(MinBrightness, MaxBrightness), 1),
-                (int)Math.Round(GetRandomValue(MinLength, MaxLength)));
+                new Color(Random.NextDouble(MinHue, MaxHue), Random.NextDouble(MinSaturation, MaxSaturation), Random.NextDouble(MinBrightness, MaxBrightness), 1),
+                (int)Math.Round(Random.NextDouble(MinLength, MaxLength)));
         }
 
         IEnumerable<MeteorContext> CreateContexts()
         {
-            var count = (int)Math.Round(GetRandomValue(MinCount, MaxCount));
+            var count = (int)Math.Round(Random.NextDouble(MinCount, MaxCount));
             var offset = 0;
 
             for(var i = 0; i < count; ++i)
             {
                 var c = CreateContext();
                 c.Offset = offset;
-                offset += c.Length + (int)Math.Round(GetRandomValue(MinDistance, MaxDistance));
+                offset += c.Length + (int)Math.Round(Random.NextDouble(MinDistance, MaxDistance));
                 yield return c;
             }
-        }
-
-        double GetRandomValue(double min, double max)
-        {
-            return (Random.NextDouble() * (max - min)) + min;
         }
 
         class MeteorContext

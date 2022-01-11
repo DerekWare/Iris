@@ -8,8 +8,6 @@ namespace DerekWare.HomeAutomation.Common.Themes
 {
     public class Spectrum : Theme
     {
-        readonly Random Random = new();
-
         [Browsable(false)]
         public override bool IsDynamic => true;
 

@@ -178,6 +178,7 @@
     <Compile Include="Process.cs" />
     <Compile Include="Query\Clause.cs" />
     <Compile Include="Query\Expression.cs" />
+    <Compile Include="Random.cs" />
     <Compile Include="Ratio.cs" />
     <Compile Include="Reflection\Attributes.cs" />
     <Compile Include="Reflection\Enum.cs" />

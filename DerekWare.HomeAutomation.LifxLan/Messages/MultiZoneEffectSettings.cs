@@ -78,7 +78,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
         public MultiZoneEffectDirection Direction { get; set; } = MultiZoneEffectDirection.Left;
         public TimeSpan Duration { get; set; } = TimeSpan.MaxValue;
         public MultiZoneEffectType EffectType { get; set; }
-        public uint InstanceId { get; set; } = (uint)new Random().Next(0x10000);
+        public uint InstanceId { get; set; } = (uint)Random.Next(0x10000);
 
         #region ICloneable
 

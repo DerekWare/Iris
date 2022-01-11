@@ -9,8 +9,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
     [Name("Random Solid"), Description("Selects a random color to apply to the device.")]
     public class RandomSolidSingleColorEffect : SingleColorEffectRenderer
     {
-        readonly Random Random = new();
-
         [Range(typeof(double), "0", "1")]
         public double Brightness { get; set; } = 1;
 
@@ -40,7 +38,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             {
                 Hue = Random.NextDouble(),
                 Brightness = Brightness,
-                Saturation = (Random.NextDouble() * (MaxSaturation - MinSaturation)) + MinSaturation,
+                Saturation = Random.NextDouble(MinSaturation, MaxSaturation),
                 Kelvin = Kelvin
             };
 

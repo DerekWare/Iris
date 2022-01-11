@@ -807,11 +807,10 @@ namespace DerekWare.Collections
             return true;
         }
 
-        public static List<T> Shuffle<T>(this IEnumerable<T> @this, Random random = null)
+        public static List<T> Shuffle<T>(this IEnumerable<T> @this)
         {
-            random = random ?? new Random();
             var result = new List<T>();
-            @this.ForEach(i => result.Insert(random.Next(result.Count + 1), i));
+            @this.ForEach(i => result.Insert(Random.Next(result.Count + 1), i));
             return result;
         }
 
