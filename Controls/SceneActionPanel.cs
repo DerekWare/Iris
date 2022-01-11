@@ -280,6 +280,11 @@ namespace DerekWare.Iris
                 return;
             }
 
+            if(InUpdate)
+            {
+                return;
+            }
+
             if(groupBox.Checked)
             {
                 if(sender == SolidColorPanel.GroupBox)

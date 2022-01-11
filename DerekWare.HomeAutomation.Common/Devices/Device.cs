@@ -147,10 +147,7 @@ namespace DerekWare.HomeAutomation.Common
                 colors = colors.Append(colors.Last().Repeat(ZoneCount - colors.Count)).ToArray();
             }
 
-            if(colors.SafeEmpty().SequenceEqual(Color))
-            {
-                return;
-            }
+            var redundant = colors.SafeEmpty().SequenceEqual(Color);
 
             _Color = colors.Select(i => i.Clone()).ToArray();
 
@@ -159,21 +156,28 @@ namespace DerekWare.HomeAutomation.Common
                 ApplyColor(_Color, transitionDuration);
             }
 
+            if(redundant)
+            {
+                return;
+            }
+
             OnStateChanged();
         }
 
         public virtual void SetPower(PowerState power, bool apply)
         {
-            if(Equals(power, Power))
-            {
-                return;
-            }
+            var redundant = Equals(power, Power);
 
             _Power = power;
 
             if(apply)
             {
                 ApplyPower(_Power);
+            }
+
+            if(redundant)
+            {
+                return;
             }
 
             OnStateChanged();

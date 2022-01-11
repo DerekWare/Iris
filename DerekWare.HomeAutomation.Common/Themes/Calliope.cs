@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using DerekWare.HomeAutomation.Common.Colors;
@@ -39,10 +38,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
             {
                 palette[i] = new Color
                 {
-                    Hue = Random.NextDouble(),
-                    Saturation = Random.NextDouble(MinSaturation, MaxSaturation),
-                    Brightness = Brightness,
-                    Kelvin = Kelvin
+                    Hue = Random.GetDouble(), Saturation = Random.GetDouble(MinSaturation, MaxSaturation), Brightness = Brightness, Kelvin = Kelvin
                 };
             }
 

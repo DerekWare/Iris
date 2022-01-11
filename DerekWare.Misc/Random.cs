@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using DerekWare.Collections;
 
 namespace DerekWare
 {
@@ -32,37 +34,17 @@ namespace DerekWare
             }
         }
 
-        public static int Next()
-        {
-            return Base.Next();
-        }
-
-        public static int Next(int minValue, int maxValue)
-        {
-            if(minValue > maxValue)
-            {
-                throw new IndexOutOfRangeException("minValue must be <= maxValue");
-            }
-
-            return Base.Next(minValue, maxValue);
-        }
-
-        public static int Next(int maxValue)
-        {
-            return Base.Next(maxValue);
-        }
-
-        public static bool NextBool()
+        public static bool GetBool()
         {
             return Base.Next(2) == 1;
         }
 
-        public static void NextBytes(byte[] buffer)
+        public static void GetBytes(byte[] buffer)
         {
             Base.NextBytes(buffer);
         }
 
-        public static double NextDouble(double minValue, double maxValue)
+        public static double GetDouble(double minValue, double maxValue)
         {
             if(minValue > maxValue)
             {
@@ -72,33 +54,90 @@ namespace DerekWare
             return (Base.NextDouble() * (maxValue - minValue)) + minValue;
         }
 
-        public static double NextDouble(double maxValue)
+        public static double GetDouble(double maxValue)
         {
             return Base.NextDouble() * maxValue;
         }
 
-        public static double NextDouble()
+        public static double GetDouble()
         {
             return Base.NextDouble();
         }
 
-        public static T NextEnumValue<T>()
+        public static T GetEnumValue<T>()
             where T : Enum
         {
-            var type = typeof(T);
-            var values = type.GetEnumValues();
-            var index = Base.Next(values.Length);
-            return (T)values.GetValue(index);
+            return GetItem<T>(typeof(T).GetEnumValues());
         }
 
-        public static TimeSpan NextTimeSpan(TimeSpan maxValue)
+        public static int GetInt()
         {
-            return TimeSpan.FromSeconds(NextDouble(maxValue.TotalSeconds));
+            return Base.Next();
         }
 
-        public static TimeSpan NextTimeSpan(TimeSpan minValue, TimeSpan maxValue)
+        public static int GetInt(int minValue, int maxValue)
         {
-            return TimeSpan.FromSeconds(NextDouble(minValue.TotalSeconds, maxValue.TotalSeconds));
+            if(minValue > maxValue)
+            {
+                throw new IndexOutOfRangeException("minValue must be <= maxValue");
+            }
+
+            return Base.Next(minValue, maxValue);
+        }
+
+        public static int GetInt(int maxValue)
+        {
+            return Base.Next(maxValue);
+        }
+
+        public static T GetItem<T>(IReadOnlyList<T> items)
+        {
+            if(items.IsNullOrEmpty())
+            {
+                throw new IndexOutOfRangeException("Empty collection");
+            }
+
+            return items[Base.Next(items.Count)];
+        }
+
+        public static T GetItem<T>(T[] items)
+        {
+            if(items.IsNullOrEmpty())
+            {
+                throw new IndexOutOfRangeException("Empty collection");
+            }
+
+            return items[Base.Next(items.Length)];
+        }
+
+        public static object GetItem(Array items)
+        {
+            if(items.IsNullOrEmpty())
+            {
+                throw new IndexOutOfRangeException("Empty collection");
+            }
+
+            return items.GetValue(Base.Next(items.Length));
+        }
+
+        public static T GetItem<T>(Array items)
+        {
+            if(items.IsNullOrEmpty())
+            {
+                throw new IndexOutOfRangeException("Empty collection");
+            }
+
+            return (T)GetItem(items);
+        }
+
+        public static TimeSpan GetTimeSpan(TimeSpan maxValue)
+        {
+            return TimeSpan.FromSeconds(GetDouble(maxValue.TotalSeconds));
+        }
+
+        public static TimeSpan GetTimeSpan(TimeSpan minValue, TimeSpan maxValue)
+        {
+            return TimeSpan.FromSeconds(GetDouble(minValue.TotalSeconds, maxValue.TotalSeconds));
         }
     }
 }

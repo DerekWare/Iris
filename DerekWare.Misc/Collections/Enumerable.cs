@@ -613,6 +613,11 @@ namespace DerekWare.Collections
             return @this?.Any() != true;
         }
 
+        public static bool IsNullOrEmpty(this Array @this)
+        {
+            return !(@this?.Length > 0);
+        }
+
         public static bool Overlaps<T>(this IEnumerable<T> left, IEnumerable<T> right, IEqualityComparer<T> comparer = null)
         {
             return new HashSet<T>(left, comparer ?? EqualityComparer<T>.Default).Overlaps(right);
@@ -810,7 +815,7 @@ namespace DerekWare.Collections
         public static List<T> Shuffle<T>(this IEnumerable<T> @this)
         {
             var result = new List<T>();
-            @this.ForEach(i => result.Insert(Random.Next(result.Count + 1), i));
+            @this.ForEach(i => result.Insert(Random.GetInt(result.Count + 1), i));
             return result;
         }
 

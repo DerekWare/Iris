@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.Reflection;
@@ -36,10 +35,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             color = new Color
             {
-                Hue = Random.NextDouble(),
-                Brightness = Brightness,
-                Saturation = Random.NextDouble(MinSaturation, MaxSaturation),
-                Kelvin = Kelvin
+                Hue = Random.GetDouble(), Brightness = Brightness, Saturation = Random.GetDouble(MinSaturation, MaxSaturation), Kelvin = Kelvin
             };
 
             return true;

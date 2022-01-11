@@ -65,6 +65,11 @@ namespace DerekWare.HomeAutomation.Common.Scenes
 
             base.Power = Power;
 
+            if(Power == PowerState.Off)
+            {
+                return true;
+            }
+
             if(Theme is not null)
             {
                 base.Theme = Theme;

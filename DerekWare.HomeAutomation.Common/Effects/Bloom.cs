@@ -43,13 +43,13 @@ namespace DerekWare.HomeAutomation.Common.Effects
             // a random number of zones.
             if(CurrentCount > TargetCount)
             {
-                ZoneIndex = Random.Next(0, ZoneCount);
-                TargetCount = Random.Next(3, ZoneCount);
+                ZoneIndex = Random.GetInt(0, ZoneCount);
+                TargetCount = Random.GetInt(3, ZoneCount);
                 CurrentCount = 1;
 
-                BloomColor = new Color(Random.NextDouble(),
-                                       Random.NextDouble(MinSaturation, MaxSaturation),
-                                       Random.NextDouble(MinBrightness, MaxBrightness),
+                BloomColor = new Color(Random.GetDouble(),
+                                       Random.GetDouble(MinSaturation, MaxSaturation),
+                                       Random.GetDouble(MinBrightness, MaxBrightness),
                                        Kelvin);
             }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using DerekWare.Collections;
-using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common.Colors;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -17,14 +16,14 @@ namespace DerekWare.HomeAutomation.Common.Effects
             Random
         }
 
-        [DefaultValue(Common.Direction.Forward)]
+        protected bool ClampRefreshRate = true;
+
+        [DefaultValue(Direction.Forward)]
         protected Direction Direction = Direction.Forward;
 
         protected double IncrementalOffset;
 
         protected TimeSpan NextChange = TimeSpan.Zero;
-
-        protected bool ClampRefreshRate = true;
 
         public Move()
         {
@@ -106,7 +105,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                     // If we passed the randomly chosen position, reverse direction
                     if(renderState.TotalElapsed >= NextChange)
                     {
-                        NextChange += Random.NextTimeSpan(Duration);
+                        NextChange += Random.GetTimeSpan(Duration);
                         Direction = Direction == Direction.Forward ? Direction.Backward : Direction.Forward;
                     }
 
@@ -123,7 +122,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
             {
                 return base.ValidateRefreshRate();
             }
-            
+
             var refreshRate = base.ValidateRefreshRate().TotalSeconds;
             refreshRate = Math.Max(refreshRate, 1.0 / ZoneCount);
             refreshRate = Math.Max(refreshRate, 1.0 / Duration.TotalSeconds);

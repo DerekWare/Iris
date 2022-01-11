@@ -34,7 +34,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
     class Message
     {
         public const int PacketHeaderSize = 36;
-        public static readonly uint ExpectedSource = (uint)Random.Next(2, int.MaxValue);
+        public static readonly uint ExpectedSource = (uint)Random.GetInt(2, int.MaxValue);
 
         static readonly object SequenceLock = new();
         static byte NextSequenceValue;

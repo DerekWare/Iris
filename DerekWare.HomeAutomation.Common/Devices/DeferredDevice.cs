@@ -203,7 +203,7 @@ namespace DerekWare.HomeAutomation.Common.Devices
             {
                 return Equals(deferredDevice);
             }
-            
+
             return Device?.Equals(other) ?? false;
         }
 

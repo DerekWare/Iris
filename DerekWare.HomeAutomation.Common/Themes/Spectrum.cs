@@ -17,7 +17,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
         [Range(0.0, 1.0)]
         public double Brightness { get; set; } = 1;
 
-        [DefaultValue(Common.Direction.Forward)]
+        [DefaultValue(Direction.Forward)]
         public Direction Direction { get; set; } = Direction.Forward;
 
         [Range(0.0, 1.0)]
@@ -44,7 +44,7 @@ namespace DerekWare.HomeAutomation.Common.Themes
 
         public Color[] GetPalette(int count)
         {
-            var offset = RandomOffset ? Random.NextDouble() : Offset;
+            var offset = RandomOffset ? Random.GetDouble() : Offset;
             var colors = new Color[count];
 
             for(var i = 0; i < count; ++i)
