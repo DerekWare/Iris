@@ -37,7 +37,7 @@ namespace DerekWare.Iris
 
         protected virtual void ExpandCheckedNodes()
         {
-            ExpandNodes(TreeNode.GetAllNodes(Nodes).Where(i => i.Checked));
+            ExpandNodes(TreeNode.GetAllNodes<TreeNode>(Nodes).Where(i => i.Checked));
         }
 
         protected virtual void ExpandNodes(IEnumerable<TreeNode> nodes)

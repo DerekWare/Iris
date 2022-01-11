@@ -259,7 +259,7 @@ namespace DerekWare.Iris
 
             public static IEnumerable<IDevice> GetAllChildDevices(TreeNodeCollection parent)
             {
-                return GetAllNodes(parent).OfType<DeviceNode>().Select(i => i.Device);
+                return GetAllNodes<DeviceNode>(parent).Select(i => i.Device);
             }
 
             public static void Remove(TreeNodeCollection parent, IDevice device)

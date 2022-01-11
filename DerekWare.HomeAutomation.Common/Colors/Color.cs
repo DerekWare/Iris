@@ -212,6 +212,36 @@ namespace DerekWare.HomeAutomation.Common.Colors
 
         #endregion
 
+        public static Color operator +(Color src, double value)
+        {
+            return new Color(src.Hue + value, src.Saturation + value, src.Brightness + value, src.Kelvin + value);
+        }
+
+        public static Color operator +(Color x, Color y)
+        {
+            return new Color(x.Hue + y.Hue, x.Saturation + y.Saturation, x.Brightness + y.Brightness, x.Kelvin + y.Kelvin);
+        }
+
+        public static Color operator *(Color src, double value)
+        {
+            return new Color(src.Hue * value, src.Saturation * value, src.Brightness * value, src.Kelvin * value);
+        }
+
+        public static Color operator *(Color x, Color y)
+        {
+            return new Color(x.Hue * y.Hue, x.Saturation * y.Saturation, x.Brightness * y.Brightness, x.Kelvin * y.Kelvin);
+        }
+
+        public static Color operator -(Color src, double value)
+        {
+            return new Color(src.Hue - value, src.Saturation - value, src.Brightness - value, src.Kelvin - value);
+        }
+
+        public static Color operator -(Color x, Color y)
+        {
+            return new Color(x.Hue - y.Hue, x.Saturation - y.Saturation, x.Brightness - y.Brightness, x.Kelvin - y.Kelvin);
+        }
+
         public static bool TryParse(string text, out Color color)
         {
             try

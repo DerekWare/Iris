@@ -46,7 +46,7 @@ namespace DerekWare.Iris
 
             public static int FindInsertionPoint(TreeNodeCollection parent, TreeNode child)
             {
-                return parent.FindInsertionPoint(child, (x, y) => StringComparer.OrdinalIgnoreCase.Compare(x.Text, y.Text));
+                return parent.FindInsertionPointInUntypedList(child, (x, y) => StringComparer.OrdinalIgnoreCase.Compare(x.Text, y.Text));
             }
 
             public static IEnumerable<T> GetAllNodes<T>(TreeNodeCollection parent)

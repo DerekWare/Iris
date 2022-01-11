@@ -849,7 +849,7 @@ namespace DerekWare.Collections
             return i;
         }
 
-        public static int FindInsertionPoint<T>(this IList items, T item, Func<T, T, int> comparer)
+        public static int FindInsertionPointInUntypedList<T>(this IList items, T item, Func<T, T, int> comparer)
         {
             var i = 0;
 
