@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,20 +56,26 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         {
             InternalDevices.CollectionChanged += (sender, args) =>
             {
-                foreach(string key in args.NewItems)
+                if(args.Action == NotifyCollectionChangedAction.Add)
                 {
-                    var device = InternalDevices[key];
-                    Debug.Trace(this, $"Device discovered: {device}");
-                    _DeviceDiscovered?.Invoke(this, new DeviceEventArgs { Device = device });
+                    foreach(string key in args.NewItems.SafeEmpty())
+                    {
+                        var device = InternalDevices[key];
+                        Debug.Trace(this, $"Device discovered: {device}");
+                        _DeviceDiscovered?.Invoke(this, new DeviceEventArgs { Device = device });
+                    }
                 }
             };
 
             InternalGroups.CollectionChanged += (sender, args) =>
             {
-                foreach(DeviceGroup group in args.NewItems)
+                if(args.Action == NotifyCollectionChangedAction.Add)
                 {
-                    Debug.Trace(this, $"Group discovered: {group}");
-                    _DeviceDiscovered?.Invoke(this, new DeviceEventArgs { Device = group });
+                    foreach(DeviceGroup group in args.NewItems.SafeEmpty())
+                    {
+                        Debug.Trace(this, $"Group discovered: {group}");
+                        _DeviceDiscovered?.Invoke(this, new DeviceEventArgs { Device = group });
+                    }
                 }
             };
         }

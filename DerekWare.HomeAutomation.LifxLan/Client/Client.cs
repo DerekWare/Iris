@@ -40,7 +40,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
             {
                 if(args.Action == NotifyCollectionChangedAction.Add)
                 {
-                    foreach(string i in args.NewItems)
+                    foreach(string i in args.NewItems.SafeEmpty())
                     {
                         OnDeviceDiscovered(InternalDevices[i]);
                     }
@@ -51,7 +51,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
             {
                 if(args.Action == NotifyCollectionChangedAction.Add)
                 {
-                    foreach(string i in args.NewItems)
+                    foreach(string i in args.NewItems.SafeEmpty())
                     {
                         OnDeviceDiscovered(InternalGroups[i]);
                     }
