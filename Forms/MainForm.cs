@@ -72,7 +72,7 @@ namespace DerekWare.Iris
             // Connect to the Hue bridge
             if(!Settings.Default.HueBridgeAddress.IsNullOrEmpty() && !Settings.Default.HueApiKey.IsNullOrEmpty())
             {
-                HueClient.Instance.Connect(Settings.Default.HueBridgeAddress, Settings.Default.HueApiKey);
+                HueClient.Instance.Connect(Settings.Default.HueBridgeAddress, Settings.Default.HueApiKey, Settings.Default.HueEntertainmentKey);
             }
 
             // Load effects, themes and scenes
@@ -142,7 +142,7 @@ namespace DerekWare.Iris
                 return;
             }
 
-            HueClient.Instance.Connect(dlg.IpAddress, dlg.ApiKey);
+            HueClient.Instance.Connect(dlg.IpAddress, dlg.ApiKey, dlg.EntertainmentKey);
 
             Settings.Default.HueBridgeAddress = dlg.IpAddress;
             Settings.Default.HueApiKey = dlg.ApiKey;

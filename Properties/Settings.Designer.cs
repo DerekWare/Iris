@@ -93,5 +93,17 @@ namespace DerekWare.Iris.Properties {
                 this["Effects"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HueEntertainmentKey {
+            get {
+                return ((string)(this["HueEntertainmentKey"]));
+            }
+            set {
+                this["HueEntertainmentKey"] = value;
+            }
+        }
     }
 }

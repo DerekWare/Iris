@@ -142,7 +142,11 @@ namespace DerekWare.HomeAutomation.Common
         {
             colors = colors.Take(Math.Min(ZoneCount, colors.Count)).ToArray();
 
-            if(colors.Count < ZoneCount)
+            if(colors.IsNullOrEmpty())
+            {
+                colors = Colors.Colors.Black.Repeat(ZoneCount).ToArray();
+            }
+            else if(colors.Count < ZoneCount)
             {
                 colors = colors.Append(colors.Last().Repeat(ZoneCount - colors.Count)).ToArray();
             }

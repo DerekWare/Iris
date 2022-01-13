@@ -8,14 +8,14 @@ using Q42.HueApi;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
 {
-    public interface IHueDevice : IDevice
+    interface IHueDevice : IDevice
     {
         public void SendCommand(LightCommand cmd);
     }
 
-    public sealed class Device : Common.Device, IHueDevice
+    class Device : Common.Device, IHueDevice
     {
-        internal Light HueDevice;
+        protected Light HueDevice;
 
         internal Device(Light hueDevice)
         {
@@ -86,7 +86,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public override async void RefreshState()
         {
-            var device = await PhilipsHue.Client.Instance.HueClient.GetLightAsync(HueDevice.Id);
+            var device = await PhilipsHue.Client.Instance.GetLightById(HueDevice.Id);
 
             if(device is null)
             {
@@ -95,13 +95,13 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
             HueDevice = device;
 
-            SetPower(HueDevice.State.On ? PowerState.On : PowerState.Off);
+            SetPower(HueDevice.State.On ? PowerState.On : PowerState.Off, false);
 
             var color = Colors.FromState(HueDevice.State);
 
             if(color is not null)
             {
-                SetColor(new[] { Colors.FromState(HueDevice.State) }, TimeSpan.Zero);
+                SetColor(new[] { Colors.FromState(HueDevice.State) }, TimeSpan.Zero, false);
             }
         }
 

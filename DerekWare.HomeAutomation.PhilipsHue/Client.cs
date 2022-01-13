@@ -10,6 +10,9 @@ using Q42.HueApi;
 using Q42.HueApi.Interfaces;
 using Q42.HueApi.Models.Bridge;
 using Q42.HueApi.Models.Groups;
+#if ENABLE_STREAMING
+using Q42.HueApi.Streaming;
+#endif
 
 namespace DerekWare.HomeAutomation.PhilipsHue
 {
@@ -23,6 +26,12 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         CancellationTokenSource BridgeDiscoveryCancellationSource;
         Task BridgeDiscoveryTask;
         BridgeLocator BridgeLocater;
+        ILocalHueClient LocalHueClient;
+        string BridgeAddress;
+
+#if ENABLE_STREAMING
+        StreamingHueClient StreamingHueClient;
+#endif
 
         public event EventHandler<BridgeEventArgs> BridgeDiscovered;
 
@@ -69,7 +78,15 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups;
         public TimeSpan MinMessageInterval => TimeSpan.FromMilliseconds(100);
 
-        internal LocalHueClient HueClient { get; private set; }
+        internal Task<HueResults> SendLightCommand(LightCommand command, IEnumerable<string> lightIds)
+        {
+            return LocalHueClient.SendCommandAsync(command, lightIds);
+        }
+
+        internal Task<HueResults> SendGroupCommand(LightCommand command, string groupId)
+        {
+            return LocalHueClient.SendGroupCommandAsync(command, groupId);
+        }
 
         public Task BeginBridgeDiscovery()
         {
@@ -110,27 +127,38 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         // This API key must be retrieved from the Register method, which involves the
         // user pressing the link button on their Hue Bridge, then calling Register.
         // From then on, we can connect to the bridge using the API key.
-        public void Connect(string bridgeAddress, string apiKey)
+        public void Connect(string bridgeAddress, string apiKey, string entertainmentKey)
         {
-            HueClient = new LocalHueClient(bridgeAddress);
-            HueClient.Initialize(apiKey);
+            if(!string.Equals(BridgeAddress, bridgeAddress))
+            {
+                InternalDevices.Clear();
+                InternalGroups.Clear();
+            }
+
+#if ENABLE_STREAMING
+            StreamingHueClient = new StreamingHueClient(bridgeAddress, apiKey, entertainmentKey);
+            LocalHueClient = StreamingHueClient.LocalHueClient;
+#else
+            LocalHueClient = new LocalHueClient(bridgeAddress, apiKey);
+#endif
+            BridgeAddress = bridgeAddress;
 
             RefreshDevices();
         }
 
         internal Task<IReadOnlyCollection<Group>> GetGroups()
         {
-            return HueClient.GetGroupsAsync();
+            return LocalHueClient.GetGroupsAsync();
         }
 
         internal Task<Light> GetLightById(string id)
         {
-            return HueClient.GetLightAsync(id);
+            return LocalHueClient.GetLightAsync(id);
         }
 
         internal Task<IEnumerable<Light>> GetLights()
         {
-            return HueClient.GetLightsAsync();
+            return LocalHueClient.GetLightsAsync();
         }
 
         internal void OnPropertiesChanged(IDevice device)
@@ -148,8 +176,14 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             var lights = await GetLights();
             var groups = await GetGroups();
 
-            InternalDevices.AddRange(lights.Select(i => new KeyValuePair<string, Device>(i.Id, new Device(i))));
+            InternalDevices.AddRange(lights.Where(i => !InternalDevices.ContainsKey(i.Id)).Select(i => KeyValuePair.Create(i.Id, new Device(i))));
+            InternalDevices.AddRange(lights.Where(i => !InternalDevices.ContainsKey(i.Id)).Select(i => KeyValuePair.Create(i.Id, new Device(i))));
+
+#if ENABLE_STREAMING
+            InternalGroups.AddRange(groups.Select(i => i.Type == GroupType.Entertainment ? new StreamingGroup(i) : new DeviceGroup(i)));
+#else
             InternalGroups.AddRange(groups.Select(i => new DeviceGroup(i)));
+#endif
         }
 
         #region IDisposable
@@ -157,7 +191,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public void Dispose()
         {
             CancelBridgeDiscovery();
-            HueClient = null;
+            LocalHueClient = null;
         }
 
         #endregion
@@ -177,9 +211,14 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         #endregion
 
-        public static Task<string> Register(string bridgeAddress)
+        public static Task<RegisterEntertainmentResult> Register(string bridgeAddress)
         {
-            return new LocalHueClient(bridgeAddress).RegisterAsync("DerekWare", Environment.MachineName);
+#if ENABLE_STREAMING
+            var generateClientKey = true;
+#else
+            var generateClientKey = false;
+#endif
+            return new LocalHueClient(bridgeAddress).RegisterAsync("DerekWare", Environment.MachineName, generateClientKey);
         }
     }
 }

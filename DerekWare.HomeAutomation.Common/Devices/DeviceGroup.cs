@@ -72,6 +72,11 @@ namespace DerekWare.HomeAutomation.Common
 
         protected override void ApplyColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
         {
+            ApplyDeviceColor(colors, transitionDuration);
+        }
+
+        protected void ApplyDeviceColor(IReadOnlyCollection<Color> colors, TimeSpan transitionDuration)
+        {
             var count = ZoneCount - colors.Count;
             var index = 0;
 
@@ -88,9 +93,14 @@ namespace DerekWare.HomeAutomation.Common
             }
         }
 
-        protected override void ApplyPower(PowerState power)
+        protected void ApplyDevicePower(PowerState power)
         {
             Children.ForEach(i => i.SetPower(power));
+        }
+
+        protected override void ApplyPower(PowerState power)
+        {
+            ApplyDevicePower(power);
         }
 
         #region IDeviceState

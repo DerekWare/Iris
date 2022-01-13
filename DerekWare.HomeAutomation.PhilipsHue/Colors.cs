@@ -5,10 +5,14 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 {
     public static class Colors
     {
-        public const double BrightnessMax = 254;
+        public const double BrightnessMax = 255;
         public const double BrightnessMin = 0;
-
         public const double HueMax = 65535;
+        public const double HueMin = 0;
+        public const double MiredMax = 500;
+        public const double MiredMin = 153;
+        public const double SaturationMax = 255;
+        public const double SaturationMin = 0;
 
         /*
          * Found on a Tasker forum:
@@ -24,12 +28,6 @@ namespace DerekWare.HomeAutomation.PhilipsHue
          *
          * TODO: it would be nice to treat Kelvin as a real value and not 0-1.
          */
-        public const double HueMin = 0;
-        public const double MiredMax = 500;
-        public const double MiredMin = 153;
-        public const double SaturationMax = 254;
-        public const double SaturationMin = 0;
-
         public static Color FromHueColor(string colorMode, int? hue, int? saturation, byte? brightness, int? colorTemperature)
         {
             switch(colorMode)

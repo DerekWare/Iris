@@ -20,6 +20,7 @@ namespace DerekWare.Iris
         }
 
         public string ApiKey { get; private set; }
+        public string EntertainmentKey { get; private set; }
 
         public string IpAddress
         {
@@ -101,7 +102,9 @@ namespace DerekWare.Iris
         {
             try
             {
-                ApiKey = await HueClient.Register(IpAddress);
+                var result = await HueClient.Register(IpAddress);
+                ApiKey = result.Username;
+                EntertainmentKey = result.StreamingClientKey;
             }
             catch(Exception ex)
             {

@@ -9,15 +9,15 @@ using Q42.HueApi.Models.Groups;
 
 namespace DerekWare.HomeAutomation.PhilipsHue
 {
-    public class DeviceGroup : Common.DeviceGroup, IHueDevice
+    class DeviceGroup : Common.DeviceGroup, IHueDevice
     {
-        internal readonly Group HueDevice;
+        protected readonly Group HueGroup;
 
-        internal DeviceGroup(Group hueDevice)
+        internal DeviceGroup(Group hueGroup)
         {
-            HueDevice = hueDevice;
+            HueGroup = hueGroup;
 
-            foreach(var i in HueDevice.Lights)
+            foreach(var i in HueGroup.Lights)
             {
                 if(PhilipsHue.Client.Instance.InternalDevices.TryGetValue(i, out var device))
                 {
@@ -26,17 +26,17 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             }
         }
 
-        public RoomClass? Class => HueDevice.Class;
+        public RoomClass? Class => HueGroup.Class;
 
         public override IClient Client => PhilipsHue.Client.Instance;
 
-        public string ModelId => HueDevice.ModelId;
+        public string ModelId => HueGroup.ModelId;
 
-        public override string Name => HueDevice.Name;
+        public override string Name => HueGroup.Name;
 
-        public GroupType? Type => HueDevice.Type;
+        public GroupType? Type => HueGroup.Type;
 
-        public override string Uuid => HueDevice.Id;
+        public override string Uuid => HueGroup.Id;
 
         internal new SynchronizedHashSet<IDevice> InternalChildren => base.InternalChildren;
 
@@ -88,7 +88,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public void SendCommand(LightCommand cmd)
         {
-            cmd.SendCommand(HueDevice);
+            cmd.SendCommand(HueGroup);
         }
 
         #endregion
