@@ -11,7 +11,7 @@ namespace DerekWare.Threading
 
     public delegate void WorkCompletedEventHandler(Thread sender, WorkCompletedEventArgs e);
 
-    public interface IThread
+    public interface IThread : IDisposable
     {
         event CancellationRequestedEventHandler CancellationRequested;
         event DoWorkEventHandler DoWork;
@@ -28,7 +28,6 @@ namespace DerekWare.Threading
         EventWaitHandle WorkEvent { get; set; }
 
         void Abort(bool wait = true);
-        void Dispose();
         void Join();
         void Start();
         void Stop(bool wait = true);

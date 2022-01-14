@@ -18,8 +18,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         internal SynchronizedHashSet<DeviceGroup> InternalGroups = new();
 
         readonly DeviceController Controller;
-        int _IsValid;
 
+        int _IsValid;
         MultiZoneEffectSettings _MultiZoneEffect;
         string _Name;
         Products.Product _Product;
@@ -27,7 +27,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         WaveformSettings _Waveform;
         int _ZoneCount = 1;
 
-        internal Device(string ipAddress, ServiceResponse response)
+        internal Device(string ipAddress)
         {
             Controller = new DeviceController(ipAddress);
 
@@ -35,27 +35,16 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
         }
 
         public override IClient Client => Lan.Client.Instance;
-
         public override IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups;
-
         public string IpAddress => Controller.IpAddress;
-
         public override bool IsColor => _Product?.features.color ?? false;
-
         public override bool IsValid => _IsValid != 0;
-
         public override string Name => _Name.IsNullOrEmpty() ? IpAddress : _Name;
-
         public string Product => _Product?.name;
-
         public override string Uuid => IpAddress;
-
         public string Vendor => _Vendor?.name;
-
         public override int ZoneCount => _ZoneCount;
-
         public Version FirmwareVersion { get; private set; }
-
         public bool? IsExtendedMultiZone { get; private set; }
 
         [Browsable(false)]

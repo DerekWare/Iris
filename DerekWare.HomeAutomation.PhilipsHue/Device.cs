@@ -17,11 +17,11 @@ namespace DerekWare.HomeAutomation.PhilipsHue
     {
         protected Light HueDevice;
 
+        readonly object SyncRoot = new();
+
         internal Device(Light hueDevice)
         {
-            HueDevice = hueDevice;
-
-            StartRefreshTask();
+            SetState(hueDevice);
         }
 
         [Browsable(false)]
@@ -30,7 +30,16 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         [Browsable(false)]
         public override IReadOnlyCollection<IDeviceGroup> Groups => PhilipsHue.Client.Instance.Groups.Where(i => i.Children.Contains(this)).ToList();
 
-        public string Id => HueDevice.Id;
+        public string Id
+        {
+            get
+            {
+                lock(SyncRoot)
+                {
+                    return HueDevice.Id;
+                }
+            }
+        }
 
         public override bool IsColor => Type.IndexOf("color", StringComparison.CurrentCultureIgnoreCase) >= 0; // TODO this is a little hacky
 
@@ -39,23 +48,104 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         [Browsable(false)]
         public override bool IsValid => true;
 
-        public string LuminaireUniqueId => HueDevice.LuminaireUniqueId;
+        public string LuminaireUniqueId
+        {
+            get
+            {
+                lock(SyncRoot)
+                {
+                    return HueDevice.LuminaireUniqueId;
+                }
+            }
+        }
 
-        public string ModelId => HueDevice.ModelId;
+        public string ModelId
+        {
+            get
+            {
+                lock(SyncRoot)
+                {
+                    return HueDevice.ModelId;
+                }
+            }
+        }
 
-        public override string Name => HueDevice.Name;
+        public override string Name
+        {
+            get
+            {
+                lock(SyncRoot)
+                {
+                    return HueDevice.Name;
+                }
+            }
+        }
 
-        public string Product => HueDevice.ProductId;
+        public string Product
+        {
+            get
+            {
+                lock(SyncRoot)
+                {
+                    return HueDevice.ProductId;
+                }
+            }
+        }
 
-        public string SoftwareConfigId => HueDevice.SwConfigId;
+        public string SoftwareConfigId
+        {
+            get
+            {
+                lock(SyncRoot)
+                {
+                    return HueDevice.SwConfigId;
+                }
+            }
+        }
 
-        public string SoftwareVersion => HueDevice.SoftwareVersion;
+        public string SoftwareVersion
+        {
+            get
+            {
+                lock(SyncRoot)
+                {
+                    return HueDevice.SoftwareVersion;
+                }
+            }
+        }
 
-        public string Type => HueDevice.Type;
+        public string Type
+        {
+            get
+            {
+                lock(SyncRoot)
+                {
+                    return HueDevice.Type;
+                }
+            }
+        }
 
-        public override string Uuid => HueDevice.UniqueId;
+        public override string Uuid
+        {
+            get
+            {
+                lock(SyncRoot)
+                {
+                    return HueDevice.UniqueId;
+                }
+            }
+        }
 
-        public string Vendor => HueDevice.ManufacturerName;
+        public string Vendor
+        {
+            get
+            {
+                lock(SyncRoot)
+                {
+                    return HueDevice.ManufacturerName;
+                }
+            }
+        }
 
         public override int ZoneCount => 1;
 
@@ -82,27 +172,35 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             PhilipsHue.Client.Instance.OnStateChanged(this);
         }
 
+        internal void SetState(Light hueDevice)
+        {
+            lock(SyncRoot)
+            {
+                HueDevice = hueDevice;
+
+                SetPower(HueDevice.State.On ? PowerState.On : PowerState.Off, false);
+
+                var color = Colors.FromState(HueDevice.State);
+
+                if(color is not null)
+                {
+                    SetColor(new[] { Colors.FromState(HueDevice.State) }, TimeSpan.Zero, false);
+                }
+            }
+        }
+
         #region IDeviceState
 
         public override async void RefreshState()
         {
-            var device = await PhilipsHue.Client.Instance.GetLightById(HueDevice.Id);
+            var hueDevice = await PhilipsHue.Client.Instance.GetLightById(Id);
 
-            if(device is null)
+            if(hueDevice is null)
             {
                 return;
             }
 
-            HueDevice = device;
-
-            SetPower(HueDevice.State.On ? PowerState.On : PowerState.Off, false);
-
-            var color = Colors.FromState(HueDevice.State);
-
-            if(color is not null)
-            {
-                SetColor(new[] { Colors.FromState(HueDevice.State) }, TimeSpan.Zero, false);
-            }
+            SetState(hueDevice);
         }
 
         public override void SetFirmwareEffect(object effect)
@@ -116,7 +214,10 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public void SendCommand(LightCommand cmd)
         {
-            cmd.SendCommand(HueDevice);
+            lock(SyncRoot)
+            {
+                cmd.SendCommand(HueDevice);
+            }
         }
 
         #endregion

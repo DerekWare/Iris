@@ -14,9 +14,10 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected Thread Thread;
 
-        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false)]
+        [Description("True if the effect runs on the device as opposed to running in this application.")]
         public override bool IsFirmware => false;
 
+        [Browsable(false)]
         public override bool IsRunning => Thread?.IsEnabled ?? false;
 
         public override IDevice Device
@@ -52,7 +53,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 return;
             }
 
-            Thread = new Thread { Name = $"{GetType().Name}", SupportsCancellation = true, KeepAlive = false };
+            Thread = new Thread { Name = $"{GetType().FullName}", SupportsCancellation = true, KeepAlive = false, Priority = ThreadPriority.Highest };
             Thread.DoWork += DoWork;
             Thread.Start();
         }

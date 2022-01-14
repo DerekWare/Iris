@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
+using DerekWare.Threading;
 using Q42.HueApi;
 using Q42.HueApi.Interfaces;
 using Q42.HueApi.Models.Bridge;
 using Q42.HueApi.Models.Groups;
+using Task = System.Threading.Tasks.Task;
+using Thread = DerekWare.Threading.Thread;
 #if ENABLE_STREAMING
 using Q42.HueApi.Streaming;
 #endif
@@ -20,13 +23,15 @@ namespace DerekWare.HomeAutomation.PhilipsHue
     public class Client : IClient
     {
         public static readonly Client Instance = new();
+        public static readonly TimeSpan DeviceRefreshInterval = TimeSpan.FromSeconds(30);
 
         internal readonly SynchronizedDictionary<string, Device> InternalDevices = new();
-        internal readonly SynchronizedHashSet<DeviceGroup> InternalGroups = new();
+        internal readonly SynchronizedDictionary<string, DeviceGroup> InternalGroups = new();
 
         CancellationTokenSource BridgeDiscoveryCancellationSource;
         Task BridgeDiscoveryTask;
         BridgeLocator BridgeLocater;
+        Thread DeviceRefreshThread;
         ILocalHueClient LocalHueClient;
         string BridgeAddress;
 
@@ -42,7 +47,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             {
                 _DeviceDiscovered += value;
                 InternalDevices.ForEach(i => value.BeginInvoke(this, new DeviceEventArgs { Device = i.Value }, null, null));
-                InternalGroups.ForEach(i => value.BeginInvoke(this, new DeviceEventArgs { Device = i }, null, null));
+                InternalGroups.ForEach(i => value.BeginInvoke(this, new DeviceEventArgs { Device = i.Value }, null, null));
             }
             remove => _DeviceDiscovered -= value;
         }
@@ -71,8 +76,9 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             {
                 if(args.Action == NotifyCollectionChangedAction.Add)
                 {
-                    foreach(DeviceGroup group in args.NewItems.SafeEmpty())
+                    foreach(string key in args.NewItems.SafeEmpty())
                     {
+                        var group = InternalGroups[key];
                         Debug.Trace(this, $"Group discovered: {group}");
                         _DeviceDiscovered?.Invoke(this, new DeviceEventArgs { Device = group });
                     }
@@ -80,9 +86,9 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             };
         }
 
-        public IReadOnlyCollection<IDevice> Devices => InternalDevices.Values.ToList();
+        public IReadOnlyCollection<IDevice> Devices => InternalDevices.Values.ToList<IDevice>();
         public string Family => "Philips Hue";
-        public IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups;
+        public IReadOnlyCollection<IDeviceGroup> Groups => InternalGroups.Values.ToList<IDeviceGroup>();
         public TimeSpan MinMessageInterval => TimeSpan.FromMilliseconds(100);
 
         internal Task<HueResults> SendLightCommand(LightCommand command, IEnumerable<string> lightIds)
@@ -118,17 +124,28 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public void CancelBridgeDiscovery()
         {
-            if(BridgeDiscoveryCancellationSource is null)
+            BridgeDiscoveryCancellationSource?.Cancel();
+            BridgeDiscoveryTask?.Wait();
+
+            DerekWare.Extensions.Dispose(ref BridgeDiscoveryCancellationSource);
+            DerekWare.Extensions.Dispose(ref BridgeDiscoveryTask);
+        }
+
+        void BeginDeviceRefresh()
+        {
+            if(DeviceRefreshThread?.IsEnabled == true)
             {
                 return;
             }
 
-            BridgeDiscoveryCancellationSource.Cancel();
-            BridgeDiscoveryTask.Wait();
-            BridgeDiscoveryCancellationSource.Dispose();
-            BridgeDiscoveryCancellationSource = null;
-            BridgeDiscoveryTask.Dispose();
-            BridgeDiscoveryTask = null;
+            DeviceRefreshThread = new Thread { KeepAlive = true, Name = GetType().FullName + ".DeviceRefreshThread", SupportsCancellation = true };
+            DeviceRefreshThread.DoWork += DeviceRefreshWorker;
+            DeviceRefreshThread.Start();
+        }
+
+        void CancelDeviceRefresh()
+        {
+            DerekWare.Extensions.Dispose(ref DeviceRefreshThread);
         }
 
         // This API key must be retrieved from the Register method, which involves the
@@ -150,7 +167,16 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 #endif
             BridgeAddress = bridgeAddress;
 
-            RefreshDevices();
+            BeginDeviceRefresh();
+        }
+
+        void DeviceRefreshWorker(Thread thread, DoWorkEventArgs eventArgs)
+        {
+            while(!thread.CancellationPending)
+            {
+                RefreshDevices().Wait();
+                thread.CancelEvent.WaitOne(DeviceRefreshInterval);
+            }
         }
 
         internal Task<IReadOnlyCollection<Group>> GetGroups()
@@ -180,17 +206,33 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         async Task RefreshDevices()
         {
-            var lights = await GetLights();
-            var groups = await GetGroups();
+            foreach(var light in await GetLights())
+            {
+                if(InternalDevices.TryGetValue(light.Id, out var device))
+                {
+                    device.SetState(light);
+                }
+                else
+                {
+                    InternalDevices.Add(light.Id, new Device(light));
+                }
+            }
 
-            InternalDevices.AddRange(lights.Where(i => !InternalDevices.ContainsKey(i.Id)).Select(i => KeyValuePair.Create(i.Id, new Device(i))));
-            InternalDevices.AddRange(lights.Where(i => !InternalDevices.ContainsKey(i.Id)).Select(i => KeyValuePair.Create(i.Id, new Device(i))));
-
+            foreach(var group in await GetGroups())
+            {
+                if(InternalGroups.TryGetValue(group.Id, out var device))
+                {
+                    device.SetState(group);
+                }
+                else
+                {
 #if ENABLE_STREAMING
-            InternalGroups.AddRange(groups.Select(i => i.Type == GroupType.Entertainment ? new StreamingGroup(i) : new DeviceGroup(i)));
+                    InternalGroups.Add(group.Id, group.Type == GroupType.Entertainment ? new StreamingGroup(group) : new DeviceGroup(group)));
 #else
-            InternalGroups.AddRange(groups.Select(i => new DeviceGroup(i)));
+                    InternalGroups.Add(group.Id, new DeviceGroup(group));
 #endif
+                }
+            }
         }
 
         #region IDisposable
@@ -198,6 +240,8 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         public void Dispose()
         {
             CancelBridgeDiscovery();
+            CancelDeviceRefresh();
+
             LocalHueClient = null;
         }
 

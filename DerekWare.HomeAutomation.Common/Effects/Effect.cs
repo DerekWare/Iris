@@ -13,14 +13,16 @@ namespace DerekWare.HomeAutomation.Common.Effects
     public interface IReadOnlyEffectProperties : IName, IDescription, IFamily, ICloneable, IMatch
     {
         public IDevice Device { get; }
+        public bool IsFirmware { get; }
+        public bool IsMultiZone { get; }
     }
 
     public abstract class Effect : IEffectProperties
     {
-        [Description("True if the effect runs on the device as opposed to running in this application."), Browsable(false)]
+        [Description("True if the effect runs on the device as opposed to running in this application.")]
         public abstract bool IsFirmware { get; }
 
-        [Description("True if the effect is intended for multizone lights or light groups."), Browsable(false)]
+        [Description("True if the effect is intended for multizone lights or light groups.")]
         public abstract bool IsMultiZone { get; }
 
         protected abstract void StartEffect();
@@ -33,7 +35,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
         #endregion
 
         readonly object DeviceStateTaskLock = new();
-
         readonly object SyncRoot = new();
 
         Task DeviceStateTask;
@@ -50,7 +51,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Browsable(false)]
         public virtual string Name => this.GetName();
 
-        [Browsable(false), JsonIgnore]
+        [Browsable(false)]
         public virtual IDevice Device { get; protected set; }
 
         public virtual void Dispose()
