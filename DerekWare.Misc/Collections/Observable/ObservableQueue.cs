@@ -23,12 +23,12 @@ namespace DerekWare.Collections
 
         public ObservableQueue(int capacity)
         {
-            Items = new System.Collections.Generic.Queue<T>(capacity);
+            Items = new Queue<T>(capacity);
         }
 
         public ObservableQueue(IEnumerable<T> items)
         {
-            Items = new System.Collections.Generic.Queue<T>(items);
+            Items = new Queue<T>(items);
         }
 
         public virtual int Count => Items.Count;
