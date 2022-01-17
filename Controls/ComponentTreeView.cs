@@ -47,7 +47,7 @@ namespace DerekWare.Iris
             sceneNode.Scene.Apply();
 
             var sceneName = sceneNode.Scene.Name;
-            var deviceNames = sceneNode.Scene.Items.Select(i => i.Device.Name).Join(", ");
+            var deviceNames = sceneNode.Scene.Items.Select(i => i.Name).Join(", ");
             var message = $"Scene \"{sceneName}\" applied to {deviceNames}";
             MessageBox.Show(message, ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
 

@@ -286,6 +286,15 @@ namespace DerekWare.Threading
             while(KeepAlive);
         }
 
+        #region IDisposable
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        #endregion
+
         #region IThread
 
         /// <summary>
@@ -310,11 +319,6 @@ namespace DerekWare.Threading
             }
 
             SystemThread.Join();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
 
         /// <summary>
@@ -396,5 +400,20 @@ namespace DerekWare.Threading
         }
 
         #endregion
+
+        public static void Sleep(int milliseconds)
+        {
+            System.Threading.Thread.Sleep(milliseconds);
+        }
+
+        public static void Sleep(TimeSpan timeout)
+        {
+            System.Threading.Thread.Sleep(timeout);
+        }
+
+        public static void Yield()
+        {
+            System.Threading.Thread.Yield();
+        }
     }
 }

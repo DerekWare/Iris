@@ -138,7 +138,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
                 return;
             }
 
-            DeviceRefreshThread = new Thread { KeepAlive = true, Name = GetType().FullName + ".DeviceRefreshThread", SupportsCancellation = true };
+            DeviceRefreshThread = new Thread { Name = GetType().FullName + ".DeviceRefreshThread", SupportsCancellation = true };
             DeviceRefreshThread.DoWork += DeviceRefreshWorker;
             DeviceRefreshThread.Start();
         }

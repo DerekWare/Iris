@@ -1,58 +1,95 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using DerekWare.Collections;
 
-namespace DerekWare.Misc
+namespace DerekWare.Collections
 {
-    public class SortedHashSet<T> : OrderedHashSet<T>
+    /// <summary>
+    ///     Combines a SortedCollection with a SynchronizedHashSet to maintain the order of items based on an order comparer.
+    /// </summary>
+    public class SortedHashSet<T> : SynchronizedHashSet<T>
     {
-        protected new readonly Func<T, T, int> Comparer;
+        protected readonly SortedCollection<T> SortedCollection;
 
-        public SortedHashSet(Func<T, T, int> comparer, IEqualityComparer<T> equalityComparer = null)
+        public SortedHashSet(Func<T, T, int> orderComparer, IEqualityComparer<T> equalityComparer = null)
             : base(equalityComparer)
         {
-            Comparer = comparer;
+            SortedCollection = new SortedCollection<T>(orderComparer);
         }
 
-        public SortedHashSet(IComparer<T> comparer, IEqualityComparer<T> equalityComparer = null)
-            : this(comparer.Compare, equalityComparer)
+        public SortedHashSet(IComparer<T> orderComparer, IEqualityComparer<T> equalityComparer = null)
+            : this(orderComparer.Compare, equalityComparer)
         {
         }
 
-        public SortedHashSet(IEnumerable<T> items, Func<T, T, int> comparer, IEqualityComparer<T> equalityComparer = null)
-            : base(items, equalityComparer)
+        public SortedHashSet(IEnumerable<T> items, Func<T, T, int> orderComparer, IEqualityComparer<T> equalityComparer = null)
+            : this(orderComparer, equalityComparer)
         {
-            Comparer = comparer;
+            AddRange(items);
         }
 
-        public SortedHashSet(IEnumerable<T> items, IComparer<T> comparer, IEqualityComparer<T> equalityComparer = null)
-            : this(items, comparer.Compare, equalityComparer)
+        public SortedHashSet(IEnumerable<T> items, IComparer<T> orderComparer, IEqualityComparer<T> equalityComparer = null)
+            : this(items, orderComparer.Compare, equalityComparer)
         {
         }
-
-        public override T this[int index] { get => base[index]; set => throw new NotSupportedException(); }
 
         public override bool Add(T item)
         {
             lock(SyncRoot)
             {
-                return base.Insert(List.FindInsertionPoint(item, Comparer), item);
+                if(!base.Add(item))
+                {
+                    return false;
+                }
+
+                SortedCollection.Add(item);
+                return true;
             }
         }
 
-        public override bool Insert(int index, T item)
+        public override void Clear()
         {
-            throw new NotSupportedException();
+            lock(SyncRoot)
+            {
+                base.Clear();
+                SortedCollection.Clear();
+            }
+        }
+
+        public override void CopyTo(T[] array, int arrayIndex)
+        {
+            lock(SyncRoot)
+            {
+                SortedCollection.CopyTo(array, arrayIndex);
+            }
+        }
+
+        public override IEnumerator<T> GetEnumerator()
+        {
+            lock(SyncRoot)
+            {
+                return SortedCollection.CreateEnumerator();
+            }
+        }
+
+        public override bool Remove(T item)
+        {
+            lock(SyncRoot)
+            {
+                if(!base.Remove(item))
+                {
+                    return false;
+                }
+
+                SortedCollection.Remove(item);
+                return true;
+            }
         }
 
         public virtual void Sort()
         {
             lock(SyncRoot)
             {
-                var items = List.ToList();
-                List.Clear();
-                items.ForEach(item => List.Insert(List.FindInsertionPoint(item, Comparer), item));
+                SortedCollection.Sort();
             }
         }
     }

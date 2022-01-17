@@ -44,7 +44,7 @@ namespace DerekWare.Collections
             return AddRange(items);
         }
 
-        public int AddRange(IEnumerable<T> items)
+        public virtual int AddRange(IEnumerable<T> items)
         {
             return items.Count(Add);
         }

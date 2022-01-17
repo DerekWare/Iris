@@ -150,13 +150,13 @@ namespace DerekWare.Collections
 
         public static IEnumerable<T> WhereEquals<T>(this IEnumerable<T> @this, T value, IEqualityComparer<T> comparer = null)
         {
-            comparer = comparer ?? EqualityComparer<T>.Default;
+            comparer ??= EqualityComparer<T>.Default;
             return @this.Where(v => comparer.Equals(v, value));
         }
 
         public static IEnumerable<T1> WhereEquals<T1, T2>(this IEnumerable<T1> @this, Func<T1, T2> selector, T2 value, IEqualityComparer<T2> comparer = null)
         {
-            comparer = comparer ?? EqualityComparer<T2>.Default;
+            comparer ??= EqualityComparer<T2>.Default;
             return @this.Where(v => comparer.Equals(selector(v), value));
         }
 
@@ -171,13 +171,13 @@ namespace DerekWare.Collections
 
         public static IEnumerable<T> WhereNotEquals<T>(this IEnumerable<T> @this, T value, IEqualityComparer<T> comparer = null)
         {
-            comparer = comparer ?? EqualityComparer<T>.Default;
+            comparer ??= EqualityComparer<T>.Default;
             return @this.Where(v => !comparer.Equals(v, value));
         }
 
         public static IEnumerable<T1> WhereNotEquals<T1, T2>(this IEnumerable<T1> @this, Func<T1, T2> selector, T2 value, IEqualityComparer<T2> comparer = null)
         {
-            comparer = comparer ?? EqualityComparer<T2>.Default;
+            comparer ??= EqualityComparer<T2>.Default;
             return @this.Where(v => !comparer.Equals(selector(v), value));
         }
 
@@ -257,10 +257,10 @@ namespace DerekWare.Collections
             this T root,
             Func<T, IEnumerable<T>> selector = null,
             IEqualityComparer<T> comparer = null,
-            int depth = int.MaxValue)
+            int maxDepth = int.MaxValue)
         {
             var results = new OrderedHashSet<T>(comparer);
-            results.Collapse(root, selector, depth);
+            CollapseWorker(results, root, selector, maxDepth);
             return results;
         }
 
@@ -272,10 +272,10 @@ namespace DerekWare.Collections
             this IEnumerable<T> collection,
             Func<T, IEnumerable<T>> selector = null,
             IEqualityComparer<T> comparer = null,
-            int depth = int.MaxValue)
+            int maxDepth = int.MaxValue)
         {
             var results = new OrderedHashSet<T>(comparer);
-            collection.ForEach(item => results.Collapse(item, selector, depth));
+            collection.ForEach(item => CollapseWorker(results, item, selector, maxDepth));
             return results;
         }
 
@@ -821,19 +821,25 @@ namespace DerekWare.Collections
 
         public static List<T> Sort<T>(this IEnumerable<T> @this, IComparer<T> comparer = null)
         {
-            comparer = comparer ?? Comparer<T>.Default;
+            comparer ??= Comparer<T>.Default;
             var result = @this.ToList();
             result.Sort(comparer);
             return result;
         }
 
-        public static int FindInsertionPoint<T>(this IList<T> items, T item, IComparer<T> comparer = null)
+        public static int FindInsertionPoint<T>(this IEnumerable<T> items, T item, IComparer<T> comparer = null)
         {
-            comparer = comparer ?? Comparer<T>.Default;
+            comparer ??= Comparer<T>.Default;
             return FindInsertionPoint(items, item, (x, y) => comparer.Compare(x, y));
         }
 
-        public static int FindInsertionPoint<T>(this IList<T> items, T item, Func<T, T, int> comparer)
+        public static int FindInsertionPointUntyped<T>(this IEnumerable items, T item, IComparer<T> comparer = null)
+        {
+            comparer ??= Comparer<T>.Default;
+            return FindInsertionPointUntyped(items, item, (x, y) => comparer.Compare(x, y));
+        }
+
+        public static int FindInsertionPoint<T>(this IEnumerable<T> items, T item, Func<T, T, int> comparer)
         {
             var i = 0;
 
@@ -853,11 +859,11 @@ namespace DerekWare.Collections
             return i;
         }
 
-        public static int FindInsertionPointInUntypedList<T>(this IList items, T item, Func<T, T, int> comparer)
+        public static int FindInsertionPointUntyped<T>(this IEnumerable items, T item, Func<T, T, int> comparer)
         {
             var i = 0;
 
-            using(var e = items.SafeEmpty().OfType<T>().GetEnumerator())
+            using(var e = items.SafeEmpty().Cast<T>().GetEnumerator())
             {
                 while(e.MoveNext())
                 {
@@ -871,6 +877,69 @@ namespace DerekWare.Collections
             }
 
             return i;
+        }
+
+        public static void InsertSorted<T>(this IList<T> items, T item, IComparer<T> comparer)
+        {
+            items.Insert(FindInsertionPoint(items, item, comparer), item);
+        }
+
+        public static void InsertSorted<T>(this IList<T> items, T item, Func<T, T, int> comparer)
+        {
+            items.Insert(FindInsertionPoint(items, item, comparer), item);
+        }
+
+        public static void InsertSortedInUntypedList<T>(this IList items, T item, IComparer<T> comparer)
+        {
+            items.Insert(FindInsertionPointUntyped(items, item, comparer), item);
+        }
+
+        public static void InsertSortedInUntypedList<T>(this IList items, T item, Func<T, T, int> comparer)
+        {
+            items.Insert(FindInsertionPointUntyped(items, item, comparer), item);
+        }
+
+        public static void InsertSorted<T>(this LinkedList<T> items, T item, IComparer<T> comparer)
+        {
+            comparer ??= Comparer<T>.Default;
+            InsertSorted(items, item, (x, y) => comparer.Compare(x, y));
+        }
+
+        public static void InsertSorted<T>(this LinkedList<T> items, T item, Func<T, T, int> comparer)
+        {
+            var node = FindInsertionPoint(items, item, comparer);
+
+            if(node is null)
+            {
+                items.AddLast(item);
+            }
+            else
+            {
+                items.AddBefore(node, item);
+            }
+        }
+
+        public static LinkedListNode<T> FindInsertionPoint<T>(this LinkedList<T> items, T item, IComparer<T> comparer)
+        {
+            comparer ??= Comparer<T>.Default;
+            return FindInsertionPoint(items, item, (x, y) => comparer.Compare(x, y));
+        }
+
+        public static LinkedListNode<T> FindInsertionPoint<T>(this LinkedList<T> items, T item, Func<T, T, int> comparer)
+        {
+            var node = items.First;
+
+            while(node is not null)
+            {
+                if(comparer(item, node.Value) < 0)
+                {
+                    break;
+                }
+
+                node = node.Next;
+            }
+
+            return node;
         }
 
         public static T[] ToArray<T>(this IEnumerable @this)
@@ -903,7 +972,7 @@ namespace DerekWare.Collections
         /// </summary>
         public static OrderedHashSet<T> ToOrderedHashSet<T>(this IEnumerable<T> @this, IEqualityComparer<T> comparer = null)
         {
-            return new OrderedHashSet<T>(@this, comparer);
+            return new OrderedHashSet<T>(@this, comparer ?? EqualityComparer<T>.Default);
         }
 
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> @this, IEqualityComparer<T> comparer = null)
@@ -965,20 +1034,20 @@ namespace DerekWare.Collections
         ///     Returns a flattened list of all nodes in a tree. This is basically a recursive version of SelectMany that works
         ///     with a typed enumerable and maintains the original element ordering.
         /// </summary>
-        static void Collapse<T>(this OrderedHashSet<T> results, T root, Func<T, IEnumerable<T>> selector, int depth)
+        static void CollapseWorker<T>(OrderedHashSet<T> results, T root, Func<T, IEnumerable<T>> selector, int maxDepth)
         {
-            selector = selector ?? (item => item as IEnumerable<T>);
+            selector ??= item => item as IEnumerable<T>;
 
             // Add the root object to prevent recursion where children point back to a parent
             var offset = results.Count;
+            var length = offset + 1;
             results.Add(root);
-            var length = results.Count;
 
             // Start appending child elements to the result list in blocks bounded by offset and length, 
             // only updating length after all child elements at this level have been added. This allows 
             // us to recursively scan through children without method recursion and without modifying 
             // an active enumerable.
-            while((--depth >= 0) && (offset < length))
+            while((--maxDepth >= 0) && (offset < length))
             {
                 var children = 0;
 

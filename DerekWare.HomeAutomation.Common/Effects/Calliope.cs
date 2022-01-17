@@ -14,6 +14,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Range(typeof(double), "0", "1")]
         public double Brightness { get => Theme.Brightness; set => Theme.Brightness = value; }
 
+        [Browsable(false)]
+        public override TimeSpan Duration { get => RefreshRate; set => RefreshRate = value; }
+
         [Range(typeof(double), "0", "1")]
         public double Kelvin { get => Theme.Kelvin; set => Theme.Kelvin = value; }
 
@@ -30,11 +33,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration)
         {
-            if(!renderState.CycleCountChanged)
-            {
-                return false;
-            }
-
             colors = Theme.GetPalette(Device).ToArray();
             return true;
         }

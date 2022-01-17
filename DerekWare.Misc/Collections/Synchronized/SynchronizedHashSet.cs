@@ -43,6 +43,14 @@ namespace DerekWare.Collections
             }
         }
 
+        public override int AddRange(IEnumerable<T> items)
+        {
+            lock(SyncRoot)
+            {
+                return base.AddRange(items);
+            }
+        }
+
         public override void Clear()
         {
             lock(SyncRoot)

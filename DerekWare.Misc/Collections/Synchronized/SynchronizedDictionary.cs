@@ -129,6 +129,14 @@ namespace DerekWare.Collections
             }
         }
 
+        public override void AddRange(IEnumerable<KeyValuePair<TKey, TValue>> items)
+        {
+            lock(SyncRoot)
+            {
+                base.AddRange(items);
+            }
+        }
+
         public override void Clear()
         {
             lock(SyncRoot)

@@ -43,7 +43,7 @@ namespace DerekWare.Collections
 
         public virtual int Count => Items.Count;
         public virtual bool IsSynchronized => false;
-        public object SyncRoot => Items;
+        public virtual object SyncRoot { get; set; } = new();
 
         #region ICollection
 

@@ -104,16 +104,8 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
         public void Start()
         {
             Socket = new UdpClient(new IPEndPoint(IPAddress.Any, Port)) { Client = { Blocking = false, EnableBroadcast = true } };
-
-            ReceiveThread = new Thread
-            {
-                KeepAlive = true, Name = GetType().FullName + ".ReceiveThread", Priority = ThreadPriority.AboveNormal, SupportsCancellation = true
-            };
-
-            ServiceThread = new Thread
-            {
-                KeepAlive = true, Name = GetType().FullName + ".ServiceThread", Priority = ThreadPriority.BelowNormal, SupportsCancellation = true
-            };
+            ReceiveThread = new Thread { Name = GetType().FullName + ".ReceiveThread", Priority = ThreadPriority.AboveNormal, SupportsCancellation = true };
+            ServiceThread = new Thread { Name = GetType().FullName + ".ServiceThread", Priority = ThreadPriority.BelowNormal, SupportsCancellation = true };
 
             ReceiveThread.DoWork += ReceiveWorker;
             ServiceThread.DoWork += ServiceWorker;

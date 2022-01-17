@@ -53,7 +53,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 return;
             }
 
-            Thread = new Thread { Name = $"{GetType().FullName}", SupportsCancellation = true, KeepAlive = false, Priority = ThreadPriority.Highest };
+            Thread = new Thread { Name = $"{GetType().FullName}", SupportsCancellation = true, Priority = ThreadPriority.Highest };
             Thread.DoWork += DoWork;
             Thread.Start();
         }
@@ -84,7 +84,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         #region Event Handlers
 
-        protected virtual void DoWork(Thread sender, DoWorkEventArgs e)
+        protected virtual void DoWork(Thread thread, DoWorkEventArgs eventArgs)
         {
             var renderState = new RenderState { CycleCount = -1 };
             var startTime = DateTime.Now;
@@ -92,7 +92,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             RefreshRate = ValidateRefreshRate();
 
-            while(!sender.CancellationPending)
+            while(!thread.CancellationPending)
             {
                 var currentTime = DateTime.Now;
                 var nextUpdateTime = lastUpdateTime + RefreshRate;
@@ -101,11 +101,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 // Sleep until the next time we're supposed to render
                 if(timeout > TimeSpan.Zero)
                 {
-                    if(sender.CancelEvent.WaitOne(timeout))
-                    {
-                        break;
-                    }
-
+                    thread.CancelEvent.WaitOne(timeout);
                     continue;
                 }
 
@@ -130,6 +126,8 @@ namespace DerekWare.HomeAutomation.Common.Effects
                 Update(renderState);
 
                 lastUpdateTime = currentTime;
+
+                Thread.Yield();
             }
         }
 

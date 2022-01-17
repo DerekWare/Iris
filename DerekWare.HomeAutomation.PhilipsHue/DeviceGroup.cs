@@ -20,77 +20,17 @@ namespace DerekWare.HomeAutomation.PhilipsHue
             SetState(hueGroup);
         }
 
-        internal void SetState(Group hueGroup)
-        {
-            lock(SyncRoot)
-            {
-                HueGroup = hueGroup;
-
-                foreach(var i in HueGroup.Lights)
-                {
-                    if(PhilipsHue.Client.Instance.InternalDevices.TryGetValue(i, out var device))
-                    {
-                        InternalChildren.Add(device);
-                    }
-                }
-            }
-        }
-
-        public RoomClass? Class
-        {
-            get
-            {
-                lock(SyncRoot)
-                {
-                    return HueGroup.Class;
-                }
-            }
-        }
+        public RoomClass? Class => HueGroup.Class;
 
         public override IClient Client => PhilipsHue.Client.Instance;
 
-        public string ModelId
-        {
-            get
-            {
-                lock(SyncRoot)
-                {
-                    return HueGroup.ModelId;
-                }
-            }
-        }
+        public string ModelId => HueGroup.ModelId;
 
-        public override string Name
-        {
-            get
-            {
-                lock(SyncRoot)
-                {
-                    return HueGroup.Name;
-                }
-            }
-        }
+        public override string Name => HueGroup.Name;
 
-        public GroupType? Type
-        {
-            get
-            {
-                lock(SyncRoot)
-                {
-                    return HueGroup.Type;
-                }
-            }
-        }
+        public GroupType? Type => HueGroup.Type;
 
-        public override string Uuid {
-            get
-            {
-                lock(SyncRoot)
-                {
-                    return HueGroup.Id;
-                }
-            }
-        }
+        public override string Uuid => HueGroup.Id;
 
         internal new SynchronizedHashSet<IDevice> InternalChildren => base.InternalChildren;
 
@@ -109,20 +49,14 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
             SendCommand(first.ToLightCommand());
 
-            lock(SyncRoot)
-            {
-                Children.ForEach<Device>(i => i.SetColor(color, TimeSpan.Zero, false));
-            }
+            Children.ForEach<Device>(i => i.SetColor(color, TimeSpan.Zero, false));
         }
 
         protected override void ApplyPower(PowerState power)
         {
             SendCommand(new LightCommand { On = power == PowerState.On });
 
-            lock(SyncRoot)
-            {
-                Children.ForEach<Device>(i => i.SetPower(power, false));
-            }
+            Children.ForEach<Device>(i => i.SetPower(power, false));
         }
 
         protected override void OnPropertiesChanged()
@@ -135,6 +69,19 @@ namespace DerekWare.HomeAutomation.PhilipsHue
         {
             base.OnStateChanged();
             PhilipsHue.Client.Instance.OnStateChanged(this);
+        }
+
+        internal void SetState(Group hueGroup)
+        {
+            HueGroup = hueGroup;
+
+            foreach(var i in HueGroup.Lights)
+            {
+                if(PhilipsHue.Client.Instance.InternalDevices.TryGetValue(i, out var device))
+                {
+                    InternalChildren.Add(device);
+                }
+            }
         }
 
         #region IDeviceState
@@ -150,10 +97,7 @@ namespace DerekWare.HomeAutomation.PhilipsHue
 
         public void SendCommand(LightCommand cmd)
         {
-            lock(SyncRoot)
-            {
-                cmd.SendCommand(HueGroup);
-            }
+            cmd.SendCommand(HueGroup);
         }
 
         #endregion

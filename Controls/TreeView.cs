@@ -28,7 +28,7 @@ namespace DerekWare.Iris
             public static T Add<T>(TreeNodeCollection parent, T child)
                 where T : TreeNode
             {
-                parent.Insert(FindInsertionPoint(parent, child), child);
+                parent.InsertSortedInUntypedList<TreeNode>(child, (x, y) => StringComparer.OrdinalIgnoreCase.Compare(x.Text, y.Text));
                 return child;
             }
 
@@ -42,11 +42,6 @@ namespace DerekWare.Iris
                 where T : TreeNode
             {
                 return parent.OfType<T>().FirstOrDefault(predicate);
-            }
-
-            public static int FindInsertionPoint(TreeNodeCollection parent, TreeNode child)
-            {
-                return parent.FindInsertionPointInUntypedList(child, (x, y) => StringComparer.OrdinalIgnoreCase.Compare(x.Text, y.Text));
             }
 
             public static IEnumerable<T> GetAllNodes<T>(TreeNodeCollection parent)
