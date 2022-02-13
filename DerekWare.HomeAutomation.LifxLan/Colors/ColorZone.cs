@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 
-namespace DerekWare.HomeAutomation.Lifx.Lan.Colors
+namespace DerekWare.HomeAutomation.Lifx.Lan
 {
     public static partial class Extensions
     {

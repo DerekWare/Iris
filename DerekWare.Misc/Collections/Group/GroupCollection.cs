@@ -6,11 +6,6 @@ using System.Linq;
 
 namespace DerekWare.Collections
 {
-    public interface IGroupCollection<TKey, TValue> : IReadOnlyGroupCollection<TKey, TValue>
-    {
-        IReadOnlyGroupCollection<TKey, TValue> AsReadOnly();
-    }
-
     public interface IReadOnlyGroupCollection<TKey, TValue>
         : IReadOnlyCollection<IReadOnlyGroup<TKey, TValue>>, IReadOnlyDictionary<TKey, IReadOnlyGroup<TKey, TValue>>
     {
@@ -21,8 +16,13 @@ namespace DerekWare.Collections
     }
 
     [DebuggerDisplay(nameof(Count) + " = {" + nameof(Count) + "}")]
-    public class GroupCollection<TKey, TValue> : IGroupCollection<TKey, TValue>
+    public class GroupCollection<TKey, TValue> : IReadOnlyGroupCollection<TKey, TValue>
     {
+        /// <summary>
+        ///     Overrides the allocator to create a custom type that inherits from IGroup.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public delegate IGroup<TKey, TValue> GroupAllocatorDelegate(TKey key);
 
         public static readonly GroupAllocatorDelegate DefaultAllocator = key => new Group<TKey, TValue>(key);
@@ -71,10 +71,14 @@ namespace DerekWare.Collections
 
         public IEqualityComparer<TKey> Comparer => Items.Comparer;
         public int Count => Items.Count;
-        public int ItemCount => Items.Sum(i => i.Value.Count);
         public IEnumerable<TKey> Keys => Items.Keys;
         public IEnumerable<IReadOnlyGroup<TKey, TValue>> Values => Items.Values;
+
+        /// <summary>
+        ///     Overrides the allocator to create a custom type that inherits from IGroup.
+        /// </summary>
         public GroupAllocatorDelegate Allocator { get; set; } = DefaultAllocator;
+
         public bool IsReadOnly { get; protected set; }
         public IReadOnlyGroup<TKey, TValue> this[TKey key] => Items[key];
 
@@ -163,6 +167,11 @@ namespace DerekWare.Collections
             return items.Sum(item => Add(keySelector(item), item));
         }
 
+        public IReadOnlyGroupCollection<TKey, TValue> AsReadOnly()
+        {
+            return new GroupCollection<TKey, TValue>(this) { IsReadOnly = true };
+        }
+
         public void Clear()
         {
             if(IsReadOnly)
@@ -212,15 +221,6 @@ namespace DerekWare.Collections
         IEnumerator<KeyValuePair<TKey, IReadOnlyGroup<TKey, TValue>>> IEnumerable<KeyValuePair<TKey, IReadOnlyGroup<TKey, TValue>>>.GetEnumerator()
         {
             return Items.Select(i => new KeyValuePair<TKey, IReadOnlyGroup<TKey, TValue>>(i.Key, i.Value)).GetEnumerator();
-        }
-
-        #endregion
-
-        #region IGroupCollection<TKey,TValue>
-
-        public IReadOnlyGroupCollection<TKey, TValue> AsReadOnly()
-        {
-            return new GroupCollection<TKey, TValue>(this) { IsReadOnly = true };
         }
 
         #endregion

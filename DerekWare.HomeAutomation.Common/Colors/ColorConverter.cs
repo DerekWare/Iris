@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace DerekWare.HomeAutomation.Common.Colors
+namespace DerekWare.HomeAutomation.Common
 {
     public class ColorConverter : TypeConverter
     {

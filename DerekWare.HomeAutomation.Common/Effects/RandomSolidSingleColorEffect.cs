@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -10,6 +11,9 @@ namespace DerekWare.HomeAutomation.Common.Effects
     {
         [Range(typeof(double), "0", "1")]
         public double Brightness { get; set; } = 1;
+
+        [Browsable(false)]
+        public override TimeSpan Duration { get => RefreshRate; set => RefreshRate = value; }
 
         [Range(typeof(double), "0", "1")]
         public double Kelvin { get; set; } = 1;
@@ -27,12 +31,6 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
         protected override bool GetColor(RenderState state, out Color color)
         {
-            if(!state.CycleCountChanged)
-            {
-                color = null;
-                return false;
-            }
-
             color = new Color
             {
                 Hue = Random.GetDouble(), Brightness = Brightness, Saturation = Random.GetDouble(MinSaturation, MaxSaturation), Kelvin = Kelvin

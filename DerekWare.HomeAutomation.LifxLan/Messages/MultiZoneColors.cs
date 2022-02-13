@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using DerekWare.Diagnostics;
-using DerekWare.HomeAutomation.Common.Colors;
-using DerekWare.HomeAutomation.Lifx.Lan.Colors;
+using DerekWare.HomeAutomation.Common;
+using DerekWare.HomeAutomation.Lifx.Lan;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 {

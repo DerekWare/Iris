@@ -11,8 +11,8 @@ using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 using DerekWare.Threading;
-using Device = DerekWare.HomeAutomation.Lifx.Lan.Devices.Device;
-using DeviceGroup = DerekWare.HomeAutomation.Lifx.Lan.Devices.DeviceGroup;
+using Device = DerekWare.HomeAutomation.Lifx.Lan.Device;
+using DeviceGroup = DerekWare.HomeAutomation.Lifx.Lan.DeviceGroup;
 using Task = System.Threading.Tasks.Task;
 using Thread = DerekWare.Threading.Thread;
 
@@ -222,9 +222,9 @@ namespace DerekWare.HomeAutomation.Lifx.Lan
             ReceiveThread.Stop(false);
             ServiceThread.Stop(false);
 
-            Extensions.Dispose(ref Socket);
-            Extensions.Dispose(ref ReceiveThread);
-            Extensions.Dispose(ref ServiceThread);
+            DerekWare.Extensions.Dispose(ref Socket);
+            DerekWare.Extensions.Dispose(ref ReceiveThread);
+            DerekWare.Extensions.Dispose(ref ServiceThread);
         }
 
         #endregion

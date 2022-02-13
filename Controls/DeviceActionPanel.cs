@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
-using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Themes;
 using PowerState = DerekWare.HomeAutomation.Common.PowerState;
@@ -50,6 +49,9 @@ namespace DerekWare.Iris
             }
         }
 
+        protected virtual Effect Effect => _Device?.Effect;
+        protected virtual Theme Theme => _Device?.Theme;
+
         protected bool InUpdate
         {
             get => _InUpdateCounter > 0;
@@ -83,10 +85,18 @@ namespace DerekWare.Iris
 
         protected virtual bool CreateEffect(IReadOnlyEffectProperties properties, out Effect effect)
         {
-            effect = EffectFactory.Instance.CreateInstance(properties.Name);
+            // If the effect is the same as what the device is already using, show
+            // its saved properties rather than the ones cached in the factory.
+            effect = Effect;
+
+            if(effect?.Matches(properties) != true)
+            {
+                effect = EffectFactory.Instance.CreateInstance(properties.Name);
+            }
 
             if(DialogResult.OK != PropertyEditor.Show(this, effect))
             {
+                effect = null;
                 return false;
             }
 
@@ -96,10 +106,18 @@ namespace DerekWare.Iris
 
         protected virtual bool CreateTheme(IReadOnlyThemeProperties properties, out Theme theme)
         {
-            theme = ThemeFactory.Instance.CreateInstance(properties.Name);
+            // If the theme is the same as what the device is already using, show
+            // its saved properties rather than the ones cached in the factory.
+            theme = Theme;
+
+            if(theme?.Matches(properties) != true)
+            {
+                theme = ThemeFactory.Instance.CreateInstance(properties.Name);
+            }
 
             if(DialogResult.OK != PropertyEditor.Show(this, theme))
             {
+                theme = null;
                 return false;
             }
 
@@ -283,7 +301,7 @@ namespace DerekWare.Iris
             Device.Theme = null;
             Device.Effect = null;
             Device.Power = PowerState.On;
-            Device.Color = new [] { e.Property };
+            Device.Color = new[] { e.Property };
             InUpdate = false;
 
             UpdateUiFromDevice();

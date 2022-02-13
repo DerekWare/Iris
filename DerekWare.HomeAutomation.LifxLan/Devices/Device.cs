@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
-using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 
-namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
+namespace DerekWare.HomeAutomation.Lifx.Lan
 {
     // TODO property accessors aren't thread safe
     public sealed class Device : Common.Device
@@ -248,6 +247,12 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
             if(0 == Interlocked.Exchange(ref _IsValid, 1))
             {
                 OnPropertiesChanged();
+
+                // If the device that's now valid is on, apply any auto-apply scenes that contain this device
+                if(PowerState.On == Power)
+                {
+                    AutoApplyScene();
+                }
             }
         }
     }

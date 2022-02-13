@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {

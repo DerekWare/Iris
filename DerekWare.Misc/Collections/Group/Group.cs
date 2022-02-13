@@ -5,30 +5,33 @@ using DerekWare.Strings;
 namespace DerekWare.Collections
 {
     /// <summary>
-    ///     IGroup extends IGrouping and is used by GroupCollection.
+    ///     Extends IGrouping and is used by GroupCollection.
     /// </summary>
     public interface IGroup<out TKey, TValue> : IReadOnlyGroup<TKey, TValue>, ICollection<TValue>
     {
-        new int Count { get; }
     }
 
     /// <summary>
-    ///     IGroup extends IGrouping and is used by GroupCollection.
+    ///     Extends IGrouping and is used by GroupCollection.
     /// </summary>
     public interface IReadOnlyGroup<out TKey, out TValue> : IGrouping<TKey, TValue>, IReadOnlyCollection<TValue>
     {
-        new int Count { get; }
     }
 
     /// <summary>
-    ///     IGroup extends IGrouping and is used by GroupCollection.
+    ///     Default IGroup implementation for GroupCollection.
     /// </summary>
     public class Group<TKey, TValue> : List<TValue>, IGroup<TKey, TValue>
     {
-        public Group(TKey key, IEnumerable<TValue> items = null)
+        public Group(TKey key)
         {
             Key = key;
-            AddRange(items.SafeEmpty());
+        }
+
+        public Group(TKey key, IEnumerable<TValue> items)
+            : base(items.SafeEmpty())
+        {
+            Key = key;
         }
 
         public TKey Key { get; }

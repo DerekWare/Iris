@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DerekWare.HomeAutomation.Common;
-using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 
-namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
+namespace DerekWare.HomeAutomation.Lifx.Lan
 {
     // DeviceController abstracts the raw messaging between the application and the LIFX device
     class DeviceController

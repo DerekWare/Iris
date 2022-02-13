@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using DerekWare.Collections;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Common.Effects
@@ -92,7 +92,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             if(renderState.TotalElapsed < NextTime)
             {
-                colors = Colors.Colors.Black.Repeat(ZoneCount).ToArray();
+                colors = Common.Colors.Black.Repeat(ZoneCount).ToArray();
                 return true;
             }
 
@@ -115,7 +115,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
 
             // Create a color array that represents all of the visible and offscreen zones,
             // initialized to black.
-            colors = Colors.Colors.Black.Repeat(totalLength).ToArray();
+            colors = Common.Colors.Black.Repeat(totalLength).ToArray();
 
             // offset represents where in the total zones the meteors are currently positioned
             Elapsed += renderState.CycleIncrement;

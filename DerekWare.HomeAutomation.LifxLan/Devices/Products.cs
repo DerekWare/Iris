@@ -2,7 +2,7 @@
 using DerekWare.IO;
 using DerekWare.IO.Serialization;
 
-namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
+namespace DerekWare.HomeAutomation.Lifx.Lan
 {
     public static class Products
     {

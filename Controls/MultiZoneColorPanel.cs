@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 
 namespace DerekWare.Iris
 {

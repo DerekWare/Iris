@@ -4,9 +4,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DerekWare.Collections;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
-using DerekWare.Misc;
 using DerekWare.Strings;
 
 namespace DerekWare.HomeAutomation.Common

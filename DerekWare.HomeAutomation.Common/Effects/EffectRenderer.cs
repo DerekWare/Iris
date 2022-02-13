@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading;
 using DerekWare.Diagnostics;
+using DerekWare.HomeAutomation.Common;
 using DerekWare.Reflection;
 using DoWorkEventArgs = DerekWare.Threading.DoWorkEventArgs;
 using Thread = DerekWare.Threading.Thread;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DerekWare.Collections;
-using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.HomeAutomation.Common.Themes;
@@ -144,7 +143,7 @@ namespace DerekWare.HomeAutomation.Common
 
             if(colors.IsNullOrEmpty())
             {
-                colors = Colors.Colors.Black.Repeat(ZoneCount).ToArray();
+                colors = Colors.Black.Repeat(ZoneCount).ToArray();
             }
             else if(colors.Count < ZoneCount)
             {
@@ -191,19 +190,27 @@ namespace DerekWare.HomeAutomation.Common
             // TODO this should really be in the Scene, but this is simpler.
             if(power == PowerState.On)
             {
-                var scenes = from s in SceneFactory.Instance
-                             where s.AutoApply
-                             from d in this.GetDeviceGroups().Cast<IDevice>().Append(this)
-                             where s.Contains(d)
-                             select s;
-
-                scenes.FirstOrDefault()?.Apply();
+                AutoApplyScene();
             }
         }
 
         public override string ToString()
         {
             return $"{Name} ({Family})";
+        }
+
+        protected virtual void AutoApplyScene()
+        {
+            foreach(var scene in SceneFactory.Instance.Where(i => i.AutoApply))
+            {
+                var devices = this.GetDeviceGroups().Cast<IDevice>().Append(this);
+
+                if(scene.ContainsAny(devices))
+                {
+                    scene.Apply();
+                    break;
+                }
+            }
         }
 
         protected virtual void OnPropertiesChanged()
@@ -281,7 +288,7 @@ namespace DerekWare.HomeAutomation.Common
 
         public virtual void Dispose()
         {
-            Extensions.Dispose(ref _RefreshTask);
+            DerekWare.Extensions.Dispose(ref _RefreshTask);
         }
 
         #endregion

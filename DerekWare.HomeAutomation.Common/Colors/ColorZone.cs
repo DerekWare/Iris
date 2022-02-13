@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DerekWare.Reflection;
 using Newtonsoft.Json.Linq;
 
-namespace DerekWare.HomeAutomation.Common.Colors
+namespace DerekWare.HomeAutomation.Common
 {
     public sealed class ColorZone : ICloneable<ColorZone>, IEquatable<ColorZone>, IComparable<ColorZone>, IComparable
     {

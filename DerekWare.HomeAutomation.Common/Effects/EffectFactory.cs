@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DerekWare.Collections;
+using DerekWare.HomeAutomation.Common;
 
 namespace DerekWare.HomeAutomation.Common.Effects
 {

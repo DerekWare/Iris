@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using DerekWare.Collections;
+using DerekWare.HomeAutomation.Common;
 using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Effects

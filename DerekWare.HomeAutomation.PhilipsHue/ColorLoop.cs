@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.Reflection;
 

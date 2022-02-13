@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Linq;
 using DerekWare.Collections;
+using DerekWare.HomeAutomation.Common;
 
 namespace DerekWare.HomeAutomation.Common.Scenes
 {
@@ -46,6 +47,14 @@ namespace DerekWare.HomeAutomation.Common.Scenes
         public bool Contains(IDevice device)
         {
             return Items.Any(i => i.Matches(device));
+        }
+
+        public bool ContainsAny(IEnumerable<IDevice> devices)
+        {
+            return (from device in devices
+                    from scene in Items
+                    where scene.Matches(device)
+                    select device).Any();
         }
 
         public bool Remove(IDevice device)

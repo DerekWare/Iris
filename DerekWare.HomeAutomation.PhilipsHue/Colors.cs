@@ -1,4 +1,4 @@
-﻿using DerekWare.HomeAutomation.Common.Colors;
+﻿using DerekWare.HomeAutomation.Common;
 using Q42.HueApi;
 
 namespace DerekWare.HomeAutomation.PhilipsHue

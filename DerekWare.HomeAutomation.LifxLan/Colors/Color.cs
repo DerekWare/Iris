@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 
-namespace DerekWare.HomeAutomation.Lifx.Lan.Colors
+namespace DerekWare.HomeAutomation.Lifx.Lan
 {
     // These are ranges used by encoded/binary LIFX messages. The ranges of the runtime properties are all 0-1.
     static class EncodedColorRanges

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows.Forms;
 using DerekWare.HomeAutomation.Common;
-using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Scenes;
 using DerekWare.HomeAutomation.Common.Themes;
@@ -23,48 +22,11 @@ namespace DerekWare.Iris
         }
 
         public IClient Client => SceneItem.Client;
-
         public override IDevice Device => SceneItem.Device;
-
         public SceneItem SceneItem { get; }
 
-        protected override bool CreateEffect(IReadOnlyEffectProperties properties, out Effect effect)
-        {
-            // If the effect is the same as what the scene item already uses, show
-            // its saved properties rather than the ones cached in the factory.
-            if(SceneItem.Effect?.Matches(properties) ?? false)
-            {
-                if(DialogResult.OK == PropertyEditor.Show(this, SceneItem.Effect))
-                {
-                    effect = SceneItem.Effect;
-                    return true;
-                }
-
-                effect = null;
-                return false;
-            }
-
-            return base.CreateEffect(properties, out effect);
-        }
-
-        protected override bool CreateTheme(IReadOnlyThemeProperties properties, out Theme theme)
-        {
-            // If the theme is the same as what the scene item already uses, show
-            // its saved properties rather than the ones cached in the factory.
-            if(SceneItem.Theme?.Matches(properties) ?? false)
-            {
-                if(DialogResult.OK == PropertyEditor.Show(this, SceneItem.Theme))
-                {
-                    theme = SceneItem.Theme;
-                    return true;
-                }
-
-                theme = null;
-                return false;
-            }
-
-            return base.CreateTheme(properties, out theme);
-        }
+        protected override Effect Effect => SceneItem.Effect;
+        protected override Theme Theme => SceneItem.Theme;
 
         protected override void OnHandleCreated(EventArgs e)
         {

@@ -1,5 +1,5 @@
 ﻿
-using DerekWare.HomeAutomation.Lifx.Lan.Devices;
+using DerekWare.HomeAutomation.Lifx.Lan;
 
 namespace DerekWare.Iris
 {
@@ -50,9 +50,11 @@ namespace DerekWare.Iris
             this.ScenesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SceneContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CreateSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SelectSceneDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ApplySceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RenameSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SelectSceneDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.ApplySceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AutomaticallyApplySceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.RemoveSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,8 +63,8 @@ namespace DerekWare.Iris
             this.AboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RootLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.ComponentTreeView = new DerekWare.Iris.ComponentTreeView();
-            this.AutomaticallyApplySceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.LaunchOnSystemStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.NotifyIconMenuStrip.SuspendLayout();
             this.MenuStrip.SuspendLayout();
             this.SceneContextMenuStrip.SuspendLayout();
@@ -116,8 +118,8 @@ namespace DerekWare.Iris
             this.HelpToolStripMenuItem});
             this.MenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip.Name = "MenuStrip";
-            this.MenuStrip.Padding = new System.Windows.Forms.Padding(4, 1, 0, 1);
-            this.MenuStrip.Size = new System.Drawing.Size(1420, 36);
+            this.MenuStrip.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
+            this.MenuStrip.Size = new System.Drawing.Size(2130, 33);
             this.MenuStrip.TabIndex = 0;
             // 
             // FileToolStirpMenuItem
@@ -125,13 +127,15 @@ namespace DerekWare.Iris
             this.FileToolStirpMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ConnectMenuItem,
             this.BridgeMenuItem,
-            this.toolStripSeparator2,
-            this.SaveSettingsToolStripMenuItem,
+            this.toolStripSeparator6,
+            this.LaunchOnSystemStartupToolStripMenuItem,
             this.toolStripSeparator3,
+            this.SaveSettingsToolStripMenuItem,
+            this.toolStripSeparator2,
             this.CloseMenuItem,
             this.ExitMenuItem});
             this.FileToolStirpMenuItem.Name = "FileToolStirpMenuItem";
-            this.FileToolStirpMenuItem.Size = new System.Drawing.Size(54, 34);
+            this.FileToolStirpMenuItem.Size = new System.Drawing.Size(54, 29);
             this.FileToolStirpMenuItem.Text = "&File";
             // 
             // ConnectMenuItem
@@ -188,7 +192,7 @@ namespace DerekWare.Iris
             // 
             this.ScenesToolStripMenuItem.DropDown = this.SceneContextMenuStrip;
             this.ScenesToolStripMenuItem.Name = "ScenesToolStripMenuItem";
-            this.ScenesToolStripMenuItem.Size = new System.Drawing.Size(82, 34);
+            this.ScenesToolStripMenuItem.Size = new System.Drawing.Size(82, 29);
             this.ScenesToolStripMenuItem.Text = "&Scenes";
             this.ScenesToolStripMenuItem.DropDownOpening += new System.EventHandler(this.ScenesToolStripMenuItem_DropDownOpening);
             // 
@@ -206,7 +210,7 @@ namespace DerekWare.Iris
             this.RemoveSceneToolStripMenuItem});
             this.SceneContextMenuStrip.Name = "SceneContextMenuStrip";
             this.SceneContextMenuStrip.OwnerItem = this.ScenesToolStripMenuItem;
-            this.SceneContextMenuStrip.Size = new System.Drawing.Size(296, 241);
+            this.SceneContextMenuStrip.Size = new System.Drawing.Size(296, 208);
             // 
             // CreateSceneToolStripMenuItem
             // 
@@ -214,22 +218,6 @@ namespace DerekWare.Iris
             this.CreateSceneToolStripMenuItem.Size = new System.Drawing.Size(295, 32);
             this.CreateSceneToolStripMenuItem.Text = "&Create Scene...";
             this.CreateSceneToolStripMenuItem.Click += new System.EventHandler(this.CreateSceneToolStripMenuItem_Click);
-            // 
-            // SelectSceneDevicesToolStripMenuItem
-            // 
-            this.SelectSceneDevicesToolStripMenuItem.Enabled = false;
-            this.SelectSceneDevicesToolStripMenuItem.Name = "SelectSceneDevicesToolStripMenuItem";
-            this.SelectSceneDevicesToolStripMenuItem.Size = new System.Drawing.Size(295, 32);
-            this.SelectSceneDevicesToolStripMenuItem.Text = "Select &Devices...";
-            this.SelectSceneDevicesToolStripMenuItem.Click += new System.EventHandler(this.SelectSceneDevicesToolStripMenuItem_Click);
-            // 
-            // ApplySceneToolStripMenuItem
-            // 
-            this.ApplySceneToolStripMenuItem.Enabled = false;
-            this.ApplySceneToolStripMenuItem.Name = "ApplySceneToolStripMenuItem";
-            this.ApplySceneToolStripMenuItem.Size = new System.Drawing.Size(295, 32);
-            this.ApplySceneToolStripMenuItem.Text = "&Apply Scene";
-            this.ApplySceneToolStripMenuItem.Click += new System.EventHandler(this.ApplySceneToolStripMenuItem_Click);
             // 
             // RenameSceneToolStripMenuItem
             // 
@@ -239,6 +227,36 @@ namespace DerekWare.Iris
             this.RenameSceneToolStripMenuItem.Size = new System.Drawing.Size(295, 32);
             this.RenameSceneToolStripMenuItem.Text = "Re&name Scene";
             this.RenameSceneToolStripMenuItem.Click += new System.EventHandler(this.RenameSceneToolStripMenuItem_Click);
+            // 
+            // SelectSceneDevicesToolStripMenuItem
+            // 
+            this.SelectSceneDevicesToolStripMenuItem.Enabled = false;
+            this.SelectSceneDevicesToolStripMenuItem.Name = "SelectSceneDevicesToolStripMenuItem";
+            this.SelectSceneDevicesToolStripMenuItem.Size = new System.Drawing.Size(295, 32);
+            this.SelectSceneDevicesToolStripMenuItem.Text = "Select &Devices...";
+            this.SelectSceneDevicesToolStripMenuItem.Click += new System.EventHandler(this.SelectSceneDevicesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(292, 6);
+            // 
+            // ApplySceneToolStripMenuItem
+            // 
+            this.ApplySceneToolStripMenuItem.Enabled = false;
+            this.ApplySceneToolStripMenuItem.Name = "ApplySceneToolStripMenuItem";
+            this.ApplySceneToolStripMenuItem.Size = new System.Drawing.Size(295, 32);
+            this.ApplySceneToolStripMenuItem.Text = "&Apply Scene";
+            this.ApplySceneToolStripMenuItem.Click += new System.EventHandler(this.ApplySceneToolStripMenuItem_Click);
+            // 
+            // AutomaticallyApplySceneToolStripMenuItem
+            // 
+            this.AutomaticallyApplySceneToolStripMenuItem.CheckOnClick = true;
+            this.AutomaticallyApplySceneToolStripMenuItem.Enabled = false;
+            this.AutomaticallyApplySceneToolStripMenuItem.Name = "AutomaticallyApplySceneToolStripMenuItem";
+            this.AutomaticallyApplySceneToolStripMenuItem.Size = new System.Drawing.Size(295, 32);
+            this.AutomaticallyApplySceneToolStripMenuItem.Text = "A&utomatically Apply Scene";
+            this.AutomaticallyApplySceneToolStripMenuItem.CheckedChanged += new System.EventHandler(this.AutomaticallyApplySceneToolStripMenuItem_CheckedChanged);
             // 
             // toolStripSeparator4
             // 
@@ -260,7 +278,7 @@ namespace DerekWare.Iris
             this.UpdateMenuItem,
             this.AboutMenuItem});
             this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
-            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(65, 34);
+            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
             this.HelpToolStripMenuItem.Text = "&Help";
             // 
             // ViewReadmeToolStripMenuItem
@@ -293,12 +311,11 @@ namespace DerekWare.Iris
             this.RootLayoutPanel.Controls.Add(this.ComponentTreeView, 0, 0);
             this.RootLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RootLayoutPanel.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.AddColumns;
-            this.RootLayoutPanel.Location = new System.Drawing.Point(0, 36);
-            this.RootLayoutPanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.RootLayoutPanel.Location = new System.Drawing.Point(0, 33);
             this.RootLayoutPanel.Name = "RootLayoutPanel";
             this.RootLayoutPanel.RowCount = 1;
             this.RootLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.RootLayoutPanel.Size = new System.Drawing.Size(1420, 758);
+            this.RootLayoutPanel.Size = new System.Drawing.Size(2130, 1189);
             this.RootLayoutPanel.TabIndex = 1;
             // 
             // ComponentTreeView
@@ -306,38 +323,38 @@ namespace DerekWare.Iris
             this.ComponentTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ComponentTreeView.HideSelection = false;
             this.ComponentTreeView.LabelEdit = true;
-            this.ComponentTreeView.Location = new System.Drawing.Point(5, 5);
-            this.ComponentTreeView.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.ComponentTreeView.Location = new System.Drawing.Point(8, 8);
+            this.ComponentTreeView.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.ComponentTreeView.Name = "ComponentTreeView";
             this.ComponentTreeView.SelectedNode = null;
-            this.ComponentTreeView.Size = new System.Drawing.Size(274, 748);
+            this.ComponentTreeView.ShowFamilyNodes = true;
+            this.ComponentTreeView.ShowStateNodes = true;
+            this.ComponentTreeView.Size = new System.Drawing.Size(410, 1173);
             this.ComponentTreeView.TabIndex = 0;
             this.ComponentTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ComponentTreeView_AfterSelect);
             this.ComponentTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ComponentTreeView_NodeMouseClick);
             // 
-            // AutomaticallyApplySceneToolStripMenuItem
+            // LaunchOnSystemStartupToolStripMenuItem
             // 
-            this.AutomaticallyApplySceneToolStripMenuItem.CheckOnClick = true;
-            this.AutomaticallyApplySceneToolStripMenuItem.Enabled = false;
-            this.AutomaticallyApplySceneToolStripMenuItem.Name = "AutomaticallyApplySceneToolStripMenuItem";
-            this.AutomaticallyApplySceneToolStripMenuItem.Size = new System.Drawing.Size(295, 32);
-            this.AutomaticallyApplySceneToolStripMenuItem.Text = "A&utomatically Apply Scene";
-            this.AutomaticallyApplySceneToolStripMenuItem.CheckedChanged += new System.EventHandler(this.AutomaticallyApplySceneToolStripMenuItem_CheckedChanged);
+            this.LaunchOnSystemStartupToolStripMenuItem.CheckOnClick = true;
+            this.LaunchOnSystemStartupToolStripMenuItem.Name = "LaunchOnSystemStartupToolStripMenuItem";
+            this.LaunchOnSystemStartupToolStripMenuItem.Size = new System.Drawing.Size(373, 34);
+            this.LaunchOnSystemStartupToolStripMenuItem.Text = "Launch on System Startup";
+            this.LaunchOnSystemStartupToolStripMenuItem.CheckedChanged += new System.EventHandler(this.LaunchOnSystemStartupToolStripMenuItem_CheckedChanged);
             // 
-            // toolStripSeparator5
+            // toolStripSeparator6
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(292, 6);
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(370, 6);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1420, 794);
+            this.ClientSize = new System.Drawing.Size(2130, 1222);
             this.Controls.Add(this.RootLayoutPanel);
             this.Controls.Add(this.MenuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
             this.Text = this.ProductName;
@@ -385,6 +402,8 @@ namespace DerekWare.Iris
         private System.Windows.Forms.ToolStripMenuItem SelectSceneDevicesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem AutomaticallyApplySceneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem LaunchOnSystemStartupToolStripMenuItem;
     }
 }
 

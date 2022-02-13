@@ -124,7 +124,7 @@
     <Compile Include="Effects\EffectFactory.cs" />
     <Compile Include="Effects\EffectRenderer.cs" />
     <Compile Include="Effects\Bloom.cs" />
-    <Compile Include="Devices\DeviceExtensions.cs" />
+    <Compile Include="Devices\Extensions.cs" />
     <Compile Include="Effects\GraphicEQ.cs" />
     <Compile Include="Effects\MeteorShower.cs" />
     <Compile Include="Effects\SpectrumShift.cs" />

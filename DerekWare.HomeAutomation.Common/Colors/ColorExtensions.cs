@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DerekWare.HomeAutomation.Common.Colors
+namespace DerekWare.HomeAutomation.Common
 {
     public static partial class Colors
     {

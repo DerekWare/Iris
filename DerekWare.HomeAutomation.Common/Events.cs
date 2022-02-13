@@ -1,4 +1,5 @@
 ﻿using System;
+using DerekWare.HomeAutomation.Common;
 
 namespace DerekWare.HomeAutomation.Common
 {

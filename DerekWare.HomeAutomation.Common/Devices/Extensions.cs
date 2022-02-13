@@ -4,7 +4,7 @@ using DerekWare.Collections;
 
 namespace DerekWare.HomeAutomation.Common
 {
-    public static class DeviceExtensions
+    public static partial class Extensions
     {
         /// <summary>
         ///     Finds all groups for which this device is a first-level member.

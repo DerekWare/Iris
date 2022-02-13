@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using DerekWare.HomeAutomation.Common.Colors;
-using DerekWare.HomeAutomation.Lifx.Lan.Colors;
+using DerekWare.HomeAutomation.Common;
+using DerekWare.HomeAutomation.Lifx.Lan;
 using DerekWare.Reflection;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Messages

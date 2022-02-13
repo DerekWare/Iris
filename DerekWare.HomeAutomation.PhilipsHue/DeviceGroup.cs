@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
-using DerekWare.HomeAutomation.Common.Colors;
 using Q42.HueApi;
 using Q42.HueApi.Models.Groups;
 

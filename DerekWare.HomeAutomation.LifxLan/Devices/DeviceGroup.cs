@@ -3,7 +3,7 @@ using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 
-namespace DerekWare.HomeAutomation.Lifx.Lan.Devices
+namespace DerekWare.HomeAutomation.Lifx.Lan
 {
     public sealed class DeviceGroup : Common.DeviceGroup
     {

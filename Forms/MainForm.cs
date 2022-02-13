@@ -65,6 +65,14 @@ namespace DerekWare.Iris
 
         void LoadSettings()
         {
+            // Load settings
+            LaunchOnSystemStartupToolStripMenuItem.Checked = Process.IsAutoAppStart(Application.ExecutablePath, Application.ProductName);
+
+            // Load effects, themes and scenes
+            EffectFactory.Instance.Deserialize(Settings.Default.Effects);
+            ThemeFactory.Instance.Deserialize(Settings.Default.Themes);
+            SceneFactory.Instance.Deserialize(Settings.Default.Scenes);
+
             // Load cached LIFX devices
             Settings.Default.LifxDevices ??= new StringCollection();
             Settings.Default.LifxDevices.OfType<string>().ForEach(LifxClient.Instance.Connect);
@@ -74,11 +82,6 @@ namespace DerekWare.Iris
             {
                 HueClient.Instance.Connect(Settings.Default.HueBridgeAddress, Settings.Default.HueApiKey, Settings.Default.HueEntertainmentKey);
             }
-
-            // Load effects, themes and scenes
-            EffectFactory.Instance.Deserialize(Settings.Default.Effects);
-            ThemeFactory.Instance.Deserialize(Settings.Default.Themes);
-            SceneFactory.Instance.Deserialize(Settings.Default.Scenes);
         }
 
         void MinimizeToTray()
@@ -214,6 +217,11 @@ namespace DerekWare.Iris
         {
             IsExiting = true;
             Close();
+        }
+
+        void LaunchOnSystemStartupToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            Process.SetAutoAppStart(Application.ExecutablePath, Application.ProductName, LaunchOnSystemStartupToolStripMenuItem.Checked);
         }
 
         void MainForm_FormClosed(object sender, FormClosedEventArgs e)

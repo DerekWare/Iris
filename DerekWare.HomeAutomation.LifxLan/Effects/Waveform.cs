@@ -1,11 +1,10 @@
 ﻿using System;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common;
-using DerekWare.HomeAutomation.Common.Colors;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 using DerekWare.Reflection;
-using Device = DerekWare.HomeAutomation.Lifx.Lan.Devices.Device;
+using Device = DerekWare.HomeAutomation.Lifx.Lan.Device;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
 {
@@ -17,7 +16,7 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
         public Waveform()
         {
             WaveformType = WaveformType.Sine;
-            Color = Common.Colors.Colors.Black;
+            Color = Common.Colors.Black;
             Duration = TimeSpan.FromSeconds(30);
             RefreshRate = TimeSpan.FromSeconds(30);
         }

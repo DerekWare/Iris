@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DerekWare.Strings;
+using Microsoft.Win32;
 using Debug = DerekWare.Diagnostics.Debug;
 using Path = DerekWare.IO.Path;
 
@@ -59,6 +60,13 @@ namespace DerekWare
             return a.Length > b.Length ? a : b;
         }
 
+        public static bool IsAutoAppStart(string executablePath, string appName)
+        {
+            var rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
+            var value = rk?.GetValue(appName) as string;
+            return string.Equals(executablePath, value, StringComparison.OrdinalIgnoreCase);
+        }
+
         /// <summary>
         ///     Runs a given executable file to completion.
         /// </summary>
@@ -71,6 +79,20 @@ namespace DerekWare
             {
                 p.WaitForExit();
                 return p.ExitCode;
+            }
+        }
+
+        public static void SetAutoAppStart(string executablePath, string appName, bool autoStart)
+        {
+            var rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+            if(autoStart)
+            {
+                rk.SetValue(appName, executablePath);
+            }
+            else
+            {
+                rk.DeleteValue(appName, false);
             }
         }
 

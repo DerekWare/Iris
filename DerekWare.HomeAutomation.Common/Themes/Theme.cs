@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using DerekWare.Collections;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 using Newtonsoft.Json;
 
 namespace DerekWare.HomeAutomation.Common.Themes

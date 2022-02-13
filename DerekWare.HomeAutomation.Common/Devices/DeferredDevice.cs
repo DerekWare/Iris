@@ -4,11 +4,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using DerekWare.Diagnostics;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Themes;
 
-namespace DerekWare.HomeAutomation.Common.Devices
+namespace DerekWare.HomeAutomation.Common
 {
     [Description("DeferredDevice allows for lazy loading of a device based on Family and Uuid.")]
     public interface IDeferredDevice : IDevice, ISerializable, IEquatable<DeferredDevice>, IMatch

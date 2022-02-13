@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Cyotek.Windows.Forms;
 using DerekWare.Collections;
-using Color = DerekWare.HomeAutomation.Common.Colors.Color;
+using Color = DerekWare.HomeAutomation.Common.Color;
 
 namespace DerekWare.Iris
 {

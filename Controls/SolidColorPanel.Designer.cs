@@ -1,6 +1,6 @@
 ﻿
-using DerekWare.HomeAutomation.Common.Colors;
-using DerekWare.HomeAutomation.Lifx.Lan.Colors;
+using DerekWare.HomeAutomation.Common;
+using DerekWare.HomeAutomation.Lifx.Lan;
 
 namespace DerekWare.Iris
 {

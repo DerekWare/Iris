@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using DerekWare.Collections;
 using DerekWare.HomeAutomation.Common.Audio;
-using DerekWare.HomeAutomation.Common.Colors;
+using DerekWare.HomeAutomation.Common;
 using DerekWare.Reflection;
 using NAudio.Dsp;
 
@@ -21,7 +21,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         }
 
         [Description("The color of the unused portions of the device."), Browsable(false)]
-        public Color BackgroundColor => Colors.Colors.Black;
+        public Color BackgroundColor => Common.Colors.Black;
 
         [Browsable(false)]
         public double Kelvin => 1;
@@ -63,7 +63,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         protected override void StopEffect()
         {
             base.StopEffect();
-            Extensions.Dispose(ref AudioRecorder);
+            DerekWare.Extensions.Dispose(ref AudioRecorder);
         }
 
         protected override bool UpdateColors(RenderState renderState, ref Color[] colors, ref TimeSpan transitionDuration)

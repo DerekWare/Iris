@@ -6,7 +6,7 @@ using DerekWare.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DerekWare.HomeAutomation.Common.Colors
+namespace DerekWare.HomeAutomation.Common
 {
     [TypeConverter(typeof(ColorConverter)), Serializable, JsonObject]
     public sealed class Color : ICloneable<Color>, IEquatable<Color>, ISerializable

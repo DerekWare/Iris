@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DerekWare.HomeAutomation.Common;
 
 namespace DerekWare.HomeAutomation.Common
 {
