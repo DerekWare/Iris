@@ -52,7 +52,6 @@ namespace DerekWare.Iris
             MessageBox.Show(message, ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             return true;
-
         }
 
         public void CreateScene(string name = "My Scene")

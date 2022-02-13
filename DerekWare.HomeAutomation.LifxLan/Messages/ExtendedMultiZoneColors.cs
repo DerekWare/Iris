@@ -4,7 +4,6 @@ using System.IO;
 using DerekWare.Collections;
 using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
-using DerekWare.HomeAutomation.Lifx.Lan;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 {

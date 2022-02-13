@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using System.Linq;
 using DerekWare.Collections;
-using DerekWare.HomeAutomation.Common;
 
 namespace DerekWare.HomeAutomation.Common.Scenes
 {

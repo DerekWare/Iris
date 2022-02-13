@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Themes;
 using DerekWare.Reflection;
 

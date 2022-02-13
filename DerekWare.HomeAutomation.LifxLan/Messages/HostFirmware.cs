@@ -4,6 +4,16 @@ using DerekWare.Diagnostics;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 {
+    class GetHostFirmwareRequest : Request
+    {
+        public new const ushort MessageType = 14;
+
+        public GetHostFirmwareRequest()
+            : base(MessageType)
+        {
+        }
+    }
+
     class HostFirmwareResponse : Response
     {
         public new const ushort MessageType = 15;
@@ -35,15 +45,5 @@ namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
         }
 
         #endregion
-    }
-
-    class GetHostFirmwareRequest : Request
-    {
-        public new const ushort MessageType = 14;
-
-        public GetHostFirmwareRequest()
-            : base(MessageType)
-        {
-        }
     }
 }

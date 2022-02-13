@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using DerekWare.Collections;
-using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Common.Themes;
 

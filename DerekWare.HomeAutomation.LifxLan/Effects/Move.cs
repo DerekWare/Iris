@@ -6,7 +6,6 @@ using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Common.Effects;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 using DerekWare.Reflection;
-using Device = DerekWare.HomeAutomation.Lifx.Lan.Device;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Effects
 {

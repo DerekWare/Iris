@@ -13,7 +13,6 @@ namespace DerekWare.Iris.Controls
     {
         string _DeviceFamily;
         IReadOnlyCollection<T> _Factory;
-        T _SelectedObject;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), Browsable(true)]
         public event EventHandler<PropertyChangedEventArgs<T>> SelectedObjectChanged;
@@ -43,18 +42,10 @@ namespace DerekWare.Iris.Controls
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
         public T SelectedObject
         {
-            get => _SelectedObject;
-            set
-            {
-                _SelectedObject = value;
-                // TODO
-            }
-        }
+            get;
+            set;
 
-        void UpdatePages()
-        {
-            TabPages.Clear();
-            AddRange(_Factory?.Where(i => i.IsCompatible(_DeviceFamily)));
+            // TODO
         }
 
         public void Add(T obj)
@@ -67,6 +58,12 @@ namespace DerekWare.Iris.Controls
         public void AddRange(IEnumerable<T> items)
         {
             items.ForEach(Add);
+        }
+
+        void UpdatePages()
+        {
+            TabPages.Clear();
+            AddRange(_Factory?.Where(i => i.IsCompatible(_DeviceFamily)));
         }
 
         #region Event Handlers

@@ -11,8 +11,6 @@ using DerekWare.Diagnostics;
 using DerekWare.HomeAutomation.Common;
 using DerekWare.HomeAutomation.Lifx.Lan.Messages;
 using DerekWare.Threading;
-using Device = DerekWare.HomeAutomation.Lifx.Lan.Device;
-using DeviceGroup = DerekWare.HomeAutomation.Lifx.Lan.DeviceGroup;
 using Task = System.Threading.Tasks.Task;
 using Thread = DerekWare.Threading.Thread;
 

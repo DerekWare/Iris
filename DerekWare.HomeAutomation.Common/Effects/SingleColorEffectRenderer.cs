@@ -1,6 +1,4 @@
-﻿using DerekWare.HomeAutomation.Common;
-
-namespace DerekWare.HomeAutomation.Common.Effects
+﻿namespace DerekWare.HomeAutomation.Common.Effects
 {
     public abstract class SingleColorEffectRenderer : EffectRenderer
     {

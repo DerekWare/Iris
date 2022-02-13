@@ -1,6 +1,5 @@
 ﻿using System.Windows.Forms;
 using DerekWare.HomeAutomation.Common.Scenes;
-using DerekWare.Iris.Properties;
 
 namespace DerekWare.Iris
 {

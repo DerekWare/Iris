@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using DerekWare.HomeAutomation.Common;
-using DerekWare.HomeAutomation.Lifx.Lan;
 
 namespace DerekWare.HomeAutomation.Lifx.Lan.Messages
 {

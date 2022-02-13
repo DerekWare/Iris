@@ -27,10 +27,8 @@ namespace DerekWare.HomeAutomation.Common
                 return null;
             }
 
-            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, ObjectCreationHandling = ObjectCreationHandling.Replace };
-            var type = @this.GetType();
-
-            return (T)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(@this, type, settings), type);
+            var data = JsonSerializer.Serialize(@this);
+            return JsonSerializer.Deserialize<T>(data);
         }
 
         public static string GetDescription(this Type type)

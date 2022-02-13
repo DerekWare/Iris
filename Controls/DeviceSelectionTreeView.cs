@@ -12,10 +12,6 @@ namespace DerekWare.Iris
         HashSet<IDevice> _CheckedDevices = new();
         bool InUpdate;
 
-        public DeviceSelectionTreeView()
-        {
-        }
-
         [Browsable(false)]
         public IReadOnlyCollection<IDevice> CheckedDevices
         {

@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Threading;
 using DerekWare.Diagnostics;
-using DerekWare.HomeAutomation.Common;
 using DerekWare.Reflection;
 using DoWorkEventArgs = DerekWare.Threading.DoWorkEventArgs;
 using Thread = DerekWare.Threading.Thread;
@@ -21,6 +20,7 @@ namespace DerekWare.HomeAutomation.Common.Effects
         [Browsable(false)]
         public override bool IsRunning => Thread?.IsEnabled ?? false;
 
+        [Browsable(false)]
         public override IDevice Device
         {
             get => base.Device;
